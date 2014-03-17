@@ -4,6 +4,8 @@
  */
 package uit.tkorg.paperrecommender.controller.main;
 
+import uit.tkorg.paperrecommender.gui.PaperRecommendation;
+
 /**
  *
  * @author THNghiep
@@ -15,6 +17,7 @@ public class PaperRecommender {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // TODO code application logic here
+        PaperRecommendation paper_recommend=new PaperRecommendation();
+        paper_recommend.show();
     }
 }

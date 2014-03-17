@@ -47,7 +47,7 @@ public class ConnectionService {
                     + ":" + PaperRecommenerConst.PORT
                     + "/" + PaperRecommenerConst.DATABASE
                     + "?user=" + PaperRecommenerConst.USERNAME
-                    + "&password=" + PaperRecommenerConst.PASSWORD
+                    + "&password="+""// + PaperRecommenerConst.PASSWORD
                     + "&autoReconnect=true"
                     + "&connectTimeout=300"
                     + "&useBlobToStoreUTF8OutsideBMP=true";

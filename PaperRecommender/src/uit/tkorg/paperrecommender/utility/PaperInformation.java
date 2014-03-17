@@ -12,17 +12,17 @@ package uit.tkorg.paperrecommender.utility;
  */
 public class PaperInformation {
 
-    private int id_paper;
+    private String id_paper;
     private int year_paper;
     private int type_paper;
 
-    public void setIdPaper(int id, int year, int type) {
+    public void setIdPaper(String id, int year, int type) {
         id_paper = id;
         year_paper = year;
         type_paper = type;
     }
 
-    public int getIdPaper() {
+    public String getIdPaper() {
         return id_paper;
     }
 

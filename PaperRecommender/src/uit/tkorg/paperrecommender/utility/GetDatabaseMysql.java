@@ -20,8 +20,8 @@ public class GetDatabaseMysql {
 
     //Trả về idAuthorType của tác giả
     //select idAuthorType from Author where Author.idAuthor='12345'
-    public static int getDataIdTypeAuthor(int i) throws Exception {
-        String query = "select idAuthorType from Author where Author.idAuthor='" + i + "'";
+    public int getDataIdTypeAuthor(String str) throws Exception {
+        String query = "select idAuthorType from Author where Author.idAuthor='" + str + "'";
         int id_type = -1;
         Statement stmt = ConnectionService.getConnection().createStatement();
         ResultSet rs = stmt.executeQuery(query);
@@ -35,14 +35,14 @@ public class GetDatabaseMysql {
 
     //Trả về danh sách các bài báo của 1 tác giả
     //select * from Paper where Author_Paper.idAuthor='12345' AND Author_Paper.idPaper=Paper.idPaper
-    public static ArrayList<PaperInformation> getDataInformationPaperAuthor(int i) throws Exception {
-        String query = "select * from Paper where Author_Paper.idAuthor='" + i + "' AND Author_Paper.idPaper=Paper.idPaper";
+    public ArrayList<PaperInformation> getDataInformationPaperAuthor(String str) throws Exception {
+        String query = "select * from Paper,Author_Paper where Author_Paper.idAuthor='" + str + "' AND Author_Paper.idPaper=Paper.idPaper";
         ArrayList<PaperInformation> arraypaper = new ArrayList<PaperInformation>();
         Statement stmt = ConnectionService.getConnection().createStatement();
         ResultSet rs = stmt.executeQuery(query);
         while (rs.next()) {
             PaperInformation paper = new PaperInformation();
-            paper.setIdPaper(rs.getInt(1), rs.getInt(2), rs.getInt(3));
+            paper.setIdPaper(rs.getString(1), rs.getInt(2), rs.getInt(3));
             arraypaper.add(paper);
         }
         rs.close();
@@ -52,14 +52,14 @@ public class GetDatabaseMysql {
 
     //Trả về danh sách các bài báo tham khảo của 1 bài báo
     //select * from Paper where Paper_Paper.idPaper="12345" AND Paper_Paper.idPaperRef=Paper.idPaper
-    public static ArrayList<PaperInformation> getDataInformationPaperRef(int i) throws Exception {
-        String query = "select * from Paper where Paper_Paper.idPaper='" + i + "' AND Paper_Paper.idPaperRef=Paper.idPaper";
+    public ArrayList<PaperInformation> getDataInformationPaperRef(String str) throws Exception {
+        String query = "select * from Paper,Paper_Paper where Paper_Paper.idPaper='" + str + "' AND Paper_Paper.idPaperRef=Paper.idPaper";
         ArrayList<PaperInformation> arraypaper = new ArrayList<PaperInformation>();
         Statement stmt = ConnectionService.getConnection().createStatement();
         ResultSet rs = stmt.executeQuery(query);
         while (rs.next()) {
             PaperInformation paper = new PaperInformation();
-            paper.setIdPaper(rs.getInt(1), rs.getInt(2), rs.getInt(3));
+            paper.setIdPaper(rs.getString(1), rs.getInt(2), rs.getInt(3));
             arraypaper.add(paper);
         }
         rs.close();
@@ -69,14 +69,14 @@ public class GetDatabaseMysql {
 
     //Trả về danh sách các bài báo trích dẫn của 1 bài báo
     //select * from Paper where Paper_Paper.idPaperRef="12345" AND Paper_Paper.idPaper=Paper.idPaper
-    public static ArrayList<PaperInformation> getDataInformationPaperCit(int i) throws Exception {
-        String query = "select * from Paper where Paper_Paper.idPaperRef='" + i + "' AND Paper_Paper.idPaper=Paper.idPaper";
+    public ArrayList<PaperInformation> getDataInformationPaperCit(String str) throws Exception {
+        String query = "select * from Paper,Paper_Paper where Paper_Paper.idPaperRef='" + str + "' AND Paper_Paper.idPaper=Paper.idPaper";
         ArrayList<PaperInformation> arraypaper = new ArrayList<PaperInformation>();
         Statement stmt = ConnectionService.getConnection().createStatement();
         ResultSet rs = stmt.executeQuery(query);
         while (rs.next()) {
             PaperInformation paper = new PaperInformation();
-            paper.setIdPaper(rs.getInt(1), rs.getInt(2), rs.getInt(3));
+            paper.setIdPaper(rs.getString(1), rs.getInt(2), rs.getInt(3));
             arraypaper.add(paper);
         }
         rs.close();
@@ -86,8 +86,8 @@ public class GetDatabaseMysql {
 
     //Trả về keyword và tf-idf của 1 bài báo
     //Select Vocabulary.keyword, Paper_Keyword.TF-IDF from Vocabulary, Paper_Keyword where Paper_Keyword.idPaper="12345" AND Paper_Keyword.idKeyword=Vocabulary.idKeyword
-    public static HashMapVector getKeywordAndWeight(int i) throws Exception {
-        String query = "Select Vocabulary.keyword, Paper_Keyword.TF-IDF from Vocabulary, Paper_Keyword where Paper_Keyword.idPaper='" + i + "' AND Paper_Keyword.idKeyword=Vocabulary.idKeyword";
+    public HashMapVector getKeywordAndWeight(String str) throws Exception {
+        String query = "Select Vocabulary.keyword, Paper_Keyword.TFIDF from Vocabulary, Paper_Keyword where Paper_Keyword.idPaper='" + str + "' AND Paper_Keyword.idKeyword=Vocabulary.idKeyword";
         HashMapVector hmvector = new HashMapVector();
         Statement stmt = ConnectionService.getConnection().createStatement();
         ResultSet rs = stmt.executeQuery(query);
@@ -101,14 +101,14 @@ public class GetDatabaseMysql {
 
     //Trả về danh sách tất cả các bài báo khuyến nghị
     //select * from Paper where Paper.idPaperType='1'
-    public static ArrayList<PaperInformation> getDataInformationPaperRec() throws Exception {
+    public ArrayList<PaperInformation> getDataInformationPaperRec() throws Exception {
         String query = "select * from Paper where Paper.idPaperType='1'";
         ArrayList<PaperInformation> arraypaper = new ArrayList<PaperInformation>();
         Statement stmt = ConnectionService.getConnection().createStatement();
         ResultSet rs = stmt.executeQuery(query);
         while (rs.next()) {
             PaperInformation paper = new PaperInformation();
-            paper.setIdPaper(rs.getInt(1), rs.getInt(2), rs.getInt(3));
+            paper.setIdPaper(rs.getString(1), rs.getInt(2), rs.getInt(3));
             arraypaper.add(paper);
         }
         rs.close();
