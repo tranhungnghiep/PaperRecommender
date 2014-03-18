@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package uit.tkorg.paperrecommender.utility;
+package obsolete.uit.tkorg.paperrecommender.utility;
 
 import ir.vsr.HashMapVector;
 import static java.lang.Math.abs;

@@ -3,13 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package uit.tkorg.paperrecommender.utility;
+package obsolete.uit.tkorg.paperrecommender.utility;
 
 import ir.vsr.HashMapVector;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
-import uit.tkorg.paperrecommender.model.nativejava.dbconnection.ConnectionService;
+import obsolete.uit.tkorg.paperrecommender.model.nativejava.dbconnection.ConnectionService;
 
 /**
  *

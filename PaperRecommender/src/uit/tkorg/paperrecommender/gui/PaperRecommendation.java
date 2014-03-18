@@ -14,10 +14,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
-import uit.tkorg.paperrecommender.model.nativejava.dbconnection.ConnectionService;
-import uit.tkorg.paperrecommender.utility.FormulaCandiatePaper;
-import uit.tkorg.paperrecommender.utility.FormulaSeniorResearcher;
-import uit.tkorg.paperrecommender.utility.RecommendationPaperList;
+import obsolete.uit.tkorg.paperrecommender.model.nativejava.dbconnection.ConnectionService;
+import obsolete.uit.tkorg.paperrecommender.utility.FormulaCandiatePaper;
+import obsolete.uit.tkorg.paperrecommender.utility.FormulaSeniorResearcher;
+import obsolete.uit.tkorg.paperrecommender.utility.RecommendationPaperList;
 
 /**
  *
