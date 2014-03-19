@@ -50,18 +50,4 @@ public class Vocabulary implements Serializable{
         vocabulary = ImportDataset1.readAllKeywords();
         Collections.sort(vocabulary);
     }
-    
-    /**
-     * Serialize.
-     */
-    public void saveVocabulary() {
-        
-    }
-    
-    /**
-     * Deserialize.
-     */
-    public void loadVocabulary() {
-        
-    }
 }

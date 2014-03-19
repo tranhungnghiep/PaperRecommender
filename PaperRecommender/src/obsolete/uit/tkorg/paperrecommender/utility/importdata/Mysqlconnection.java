@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package obsolete.uit.tkorg.paperrecommender.utility;
+package obsolete.uit.tkorg.paperrecommender.utility.importdata;
 import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
