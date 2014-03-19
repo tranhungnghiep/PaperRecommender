@@ -4,7 +4,7 @@
  */
 package uit.tkorg.paperrecommender.controller.central;
 
-import uit.tkorg.paperrecommender.gui.PaperRecommendation;
+import obsolete.uit.tkorg.paperrecommender.gui.PaperRecommendation;
 
 /**
  *
