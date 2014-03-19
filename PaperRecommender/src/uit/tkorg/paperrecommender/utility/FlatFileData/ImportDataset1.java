@@ -5,7 +5,9 @@
 package uit.tkorg.paperrecommender.utility.FlatFileData;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import uit.tkorg.paperrecommender.model.Paper;
 
 /**
  *
@@ -20,6 +22,18 @@ public class ImportDataset1 {
      */
     public static List readAllKeywords() {
         List allKeywords = new ArrayList();
+        // generate list here.
         return allKeywords;
+    }
+
+    /**
+     * This method read dataset folder (from constant class), then for each paper, 
+     * create a Paper object and put it in the hashmap.
+     * @return the hashmap contents all papers.
+     */
+    public static HashMap<String, Paper> buildListOfPapers() {
+        HashMap<String, Paper> papers = new HashMap<String, Paper>();
+        // generate map here.
+        return papers;
     }
 }
