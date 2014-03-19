@@ -2,8 +2,11 @@ package constant;
 
 import java.util.logging.Level;
 
-public class PaperRecommenerConst {
+public class PaperRecommenerConstant {
 
+    public static final String DATASETFOLDER = "";
+    public static final String SAVEDATAFOLDER = "";
+    
     public static final String DB = "MYSQL";
         //public static final String DB = "SQLSERVER";
 

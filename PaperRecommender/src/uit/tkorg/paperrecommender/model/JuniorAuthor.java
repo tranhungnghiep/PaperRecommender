@@ -8,6 +8,6 @@ package uit.tkorg.paperrecommender.model;
  *
  * @author THNghiep
  */
-public class JuniorAuthor {
+public class JuniorAuthor extends Author{
     
 }

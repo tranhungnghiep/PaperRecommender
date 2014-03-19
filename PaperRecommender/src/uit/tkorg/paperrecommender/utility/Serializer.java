@@ -13,6 +13,7 @@ import java.io.ObjectOutputStream;
 /**
  *
  * @author THNghiep
+ * Support class for serializing and deserializing.
  */
 public class Serializer {
     /**

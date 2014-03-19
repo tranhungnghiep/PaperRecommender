@@ -10,6 +10,8 @@ import java.util.List;
 /**
  *
  * @author THNghiep
+ * This class contents all method to import data from dataset1.
+ * Import process needs to filter out noisy data such as keywords longer than 50 characters.
  */
 public class ImportDataset1 {
     /**

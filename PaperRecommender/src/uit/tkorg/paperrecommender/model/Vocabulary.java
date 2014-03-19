@@ -17,7 +17,6 @@ import uit.tkorg.paperrecommender.utility.FlatFileData.ImportDataset1;
  * Data: list of all keywords.
  * Method: 
  * - Build vocabulary list.
- * - Save/load vocabulary.
  */
 public class Vocabulary implements Serializable{
     private List vocabulary;
