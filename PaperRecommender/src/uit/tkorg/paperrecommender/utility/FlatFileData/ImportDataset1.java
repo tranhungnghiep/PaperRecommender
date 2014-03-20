@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import uit.tkorg.paperrecommender.model.Author;
 import uit.tkorg.paperrecommender.model.Paper;
 
 /**
@@ -189,5 +190,15 @@ public class ImportDataset1 {
             System.out.println(e.getMessage());
         }
         return reference;
+    }
+
+    /**
+     * 
+     * @return authors
+     */
+    public static HashMap<String, Author> buildListOfAuthors() {
+        HashMap<String, Author> authors = new HashMap<String, Author>();
+        // code here.
+        return authors;
     }
 }

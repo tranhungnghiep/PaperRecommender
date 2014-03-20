@@ -22,6 +22,8 @@ import uit.tkorg.paperrecommender.utility.Weighting;
  */
 public class PaperLogic {
 
+    // Key of this hash map is paper id.
+    // Value of this hash map is the relevant paper object.
     HashMap<String, Paper> papers = null;
 
     /**
