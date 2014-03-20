@@ -11,28 +11,35 @@ import ir.vsr.HashMapVector;
  * @author THNghiep
  */
 public class Weighting {
+
     /**
-     * Compute cosine angle of two vector.
-     * Use HashMapVector from ir package as vector datatype: need to examine how to use correctly.
+     * Compute cosine angle of two vector. Use HashMapVector from ir package as
+     * vector datatype: need to examine how to use correctly.
+     *
      * @param v1
      * @param v2
      * @return cosine.
      */
     public static double computeCosine(HashMapVector v1, HashMapVector v2) {
         double cosine = 0;
-        // compute here.
+        cosine = v1.cosineTo(v2);
         return cosine;
     }
+
     /**
-     * Compute RPY of two paper.
-     * RPY = 1/|y1-y2|.
+     * Compute RPY of two paper. RPY = 1/|y1-y2|.
+     *
      * @param y1
      * @param y2
      * @return RPY
      */
     public static double computeRPY(int y1, int y2) {
         double rpy = 0;
-        // compute here.
+        if (y1 == y2) {
+            rpy = 10 / 9;
+        } else {
+            rpy = 1 / Math.abs(y1 - y2);
+        }
         return rpy;
     }
 }
