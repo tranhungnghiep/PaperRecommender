@@ -29,50 +29,51 @@ public class ImportDataset1 {
      *
      * @return allKeywords.
      */
-     
-    public  static List<String> getPathFile (File dir)
-    {
-         File[] files = dir.listFiles();
-           List listfile= new ArrayList<String>();
-           String name = null;
-          for (int i=0; i< files.length;i++)
-          {
-               if (files[i].isDirectory()) 
-            {
-              getPathFile(files[i]);
-            }
-              else
-              if (files[i].isFile())
-                  name= files[i].getName().toString();
-              if (name== "*.txt") listfile.add(files[i].getAbsolutePath());
-          }
-          return listfile;            
-    }
-    public static List readAllKeywords()  throws FileNotFoundException, IOException {
+    public static List readAllKeywords() throws FileNotFoundException, IOException {
         List allKeywords = new ArrayList();
         //generate code here
         List<String> ffile = getPathFile(new File("E:\\Luanvan\\20100825-SchPaperRecData\\"));
-        for (int i=0; i< ffile.size();i++)
-        try{
-            FileReader file = new FileReader(ffile.get(i));
-            BufferedReader textReader = new BufferedReader(file);
-            String line;
-            String[] tokens;
-            while ((line = textReader.readLine()) != null)
-            {
-                tokens = line.split(" ");
-                if (tokens.length == 2)
-                {
-                   allKeywords.add(tokens[0]);
+        for (int i = 0; i < ffile.size(); i++) {
+            try {
+                FileReader file = new FileReader(ffile.get(i));
+                BufferedReader textReader = new BufferedReader(file);
+                String line;
+                String[] tokens;
+                while ((line = textReader.readLine()) != null) {
+                    tokens = line.split(" ");
+                    if (tokens.length == 2) {
+                        allKeywords.add(tokens[0]);
+                    }
                 }
+            } catch (Exception ex) {
+                System.out.println(ex.getMessage());
             }
-        }catch(Exception ex)
-        {
-           System.out.println(ex.getMessage());
         }
         return allKeywords;
     }
-  
+
+    /**
+     * 
+     * @param dir
+     * @return listfile
+     */
+    public static List<String> getPathFile(File dir) {
+        File[] files = dir.listFiles();
+        List listfile = new ArrayList<String>();
+        String name = null;
+        for (int i = 0; i < files.length; i++) {
+            if (files[i].isDirectory()) {
+                getPathFile(files[i]);
+            } else if (files[i].isFile()) {
+                name = files[i].getName().toString();
+            }
+            if (name == "*.txt") {
+                listfile.add(files[i].getAbsolutePath());
+            }
+        }
+        return listfile;
+    }
+
     /**
      * This method read dataset folder (from constant class), then for each
      * paper, create a Paper object and put it in the hashmap.

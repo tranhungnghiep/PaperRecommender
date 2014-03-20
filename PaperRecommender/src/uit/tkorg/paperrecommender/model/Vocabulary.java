@@ -51,9 +51,9 @@ public class Vocabulary implements Serializable{
     public void buildVocabulary() {
         try {
             vocabulary = ImportDataset1.readAllKeywords();
-        } catch (IOException ex) {
-            Logger.getLogger(Vocabulary.class.getName()).log(Level.SEVERE, null, ex);
+            Collections.sort(vocabulary);
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
         }
-        Collections.sort(vocabulary);
     }
 }
