@@ -4,6 +4,7 @@
  */
 package uit.tkorg.paperrecommender.utility.FlatFileData;
 
+import constant.PaperRecommenerConstant;
 import ir.vsr.HashMapVector;
 import java.io.BufferedReader;
 import java.io.File;
@@ -32,7 +33,7 @@ public class ImportDataset1 {
     public static List readAllKeywords() throws FileNotFoundException, IOException {
         List allKeywords = new ArrayList();
         //generate code here
-        List<String> ffile = getPathFile(new File("E:\\Luanvan\\20100825-SchPaperRecData\\"));
+        List<String> ffile = getPathFile(new File(PaperRecommenerConstant.DATASETFOLDER));
         for (int i = 0; i < ffile.size(); i++) {
             try {
                 FileReader file = new FileReader(ffile.get(i));
@@ -84,7 +85,7 @@ public class ImportDataset1 {
      */
     public static HashMap<String, Paper> buildListOfPapers() throws IOException {
         HashMap<String, Paper> papers = new HashMap<String, Paper>();
-        readAllCandidatePapers(new File("C:\\Users\\Vinh\\Desktop\\Tailieuluanvan\\20100825-SchPaperRecData\\20100825-SchPaperRecData\\RecCandidatePapersFV"), papers);
+        readAllCandidatePapers(new File(PaperRecommenerConstant.DATASETFOLDER + "\\RecCandidatePapersFV"), papers);
         return papers;
     }
 
@@ -153,7 +154,7 @@ public class ImportDataset1 {
      */
     public static List<String> addCitation(String paperId) throws FileNotFoundException, IOException {
         List<String> citation = new ArrayList<String>();
-        try (BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\Vinh\\Desktop\\Tailieuluanvan\\20100825-SchPaperRecData\\20100825-SchPaperRecData\\InterLink\\acl.20080325.net"))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(PaperRecommenerConstant.DATASETFOLDER + "\\InterLink\\acl.20080325.net"))) {
             String line = null;
             while ((line = br.readLine()) != null) {
                 String[] str = line.split(" ==> ");
@@ -176,7 +177,7 @@ public class ImportDataset1 {
      */
     public static List<String> addReference(String paperId) throws FileNotFoundException, IOException {
         List<String> reference = new ArrayList<String>();
-        try (BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\Vinh\\Desktop\\Tailieuluanvan\\20100825-SchPaperRecData\\20100825-SchPaperRecData\\InterLink\\acl.20080325.net"))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(PaperRecommenerConstant.DATASETFOLDER + "\\InterLink\\acl.20080325.net"))) {
             String line = null;
             while ((line = br.readLine()) != null) {
                 String[] str = line.split(" ==> ");
