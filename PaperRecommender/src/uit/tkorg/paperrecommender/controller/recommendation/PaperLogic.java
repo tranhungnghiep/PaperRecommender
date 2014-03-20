@@ -14,9 +14,11 @@ import uit.tkorg.paperrecommender.utility.Weighting;
 
 /**
  *
- * @author THNghiep This class handles all logic for paper object. Method: -
- * Generate list of papers (key: paper id, value: object paper). - Compute
- * papers' full vector: linear, cosine, rpy.
+ * @author THNghiep 
+ * This class handles all logics for paper object. 
+ * Method: 
+ * - Generate list of papers (key: paper id, value: object paper). 
+ * - Compute papers' full vector: linear, cosine, rpy.
  */
 public class PaperLogic {
 
@@ -32,11 +34,19 @@ public class PaperLogic {
     }
 
     /**
+     * This method computes and set value for all papers' full feature vector (after combining citation and reference papers).
+     * @param paperId
+     * @param weightingScheme 0: linear; 1: cosine; 2: rpy
+     */
+    public void computeAllPapersFeatureVector(String paperId, int weightScheme) {
+        // code here.
+    }
+    /**
      * This method compute final feature vector by combining citation and
      * reference.
      *
      * @param paperId
-     * @param weightingScheme - 0: linear - 1: cosine - 2: rpy
+     * @param weightingScheme 0: linear; 1: cosine; 2: rpy
      * @return list represents feature vector.
      */
     public HashMapVector computePaperFeatureVector(String paperId, int weightingScheme) {

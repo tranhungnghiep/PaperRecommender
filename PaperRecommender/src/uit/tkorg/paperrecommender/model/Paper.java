@@ -11,15 +11,24 @@ import java.util.List;
  *
  * @author THNghiep
  * This class represents a paper.
- * Data: paper id, title, year, content in keywords' tf-idf list (ir's hashmapvector: cần xem kĩ lại class này, dùng như thế nào cho đúng), list of citation (paper id), list of reference (paper id).
+ * Data: 
+ * paper id, title, year, paper type,
+ * content in keywords' tf-idf list (ir's hashmapvector: cần xem kĩ lại class này, dùng như thế nào cho đúng),
+ * and the full feature vector of the paper (hashmapvector computed by combining other paper with weighting scheme linear or cosine or rpy).
+ * - if the paper is paper to recommend: list<String> of citation, reference (paper id).
+ * - if the paper is paper of author: List<Paper> of citation, reference (Paper object, this class).
+ * - if the paper is citation or reference paper of author: no list of citation, reference.
+ * Note: For a specific paper type, some data are absent.
  */
 public class Paper {
     private String paperId;
     private String title;
     private int year;
+    private String paperType;
     private HashMapVector content;
-    private List<String> citation;
-    private List<String> reference;
+    private List citation;
+    private List reference;
+    private HashMapVector featureVector;
 
     /**
      * @return the paperId
@@ -80,28 +89,56 @@ public class Paper {
     /**
      * @return the citation
      */
-    public List<String> getCitation() {
+    public List getCitation() {
         return citation;
     }
 
     /**
      * @param citation the citation to set
      */
-    public void setCitation(List<String> citation) {
+    public void setCitation(List citation) {
         this.citation = citation;
     }
 
     /**
      * @return the reference
      */
-    public List<String> getReference() {
+    public List getReference() {
         return reference;
     }
 
     /**
      * @param reference the reference to set
      */
-    public void setReference(List<String> reference) {
+    public void setReference(List reference) {
         this.reference = reference;
+    }
+
+    /**
+     * @return the paperType
+     */
+    public String getPaperType() {
+        return paperType;
+    }
+
+    /**
+     * @param paperType the paperType to set
+     */
+    public void setPaperType(String paperType) {
+        this.paperType = paperType;
+    }
+
+    /**
+     * @return the featureVector
+     */
+    public HashMapVector getFeatureVector() {
+        return featureVector;
+    }
+
+    /**
+     * @param featureVector the featureVector to set
+     */
+    public void setFeatureVector(HashMapVector featureVector) {
+        this.featureVector = featureVector;
     }
 }
