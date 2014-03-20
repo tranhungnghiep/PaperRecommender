@@ -4,43 +4,147 @@
  */
 package uit.tkorg.paperrecommender.controller.recommendation;
 
+import ir.utilities.Weight;
 import ir.vsr.HashMapVector;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import uit.tkorg.paperrecommender.model.Paper;
 import uit.tkorg.paperrecommender.utility.FlatFileData.ImportDataset1;
+import uit.tkorg.paperrecommender.utility.Weighting;
 
 /**
  *
- * @author THNghiep
- * This class handles all logic for paper object.
- * Method: 
- * - Generate list of papers (key: paper id, value: object paper).
- * - Compute papers' full vector: linear, cosine, rpy.
+ * @author THNghiep This class handles all logic for paper object. Method: -
+ * Generate list of papers (key: paper id, value: object paper). - Compute
+ * papers' full vector: linear, cosine, rpy.
  */
 public class PaperLogic {
+
     HashMap<String, Paper> papers = null;
-    
+
     /**
      * This method builds a hashmap of papers.
+     *
+     * @throws java.io.IOException
      */
-    public void buildListOfPapers() throws IOException  {
+    public void buildListOfPapers() throws IOException {
         papers = ImportDataset1.buildListOfPapers();
     }
-    
+
     /**
-     * This method compute final feature vector by combining citation and reference.
+     * This method compute final feature vector by combining citation and
+     * reference.
+     *
      * @param paperId
-     * @param weightingScheme
-     * - 0: linear
-     * - 1: cosine
-     * - 2: rpy
+     * @param weightingScheme - 0: linear - 1: cosine - 2: rpy
      * @return list represents feature vector.
      */
     public HashMapVector computePaperFeatureVector(String paperId, int weightingScheme) {
-        HashMapVector fearureVector = null;
-        // compute here.
-        return fearureVector;
+        HashMapVector featureVector = null;
+        if (weightingScheme == 0) {
+            computePaperFeatureVectorWithLinear(paperId,featureVector);
+        } else if (weightingScheme == 1) {
+            computePaperFeatureVectorWithCosine(paperId,featureVector);
+        } else {
+            computePaperFeatureVectorWithRPY(paperId,featureVector);
+        }
+        return featureVector;
+    }
+
+    /**
+     * This method compute Paper Feature Vector with linear weight
+     *
+     * @param paperId
+     * @param featureVector
+     */
+    public void computePaperFeatureVectorWithLinear(String paperId, HashMapVector featureVector) {
+        Paper paper = papers.get(paperId);//get paper has Id is paperId in ListofPapers
+        featureVector = paper.getContent();//assign HashMapVector featureVector equal HashMapVector paper
+        List<String> citation = paper.getCitation();//get list of citation paper
+        List<String> reference = paper.getReference();//get list of reference paper
+        featureVector.add(sumFeatureVectorWithLinear(citation));//add featureVector with featureVector of citation papers
+        featureVector.add(sumFeatureVectorWithLinear(reference));//add featureVector with featureVector of reference papers
+    }
+
+    /**
+     * This method compute Paper Feature Vector with cosine weight
+     *
+     * @param paperId
+     * @param featureVector
+     */
+    public void computePaperFeatureVectorWithCosine(String paperId, HashMapVector featureVector) {
+        Paper paper = papers.get(paperId);//get paper has paperId in ListofPapers
+        featureVector = paper.getContent();//assign HashMapVector featureVector equal HashMapVector paper
+        List<String> citation = paper.getCitation();//get list of citation paper
+        List<String> reference = paper.getReference();//get list of reference paper
+        featureVector.add(sumFeatureVectorWithCosine(paper,citation));//add featureVector with featureVector of citation papers
+        featureVector.add(sumFeatureVectorWithCosine(paper,reference));//add featureVector with featureVector of reference papers
+    }
+
+    /**
+     * This method compute Paper Feature Vector with RPY weight
+     *
+     * @param paperId
+     * @param featureVector
+     */
+    public void computePaperFeatureVectorWithRPY(String paperId, HashMapVector featureVector) {
+        featureVector = new HashMapVector();//get paper has paperId in ListofPapers
+        Paper paper = papers.get(paperId);//assign HashMapVector featureVector equal HashMapVector paper
+        featureVector = paper.getContent();//get list of citation paper
+        List<String> citation = paper.getCitation();//get list of citation paper
+        List<String> reference = paper.getReference();//get list of reference paper
+        featureVector.add(sumFeatureVectorWithRPY(paper,citation));//add featureVector with featureVector of citation papers
+        featureVector.add(sumFeatureVectorWithRPY(paper,reference));//add featureVector with featureVector of reference papers
+    }
+
+    /**
+     * This method compute sum of Papers(Citation or Reference Paper) with linear weight
+     *
+     * @param paperId
+     * @return featureVector
+     */
+    public HashMapVector sumFeatureVectorWithLinear(List<String> paperId) {
+        HashMapVector featureVector = new HashMapVector();
+        for (String paperid : paperId) {
+            Paper paper = papers.get(paperid);
+            featureVector.add(paper.getContent());
+        }
+        return featureVector;
+    }
+
+    /**
+     * This method compute sum of Papers(Citation or Reference Paper) with cosine weight
+     *
+     * @param cpaper
+     * @param paperId
+     * @return featureVector
+     */
+    public HashMapVector sumFeatureVectorWithCosine(Paper cpaper, List<String> paperId) {
+        HashMapVector featureVector = new HashMapVector();
+        for (String paperid : paperId) {
+            Paper paper = papers.get(paperid);
+            double cosine = Weighting.computeCosine(cpaper.getContent(), paper.getContent());
+            featureVector.addScaled(paper.getContent(), cosine);
+        }
+        return featureVector;
+    }
+
+    /**
+     * This method compute sum of Papers(Citation or Reference Paper) with rpy weight
+     *
+     * @param cpaper
+     * @param paperId
+     * @return featureVector
+     */
+    public HashMapVector sumFeatureVectorWithRPY(Paper cpaper, List<String> paperId) {
+        HashMapVector featureVector = new HashMapVector();
+        for (String paperid : paperId) {
+            Paper paper = papers.get(paperid);
+            double rpy = Weighting.computeRPY(cpaper.getYear(), paper.getYear());
+            featureVector.addScaled(paper.getContent(), rpy);
+        }
+        return featureVector;
     }
 }

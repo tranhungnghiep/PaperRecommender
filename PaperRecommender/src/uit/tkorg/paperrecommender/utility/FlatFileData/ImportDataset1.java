@@ -118,7 +118,7 @@ public class ImportDataset1 {
     }
 
     /**
-     * This method browse each file in candidate paper directo
+     * This method browse each file in candidate paper directory
      *
      * @param dir: address of candidate paper directory
      * @param papers: store all candidate papers
