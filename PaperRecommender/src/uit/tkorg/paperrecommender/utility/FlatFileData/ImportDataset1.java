@@ -29,6 +29,8 @@ public class ImportDataset1 {
     /**
      * This method read dataset folder (from constant class), then for each paper, 
      * create a Paper object and put it in the hashmap.
+     * HashMap Key: paper id (in file name)
+     * HashMap Value: paper object.
      * @return the hashmap contents all papers.
      */
     public static HashMap<String, Paper> buildListOfPapers() {

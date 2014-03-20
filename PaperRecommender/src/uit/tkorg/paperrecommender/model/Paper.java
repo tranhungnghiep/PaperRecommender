@@ -4,6 +4,9 @@
  */
 package uit.tkorg.paperrecommender.model;
 
+import ir.vsr.HashMapVector;
+import java.util.List;
+
 /**
  *
  * @author THNghiep
@@ -12,5 +15,9 @@ package uit.tkorg.paperrecommender.model;
  * Method: get tf-idf vector by comparing keyword list and vocabulary, if needed.
  */
 public class Paper {
-    
+    String paperId;
+    String title;
+    HashMapVector content;
+    List<String> citation;
+    List<String> reference;
 }
