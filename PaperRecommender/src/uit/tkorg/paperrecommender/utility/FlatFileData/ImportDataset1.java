@@ -29,33 +29,29 @@ public class ImportDataset1 {
      *
      * @return allKeywords.
      */
-    // Minh
-    //Lấy đường dẫn của các file txt có trong thư mục
-    public  static List<String> Getpathfile (File dir)
+     
+    public  static List<String> getPathFile (File dir)
     {
-           File[] files = dir.listFiles();
+         File[] files = dir.listFiles();
            List listfile= new ArrayList<String>();
            String name = null;
           for (int i=0; i< files.length;i++)
           {
+               if (files[i].isDirectory()) 
+            {
+              getPathFile(files[i]);
+            }
+              else
               if (files[i].isFile())
                   name= files[i].getName().toString();
               if (name== "*.txt") listfile.add(files[i].getAbsolutePath());
           }
-          return listfile;                 
+          return listfile;            
     }
-    public static List readAllKeywords() {
+    public static List readAllKeywords()  throws FileNotFoundException, IOException {
         List allKeywords = new ArrayList();
         //generate code here
-        return allKeywords;
-    }
-    // @ Minh 
-   //Doc du lieu tu file txt vao luu vao List
-   public static List readAllKeywords(File dir)   throws FileNotFoundException, IOException
-    {
-        List <String> allKeywords = new ArrayList();     
-        //generate code here
-       List<String> ffile = Getpathfile(dir);
+        List<String> ffile = getPathFile(new File("E:\\Luanvan\\20100825-SchPaperRecData\\"));
         for (int i=0; i< ffile.size();i++)
         try{
             FileReader file = new FileReader(ffile.get(i));
@@ -76,33 +72,7 @@ public class ImportDataset1 {
         }
         return allKeywords;
     }
-     //@ author Minh
-    // Xay dung tap tu vung chung cho tat ca cac paper
   
-   public static HashMap <Integer, String> Vocabulary (File dir)throws IOException
-   {
-       HashMap <Integer,String> words = new HashMap<Integer,String>();
-       List<String> key;
-       Integer currId = 0;
-       Integer id;
-        try {
-            key = readAllKeywords(dir);
-             
-       for(int i=0;i< key.size();i++)
-       {
-           id= Integer.valueOf(key.get(i));
-        // Kiem tra xem value do da co chua neu chua thi them vao 
-           if (key.get(i) != words.get(currId))
-           {
-            words.put(id,key.get(i));
-            currId= id;
-           }    
-       }
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(ImportDataset1.class.getName()).log(Level.SEVERE, null, ex);
-        }
-          return words;   
-    }
     /**
      * This method read dataset folder (from constant class), then for each
      * paper, create a Paper object and put it in the hashmap.
