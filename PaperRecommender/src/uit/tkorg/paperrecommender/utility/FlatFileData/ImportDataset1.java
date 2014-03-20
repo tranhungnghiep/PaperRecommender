@@ -37,36 +37,35 @@ public class ImportDataset1 {
      * This method read dataset folder (from constant class), then for each
      * paper, create a Paper object and put it in the hashmap.
      *
-     * HashMap Key: paper id (in file name)
-     * HashMap Value: paper object.
+     * HashMap Key: paper id (in file name) HashMap Value: paper object.
      * @return the hashmap contents all papers.
+     * @throws java.io.IOException
      */
-    public static HashMap<String, Paper> buildListOfPapers() {
+    public static HashMap<String, Paper> buildListOfPapers() throws IOException {
         HashMap<String, Paper> papers = new HashMap<String, Paper>();
-        readAllCandidatePapers(new File(""), papers);
+        readAllCandidatePapers(new File("C:\\Users\\Vinh\\Desktop\\Tailieuluanvan\\20100825-SchPaperRecData\\20100825-SchPaperRecData\\RecCandidatePapersFV"), papers);
         return papers;
     }
 
     /**
-     * This method browse each file in candidate paper directory
+     * This method browse each file in candidate paper directo
      *
      * @param dir: address of candidate paper directory
      * @param papers: store all candidate papers
+     * @throws java.io.IOException
      */
-    public static void readAllCandidatePapers(File dir, HashMap<String, Paper> papers) {
+    public static void readAllCandidatePapers(File dir, HashMap<String, Paper> papers) throws IOException {
         //Get list of all files in directory
         File[] files = dir.listFiles();
         //Browse all files in directory
         for (File file : files) {
             String paperid = file.getName().replaceAll("_recfv.txt", "");
             Paper paper = new Paper();
-            /**set data a paper
-             * id a paper
-             * year a paper
-             * paper content(hashmapvector)
-             * citation of a paper
-             * reference of a paper
-             */
+            paper.setPaperId(paperid);//set PaperId for paper
+            paper.setYear(paperYear(paperid));//set Year for paper
+            paper.setContent(readFilePaper(file.getAbsoluteFile()));//set Content for paper
+            paper.setCitation(addCitation(file.getAbsolutePath()));//set Citation for paper
+            paper.setReference(addReference(file.getAbsolutePath()));//set Reference for paper
             papers.put(paperid, paper);
         }
     }
@@ -75,36 +74,78 @@ public class ImportDataset1 {
      * This method read each file in candidate paper directory
      *
      * @param file: address of file
+     * @return content
      * @throws java.io.FileNotFoundException
      */
-    public void readFilePaper(File file) throws FileNotFoundException, IOException {
+    public static HashMapVector readFilePaper(File file) throws FileNotFoundException, IOException {
+        HashMapVector content=new HashMapVector();
         String path = file.getAbsolutePath();
-        BufferedReader br = new BufferedReader(new FileReader(path));
-        try {
+        try (BufferedReader br = new BufferedReader(new FileReader(path))) {
             String line = null;
             while ((line = br.readLine()) != null) {
                 String[] str = line.split(" ");
-                /**
-                 * content of paper
-                 * HashMapVector of CandidatPaper
-                 * hashmapvector.increment(paperid, amount);
-                 */
+                content.increment(str[0], Double.valueOf(str[1]));
             }
         } catch (IOException e) {
             System.out.println(e.getMessage());
-        } finally {
-            br.close();
         }
+        return content;
     }
-    
+
     /**
      * This method return year of candidate paper
      *
-     * @param paperid
+     * @param paperId
      * @return year of paper
      */
-    public int paperyear (String paperid) {
-        paperid=paperid.substring(1, 2);
-        return Integer.parseInt("20"+paperid);
+    public static int paperYear(String paperId) {
+        paperId = paperId.substring(1, 2);
+        return Integer.parseInt("20" + paperId);
+    }
+
+    /**
+     * This method add Citation for paper
+     *
+     * @param paperId
+     * @return citation
+     * @throws java.io.FileNotFoundException
+     */
+    public static List<String> addCitation(String paperId) throws FileNotFoundException, IOException {
+        List<String> citation = new ArrayList<String>();
+        try (BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\Vinh\\Desktop\\Tailieuluanvan\\20100825-SchPaperRecData\\20100825-SchPaperRecData\\InterLink\\acl.20080325.net"))) {
+            String line = null;
+            while ((line = br.readLine()) != null) {
+                String[] str = line.split(" ==> ");
+                if (str[1].equals(paperId)) {
+                    citation.add(str[0]);
+                }
+            }
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+        return citation;
+    }
+
+    /**
+     * This method add Reference for paper
+     *
+     * @param paperId
+     * @return reference
+     * @throws java.io.FileNotFoundException
+     */
+    public static List<String> addReference(String paperId) throws FileNotFoundException, IOException {
+        List<String> reference = new ArrayList<String>();
+        try (BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\Vinh\\Desktop\\Tailieuluanvan\\20100825-SchPaperRecData\\20100825-SchPaperRecData\\InterLink\\acl.20080325.net"))) {
+            String line = null;
+            while ((line = br.readLine()) != null) {
+                String[] str = line.split(" ==> ");
+                if (str[0].equals(paperId)) {
+                    reference.add(str[1]);
+                }
+            }
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+        return reference;
     }
 }
