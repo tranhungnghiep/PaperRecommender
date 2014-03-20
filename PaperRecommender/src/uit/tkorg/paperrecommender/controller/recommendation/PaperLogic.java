@@ -4,6 +4,8 @@
  */
 package uit.tkorg.paperrecommender.controller.recommendation;
 
+import ir.vsr.HashMapVector;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import uit.tkorg.paperrecommender.model.Paper;
@@ -23,7 +25,7 @@ public class PaperLogic {
     /**
      * This method builds a hashmap of papers.
      */
-    public void buildListOfPapers() {
+    public void buildListOfPapers() throws IOException  {
         papers = ImportDataset1.buildListOfPapers();
     }
     
@@ -36,8 +38,8 @@ public class PaperLogic {
      * - 2: rpy
      * @return list represents feature vector.
      */
-    public List computePaperFeatureVector(String paperId, int weightingScheme) {
-        List fearureVector = null;
+    public HashMapVector computePaperFeatureVector(String paperId, int weightingScheme) {
+        HashMapVector fearureVector = null;
         // compute here.
         return fearureVector;
     }
