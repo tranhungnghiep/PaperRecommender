@@ -194,7 +194,7 @@ public class ImportDataset1 {
     /**
      * 
      * @param dir 
-     * @return groundTruth
+     * @return groundTruth of author
      * @throws FileNotFoundException
      * @throws IOException 
      */
@@ -229,17 +229,19 @@ public class ImportDataset1 {
         return fileGTruth;
     }
     /**
-     * Tim cac paper Cit  c?a tác gi?
+     * Tim cac paper Cit cua tac gia
      * @param dir
-     * @return list paper of authors
+     * @return list paper cit of authors
      * @throws FileNotFoundException
      * @throws IOException 
      */
-    public static List<String> findCitOfAuthor(File dir)throws FileNotFoundException, IOException
+    public static List<Paper> findCitOfAuthor(File dir)throws FileNotFoundException, IOException
     {
-        List <String> allCitRef = new ArrayList();
+        List <Paper> allCitRef = new ArrayList();
+        Paper paper =new Paper();
         File [] files= dir.listFiles();
         String name = null;
+        String pathVectorFv =null;// ten duong dan den vector dac trung cua paper
         for (int i = 0; i < files.length; i++) {
             if (files[i].isDirectory()) {
                 findCitOfAuthor(files[i]);
@@ -248,7 +250,10 @@ public class ImportDataset1 {
                     name =files[i].getName();
                     if(name== "*" +"cit"+ "*")
                     {
-                        allCitRef.add(name.replaceAll("_fv",""));
+                        pathVectorFv= files[i].getAbsolutePath();
+                        paper.setPaperId(name.replaceAll("_fv",""));
+                        paper.setContent(readFilePaper(new File(pathVectorFv)));
+                        allCitRef.add(paper);
                     }          
                 }
         }
@@ -257,16 +262,18 @@ public class ImportDataset1 {
     /**
      * Tim cac paper Ref cua tac gia
      * @param dir
-     * @return
+     * @return list cac paper ref cua paper
      * @throws FileNotFoundException
      * @throws IOException 
      */
-      public static List<String> findRefOfAuthor(File dir)throws FileNotFoundException, IOException
+  
+      public static List<Paper> findRefOfAuthor(File dir)throws FileNotFoundException, IOException
     {
-        List <String> allCitRef = new ArrayList();
+        List <Paper> allCitRef = new ArrayList();
         Paper paper =new Paper();
         File [] files= dir.listFiles();
         String name = null;
+        String pathVectorFv =null;// ten duong dan den vector dac trung cua paper
         for (int i = 0; i < files.length; i++) {
             if (files[i].isDirectory()) {
                 findRefOfAuthor(files[i]);
@@ -275,7 +282,10 @@ public class ImportDataset1 {
                     name =files[i].getName();
                     if(name== "*" +"ref"+ "*")
                     {
-                        allCitRef.add(name.replaceAll("_fv",""));
+                        pathVectorFv= files[i].getAbsolutePath();
+                        paper.setPaperId(name.replaceAll("_fv",""));
+                        paper.setContent(readFilePaper(new File(pathVectorFv)));
+                        allCitRef.add(paper);
                     }          
                 }
         }
@@ -328,7 +338,6 @@ public class ImportDataset1 {
      */
     public static void  readAllAuthor(File dir,HashMap<String,Author> authors) throws FileNotFoundException, IOException
     {
-        //HashMap<String, Author> authors = new HashMap<String, Author>();
         File [] files = dir.listFiles();
         String name= null;
         Author author = new Author();
@@ -348,14 +357,14 @@ public class ImportDataset1 {
                     case "y":
                         author.setAuthorId(name);
                         author.setAuthorType("Junior");
-                        author.setFeatureVector(null);// Tih vector d?c trung cho user
+                        author.setFeatureVector(null);// Tih vector dac trung cho user
                         author.setGroundTruth(findGroundTruth(files[i]));
                         author.setPaper(findPaperOfAuthor(files[i]));
                         break;
                     case "m":
                         author.setAuthorId(name);
                         author.setAuthorType("Senior");
-                        author.setFeatureVector(null);// Tih vector d?c trung cho user
+                        author.setFeatureVector(null);// Tih vector dac trung cho user
                         author.setGroundTruth(findGroundTruth(files[i]));
                         author.setPaper(findPaperOfAuthor(files[i]));
                         break;
