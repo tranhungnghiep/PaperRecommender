@@ -21,7 +21,7 @@ public class PaperRecommenerConstant {
     public static final String DATABASEMSSQLSERVER = "CSPublicationCrawler";
     public static final String USERNAMEMSSQLSERVER = "sa";
     public static final String PASSWORDMSSQLSERVER = "12345";
-
+   
     //public static final Level LOGGING_LEVEL = Level.ALL;
     public static final Level LOGGING_LEVEL = Level.WARNING;
 }

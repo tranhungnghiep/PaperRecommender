@@ -118,10 +118,9 @@ public class Importdata {
                     if (files[i].getAbsolutePath().indexOf(".txt") != -1) {
                         BufferedReader br = new BufferedReader(new FileReader(files[i].getAbsolutePath()));
                     try {
-                        String line = br.readLine();
-                        while (line != null) {
-                            line = br.readLine();
-                            if (line != null) {
+                        String line ;
+                        while ( (line=br.readLine()) != null) {
+                          
                                 String[] str = line.split(" ");
                                 if (str.length == 2) {
                               // idkey_word = Integer.valueOf(str[0]);
@@ -131,7 +130,7 @@ public class Importdata {
                                 } else {
                                     break;
                                 }
-                            }
+                            
                         }
                         } catch (Exception e) {
                             System.out.println("0000 "+e.getMessage());
