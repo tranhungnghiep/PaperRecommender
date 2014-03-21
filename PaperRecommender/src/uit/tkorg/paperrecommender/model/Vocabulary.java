@@ -25,6 +25,13 @@ public class Vocabulary implements Serializable{
     private List vocabulary;
 
     /**
+     * Default constructor used for serializable.
+     */
+    public void Vocabulary() {
+        vocabulary = new ArrayList();
+    }
+    
+    /**
      * @return the vocabulary
      */
     public List getVocabulary() {
@@ -36,13 +43,6 @@ public class Vocabulary implements Serializable{
      */
     public void setVocabulary(List vocabulary) {
         this.vocabulary = vocabulary;
-    }
-    
-    /**
-     * Default constructor.
-     */
-    public void Vocabulary() {
-        vocabulary = new ArrayList();
     }
     
     /**

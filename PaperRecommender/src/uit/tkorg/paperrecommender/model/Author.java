@@ -5,6 +5,7 @@
 package uit.tkorg.paperrecommender.model;
 
 import ir.vsr.HashMapVector;
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -14,12 +15,23 @@ import java.util.List;
  * Data: author id, author type, list of ground-truth papers to recommend (List<String> of paper ids), 
  * list of papers of author (List<Paper>), each paper in list of papers of author has list of citation and reference papers.
  */
-public class Author {
+public class Author implements Serializable {
     private String authorId;
     private String authorType;
     private List groundTruth;
     private List paper;
     private HashMapVector featureVector;
+
+    /**
+     * Default constructor used for serializable.
+     */
+    public Author() {
+        this.authorId = null;
+        this.authorType = null;
+        this.groundTruth = null;
+        this.paper = null;
+        this.featureVector = null;
+    }
 
     /**
      * @return the authorId

@@ -5,6 +5,7 @@
 package uit.tkorg.paperrecommender.model;
 
 import ir.vsr.HashMapVector;
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -20,7 +21,7 @@ import java.util.List;
  * - if the paper is citation or reference paper of author: no list of citation, reference.
  * Note: For a specific paper type, some data are absent.
  */
-public class Paper {
+public class Paper implements Serializable {
     private String paperId;
     private String title;
     private int year;
@@ -29,6 +30,20 @@ public class Paper {
     private List citation;
     private List reference;
     private HashMapVector featureVector;
+
+    /**
+     * Default constructor used for serializable.
+     */
+    public Paper() {
+        this.paperId = null;
+        this.title = null;
+        this.year = 0;
+        this.paperType = null;
+        this.content = null;
+        this.citation = null;
+        this.reference = null;
+        this.featureVector = null;
+    }
 
     /**
      * @return the paperId

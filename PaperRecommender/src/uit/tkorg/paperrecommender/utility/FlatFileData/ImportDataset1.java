@@ -337,7 +337,6 @@ public class ImportDataset1 {
         File[] files = dir.listFiles();
         String name = null;
         Author author = new Author();
-        List<String> listName = new ArrayList();
         for (File file : files) {
             if (file.isDirectory()) {
                 name = file.getName();
@@ -346,14 +345,12 @@ public class ImportDataset1 {
                     case "y":
                         author.setAuthorId(name);
                         author.setAuthorType("Junior");
-                        author.setFeatureVector(null);// Tih vector dac trung cho user
                         author.setGroundTruth(findGroundTruth(file));
                         author.setPaper(findPaperOfAuthor(file));
                         break;
                     case "m":
                         author.setAuthorId(name);
                         author.setAuthorType("Senior");
-                        author.setFeatureVector(null);// Tih vector dac trung cho user
                         author.setGroundTruth(findGroundTruth(file));
                         author.setPaper(findPaperOfAuthor(file));
                         break;
@@ -366,7 +363,7 @@ public class ImportDataset1 {
     }
 
     public static HashMap<String, Author> buildListOfAuthors() throws IOException {
-        HashMap<String, Author> authors = new HashMap<String, Author>();
+        HashMap<String, Author> authors = new HashMap();
         readAllAuthor(new File(PaperRecommenerConstant.DATASETFOLDER + "\\JuniorR|SeniorR"), authors);
         return authors;
     }
