@@ -251,7 +251,7 @@ public class ImportDataset1 {
                     if(name== "*" +"cit"+ "*")
                     {
                         pathVectorFv= files[i].getAbsolutePath();
-                        paper.setPaperId(name.replaceAll("_fv",""));
+                        paper.setPaperId(name.replaceAll("_fv.txt",""));
                         paper.setContent(readFilePaper(new File(pathVectorFv)));
                         allCitRef.add(paper);
                     }          
@@ -283,7 +283,7 @@ public class ImportDataset1 {
                     if(name== "*" +"ref"+ "*")
                     {
                         pathVectorFv= files[i].getAbsolutePath();
-                        paper.setPaperId(name.replaceAll("_fv",""));
+                        paper.setPaperId(name.replaceAll("_fv.txt",""));
                         paper.setContent(readFilePaper(new File(pathVectorFv)));
                         allCitRef.add(paper);
                     }          
