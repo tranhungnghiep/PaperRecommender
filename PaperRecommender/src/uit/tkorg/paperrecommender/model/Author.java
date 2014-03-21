@@ -16,8 +16,8 @@ import java.util.List;
  */
 public class Author {
     private String authorId;
-    private String authorType; // Junior or Senior.
-    private List groundTruth; // List of String paper id.
+    private String authorType;
+    private List groundTruth;
     private List paper;
     private HashMapVector featureVector;
 

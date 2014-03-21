@@ -55,7 +55,7 @@ public class ImportDataset1 {
     }
 
     /**
-     * 
+     *
      * @param dir
      * @return listfile
      */
@@ -81,6 +81,7 @@ public class ImportDataset1 {
      * paper, create a Paper object and put it in the hashmap.
      *
      * HashMap Key: paper id (in file name) HashMap Value: paper object.
+     *
      * @return the hashmap contents all papers.
      * @throws java.io.IOException
      */
@@ -121,7 +122,7 @@ public class ImportDataset1 {
      * @throws java.io.FileNotFoundException
      */
     public static HashMapVector readFilePaper(File file) throws FileNotFoundException, IOException {
-        HashMapVector content=new HashMapVector();
+        HashMapVector content = new HashMapVector();
         String path = file.getAbsolutePath();
         try (BufferedReader br = new BufferedReader(new FileReader(path))) {
             String line = null;
@@ -193,12 +194,127 @@ public class ImportDataset1 {
     }
 
     /**
-     * 
+     * This method build list of authors
+     *
      * @return authors
      */
     public static HashMap<String, Author> buildListOfAuthors() {
         HashMap<String, Author> authors = new HashMap<String, Author>();
-        // code here.
+        //junior authors
+        //senior authors
         return authors;
+    }
+
+    /**
+     * This method get author list
+     *
+     * @param authors
+     * @param dir
+     * @return authors
+     */
+    public static HashMap<String, Author> readAllAuthors(HashMap<String, Author> authors, File dir) {
+        List authordirs = new ArrayList();
+        File[] files = dir.listFiles();//Get list of all files and folders in directory
+        for (File file : files) {
+            Author author = new Author();//initial an author
+            author.setAuthorId(file.getName());//set AuthorId
+            //set AuthoType
+            if (file.getName().contains("y")) {
+                author.setAuthorType("Junior");
+            } else {
+                author.setAuthorType("Senior");
+            }
+            authordirs = getAllPaperFilesOfAuthor(file.getAbsoluteFile());
+            //set paper of a author
+            //set ground truth
+            authors.put(file.getName(), author);
+        }
+        return authors;
+    }
+
+    /**
+     * This method get all paper files which relevant with an author
+     *
+     * @param dir
+     * @return paperfiles
+     */
+    public static List getAllPaperFilesOfAuthor(File dir) {
+        List paperfiles = new ArrayList();
+        File[] files = dir.listFiles();//Get list of all folders in a directory
+        for (File file : files) {
+            if (file.isDirectory()) {
+                getAllPaperFilesOfAuthor(file);
+            } else {
+                paperfiles.add(file.getAbsolutePath());
+            }
+        }
+        return paperfiles;
+    }
+
+    /**
+     * This method set groundTruth List of Author
+     *
+     * @param file
+     * @return groundTruth
+     */
+    public static List groundTruthList(File file) {
+        List groundTruth = new ArrayList();
+        String path = file.getAbsolutePath();
+        try (BufferedReader br = new BufferedReader(new FileReader(path))) {
+            String line = null;
+            while ((line = br.readLine()) != null) {
+                groundTruth.add(line);
+            }
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+        return groundTruth;
+    }
+
+    /**
+     * This method add papers list for author
+     *
+     * @param author
+     * @param authordirs
+     * @return paperlist
+     */
+    public static List addPaperList(Author author, List authordirs) {
+        List paperlist = new ArrayList();
+        for (Iterator it = authordirs.iterator(); it.hasNext();) {
+            String link = (String) it.next();
+            //duyet ơ day
+            Paper paper = new Paper();
+            paper = setDataOfPaper(author, link);
+            paperlist.add(paper);
+        }
+        return paperlist;
+    }
+
+    /**
+     * This method set data of a paper
+     *
+     * @param author
+     * @param link
+     * @return paper
+     */
+    public static Paper setDataOfPaper(Author author, String link) {
+        Paper paper = new Paper();
+        List citation=new ArrayList();
+        List reference=new ArrayList();
+        if (!link.contains("rlv")) {
+            paper.setPaperId(link.replaceAll("_fv.txt", ""));
+            if (link.contains("ref")) {
+                paper.setPaperType("reference");
+                reference.add(link.replaceAll("_fv.txt", ""));
+            } else if (link.contains("cit")) {
+                paper.setPaperType("citation");
+                citation.add(link.replaceAll("_fv.txt", ""));
+            } else {
+                paper.setPaperType("paper of author");
+            }
+        } else {
+            author.setGroundTruth(groundTruthList(new File(link)));
+        }
+        return paper;
     }
 }
