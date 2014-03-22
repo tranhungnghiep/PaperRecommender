@@ -6,6 +6,7 @@ package uit.tkorg.paperrecommender.controller.recommendation;
 
 import ir.vsr.HashMapVector;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -20,11 +21,15 @@ import uit.tkorg.paperrecommender.utility.Weighting;
  * Generate list of papers (key: paper id, value: object paper). - Compute
  * papers' full vector: linear, cosine, rpy.
  */
-public class PaperLogic {
+public class PaperLogic implements Serializable {
 
     // Key of this hash map is paper id.
     // Value of this hash map is the relevant paper object.
     private HashMap<String, Paper> papers;
+
+    public PaperLogic(HashMap<String, Paper> papers) {
+        this.papers = papers;
+    }
 
     /**
      * @return the papers
