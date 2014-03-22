@@ -378,7 +378,6 @@ public class ImportDataset1 {
     public static HashMap<String, Author> buildListOfAuthors() throws IOException {
         HashMap<String, Author> authors = new HashMap();
         authors = readAllAuthor(new File(PaperRecommenerConstant.DATASETFOLDER ));
-      
         return authors;
     }
 
