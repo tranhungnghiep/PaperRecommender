@@ -17,9 +17,11 @@ import uit.tkorg.paperrecommender.utility.Weighting;
 
 /**
  *
- * @author THNghiep This class handles all logics for paper object. Method: -
- * Generate list of papers (key: paper id, value: object paper). - Compute
- * papers' full vector: linear, cosine, rpy.
+ * @author THNghiep 
+ * This class handles all logics for paper object. 
+ * Method: 
+ * - Generate list of papers (key: paper id, value: object paper). 
+ * - Compute papers' full vector: linear, cosine, rpy.
  */
 public class PaperLogic implements Serializable {
 
@@ -59,11 +61,11 @@ public class PaperLogic implements Serializable {
      * (after combining citation and reference papers).
      *
      * @param paperId
-     * @param weightScheme
+     * @param weightingScheme
      */
-    public void computeAllPapersFeatureVector(String paperId, int weightScheme) {
-        for (String entry : getPapers().keySet()) {
-            papers.get(entry).setFeatureVector(computePaperFeatureVector(paperId, weightScheme));
+    public void computeAllPapersFeatureVector(int weightingScheme) {
+        for (String key : getPapers().keySet()) {
+            papers.get(key).setFeatureVector(computePaperFeatureVector(papers.get(key).getPaperId(), weightingScheme));
         }
     }
 
