@@ -56,7 +56,6 @@ public class AuthorLogic implements Serializable {
      * This method computes and set value for all authors' full feature vector
      * (after combining citation and reference papers).
      *
-     * @param authorId
      * @param weightingScheme 0: linear; 1: cosine; 2: rpy
      */
     public void computeAllPapersFeatureVector(int weightingScheme) {
@@ -77,21 +76,21 @@ public class AuthorLogic implements Serializable {
         HashMapVector featureVector = null;
         if (weightingScheme == 0) {
             if (authorId.contains("y")) {
-                computeJuniorFeatureVectorWithLinear(authorId);
+                featureVector=computeJuniorFeatureVectorWithLinear(authorId);
             } else {
-                computeSeniorFeatureVectorWithLinear(authorId);
+                featureVector=computeSeniorFeatureVectorWithLinear(authorId);
             }
         } else if (weightingScheme == 1) {
             if (authorId.contains("y")) {
-                computeJuniorFeatureVectorWithCosine(authorId);
+                featureVector=computeJuniorFeatureVectorWithCosine(authorId);
             } else {
-                computeSeniorFeatureVectorWithCosine(authorId);
+                featureVector=computeSeniorFeatureVectorWithCosine(authorId);
             }
         } else {
             if (authorId.contains("y")) {
-                computeJuniorFeatureVectorWithRPY(authorId);
+                featureVector=computeJuniorFeatureVectorWithRPY(authorId);
             } else {
-                computeSeniorFeatureVectorWithRPY(authorId);
+                featureVector=computeSeniorFeatureVectorWithRPY(authorId);
             }
         }
         return featureVector;
@@ -150,7 +149,7 @@ public class AuthorLogic implements Serializable {
     //======================================================================================================================================================
 
     /**
-     * This method compute Junior Feature Vector with linear weight
+     * This method compute Senior Feature Vector with linear weight
      *
      * @param authorId
      * @return featureVector
@@ -171,7 +170,7 @@ public class AuthorLogic implements Serializable {
     }
 
     /**
-     * This method compute Junior Feature Vector with cosine weight
+     * This method compute Senior Feature Vector with cosine weight
      *
      * @param authorId
      * @return featureVector
@@ -192,7 +191,7 @@ public class AuthorLogic implements Serializable {
     }
 
     /**
-     * This method compute Junior Feature Vector with RPY weight
+     * This method compute Senior Feature Vector with RPY weight
      *
      * @param authorId
      * @return featureVector

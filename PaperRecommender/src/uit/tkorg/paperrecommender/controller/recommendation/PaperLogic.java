@@ -7,10 +7,8 @@ package uit.tkorg.paperrecommender.controller.recommendation;
 import ir.vsr.HashMapVector;
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
 import uit.tkorg.paperrecommender.model.Paper;
 import uit.tkorg.paperrecommender.utility.FlatFileData.ImportDataset1;
 import uit.tkorg.paperrecommender.utility.Weighting;
@@ -60,7 +58,6 @@ public class PaperLogic implements Serializable {
      * This method computes and set value for all papers' full feature vector
      * (after combining citation and reference papers).
      *
-     * @param paperId
      * @param weightingScheme
      */
     public void computeAllPapersFeatureVector(int weightingScheme) {
