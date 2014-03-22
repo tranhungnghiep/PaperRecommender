@@ -55,7 +55,7 @@ public class ImportDataset1 {
     /**
      *
      * @param dir
-     * @return listfile
+     * @return list file
      */
     public static List<String> getPathFile(File dir) {
         File[] files = dir.listFiles();
@@ -193,15 +193,14 @@ public class ImportDataset1 {
     }
 
     /**
-     *
+     * This is method find list paper ground truth of Author
      * @param dir
-     * @return groundTruth of author
+     * @return a string is groundTruth of author
      * @throws FileNotFoundException
      * @throws IOException
      */
-    // Phuong thuc tim groundTruth cua Auhtor
     public static List<String> findGroundTruth(File dir) throws FileNotFoundException, IOException {
-        List<String> fileGTruth = new ArrayList();
+        List<String> fileTruth = new ArrayList();
         File[] files = dir.listFiles();
         String name = null;
         for (File file1 : files) {
@@ -210,27 +209,27 @@ public class ImportDataset1 {
             } else if (file1.isFile()) {
                 name = file1.getName().toString();
             }
-            if (name== "*".concat("-rlv.txt")) {
+            if (name.equals("*".concat("-rlv.txt"))) {
                 try {
                     FileReader file = new FileReader(file1.getAbsoluteFile());
                     BufferedReader textReader = new BufferedReader(file);
                     String line;
                     while ((line = textReader.readLine()) != null) {
-                        fileGTruth.add(line);
+                        fileTruth.add(line);
                     }
                 }catch (IOException ex) {
                     System.out.println(ex.getMessage());
                 }
             }
         }
-        return fileGTruth;
+        return fileTruth;
     }
 
     /**
-     * Tim cac paper Cit cua tac gia
+     * This is method find list paper citation of author
      *
      * @param dir
-     * @return list paper cit of authors
+     * @return list<paper> cit of authors
      * @throws FileNotFoundException
      * @throws IOException
      */
@@ -257,17 +256,16 @@ public class ImportDataset1 {
     }
 
     /**
-     * Tim cac paper Ref cua tac gia
+     * This is method find all paper reference of author
      *
      * @param dir
-     * @return list cac paper ref cua paper
+     * @return list<paper> reference of author
      * @throws FileNotFoundException
      * @throws IOException
      */
 
     public static List<Paper> findRefOfAuthor(File dir) throws FileNotFoundException, IOException {
         List<Paper> allCitRef = new ArrayList();
-      //  Paper paper = new Paper();
         File[] files = dir.listFiles();
         String name = null;
         String pathVectorFv = null;// ten duong dan den vector dac trung cua paper
@@ -289,10 +287,10 @@ public class ImportDataset1 {
     }
 
     /**
-     * Tim danh sach các paper cua tac gia
+     * This is method find all paper of author
      *
      * @param dir
-     * @return
+     * @return list <paper> of author
      * @throws FileNotFoundException
      * @throws IOException
      */
@@ -311,14 +309,9 @@ public class ImportDataset1 {
             switch (name) {
                 case "y":
                     paper.setPaperId(file.getName().concat("-1")); // set id paper i cua Senior
-                  //  paper.setReference(findRefOfAuthor(file)); // set List ref cua paper i
-                   // paper.setContent(readFilePaper(new File(pathVectorFv)));// set content cho paper i
                     break;
                 case "m":
                     paper.setPaperId(file.getName()); // set id paper i cua Senior
-                   // paper.setCitation(findCitOfAuthor(file)); // set List cit cua  paper i
-                   // paper.setReference(findRefOfAuthor(file)); // set List ref cua paper i
-                  //  paper.setContent(readFilePaper(new File(pathVectorFv)));// set content cho paper i
                     break;
                 default:
                     break;
@@ -332,7 +325,7 @@ public class ImportDataset1 {
     }
 
     /**
-     * Doc danh sach tat ca cac tac gia
+     * This is method read all author
      *
      * @param dir
      * @param authors
@@ -349,20 +342,16 @@ public class ImportDataset1 {
             if (file.isDirectory()) {
                 name = file.getName();
                 String typeAuthor = name.substring(0, 1);
-                if (typeAuthor!= "y|m")readAllAuthor(file);
+                if (!"y".equals(typeAuthor) || !"m".equals(typeAuthor))readAllAuthor(file);
                 else    
                 switch (typeAuthor) {
                     case "y":
                         author.setAuthorId(name);
                         author.setAuthorType("Junior");
-                      ///  author.setGroundTruth(findGroundTruth(file));
-                        //author.setPaper(findPaperOfAuthor(file));
                         break;
                     case "m":
                         author.setAuthorId(name);
                         author.setAuthorType("Senior");
-                       // author.setGroundTruth(findGroundTruth(file));
-                       // author.setPaper(findPaperOfAuthor(file));
                         break;
                     default:
                         break;
