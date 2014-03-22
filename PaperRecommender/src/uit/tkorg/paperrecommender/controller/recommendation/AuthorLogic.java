@@ -16,8 +16,11 @@ import uit.tkorg.paperrecommender.utility.FlatFileData.ImportDataset1;
 import uit.tkorg.paperrecommender.utility.Weighting;
 
 /**
- * This class handles all logics for author object. Data: List of author: junior
- * and senior. Method: - Build list authors. - Compute author feature vector.
+ * This class handles all logics for author object. 
+ * Data: List of author: junior and senior. 
+ * Method: 
+ * - Build list authors. 
+ * - Compute author feature vector.
  *
  * @author THNghiep
  */
@@ -54,11 +57,11 @@ public class AuthorLogic implements Serializable {
      * (after combining citation and reference papers).
      *
      * @param authorId
-     * @param weightScheme 0: linear; 1: cosine; 2: rpy
+     * @param weightingScheme 0: linear; 1: cosine; 2: rpy
      */
-    public void computeAllPapersFeatureVector(String authorId, int weightScheme) {
-        for (String entry : getAuthors().keySet()) {
-            getAuthors().get(entry).setFeatureVector(computeAuthorFeatureVector(authorId, weightScheme));
+    public void computeAllPapersFeatureVector(int weightingScheme) {
+        for (String key : authors.keySet()) {
+            authors.get(key).setFeatureVector(computeAuthorFeatureVector(authors.get(key).getAuthorId(), weightingScheme));
         }
     }
 
@@ -102,11 +105,11 @@ public class AuthorLogic implements Serializable {
      */
     public HashMapVector computeJuniorFeatureVectorWithLinear(String authorId) {
         HashMapVector featureVector = new HashMapVector();
-        Paper authorpaper = new Paper();
+        Paper authorPaper = new Paper();
         Author author = getAuthors().get(authorId);//get author has Id equally authorId in ListofPapers
-        authorpaper = (Paper) author.getPaper().get(0);//get paper of junior researchers 
-        featureVector = authorpaper.getContent();
-        List reference = authorpaper.getReference();//get list of reference papers of author's paper 
+        authorPaper = (Paper) author.getPaper().get(0);//get paper of junior researchers 
+        featureVector = authorPaper.getContent();
+        List reference = authorPaper.getReference();//get list of reference papers of author's paper 
         featureVector.add(sumFeatureVectorWithLinear(reference));//add featureVector with featureVector of reference papers of author's paper 
         return featureVector;
     }
@@ -119,12 +122,12 @@ public class AuthorLogic implements Serializable {
      */
     public HashMapVector computeJuniorFeatureVectorWithCosine(String authorId) {
         HashMapVector featureVector = new HashMapVector();
-        Paper authorpaper = new Paper();
+        Paper authorPaper = new Paper();
         Author author = getAuthors().get(authorId);//get author has Id equally authorId in ListofPapers
-        authorpaper = (Paper) author.getPaper().get(0);//get paper of junior researchers 
-        featureVector = authorpaper.getContent();
-        List reference = authorpaper.getReference();//get list of reference papers of author's paper 
-        featureVector.add(sumFeatureVectorWithCosine(authorpaper, reference));//add featureVector with featureVector of reference papers of author's paper 
+        authorPaper = (Paper) author.getPaper().get(0);//get paper of junior researchers 
+        featureVector = authorPaper.getContent();
+        List reference = authorPaper.getReference();//get list of reference papers of author's paper 
+        featureVector.add(sumFeatureVectorWithCosine(authorPaper, reference));//add featureVector with featureVector of reference papers of author's paper 
         return featureVector;
     }
 
@@ -136,12 +139,12 @@ public class AuthorLogic implements Serializable {
      */
     public HashMapVector computeJuniorFeatureVectorWithRPY(String authorId) {
         HashMapVector featureVector = new HashMapVector();
-        Paper authorpaper = new Paper();
+        Paper authorPaper = new Paper();
         Author author = getAuthors().get(authorId);//get author has Id equally authorId in ListofPapers
-        authorpaper = (Paper) author.getPaper().get(0);//get paper of junior researchers 
-        featureVector = authorpaper.getContent();
-        List reference = authorpaper.getReference();//get list of reference papers of author's paper 
-        featureVector.add(sumFeatureVectorWithRPY(authorpaper, reference));//add featureVector with featureVector of reference papers of author's paper 
+        authorPaper = (Paper) author.getPaper().get(0);//get paper of junior researchers 
+        featureVector = authorPaper.getContent();
+        List reference = authorPaper.getReference();//get list of reference papers of author's paper 
+        featureVector.add(sumFeatureVectorWithRPY(authorPaper, reference));//add featureVector with featureVector of reference papers of author's paper 
         return featureVector;
     }
     //======================================================================================================================================================
@@ -154,12 +157,12 @@ public class AuthorLogic implements Serializable {
      */
     public HashMapVector computeSeniorFeatureVectorWithLinear(String authorId) {
         HashMapVector featureVector = new HashMapVector();
-        List<Paper> authorpapers = new ArrayList();
+        List<Paper> authorPapers = new ArrayList();
         Author author = getAuthors().get(authorId);//get author has Id equally authorId in ListofPapers
-        authorpapers = author.getPaper();//get list of papers of senior researchers 
-        for (Paper paper : authorpapers) {
+        authorPapers = author.getPaper();//get list of papers of senior researchers 
+        for (Paper paper : authorPapers) {
             featureVector.add(paper.getContent());
-            List citation = paper.getReference();//get list of citation papers of author's paper 
+            List citation = paper.getCitation();//get list of citation papers of author's paper 
             featureVector.add(sumFeatureVectorWithLinear(citation));//add featureVector with featureVector of citation papers of author's paper 
             List reference = paper.getReference();//get list of reference papers of author's paper 
             featureVector.add(sumFeatureVectorWithLinear(reference));//add featureVector with featureVector of reference papers of author's paper 
@@ -175,12 +178,12 @@ public class AuthorLogic implements Serializable {
      */
     public HashMapVector computeSeniorFeatureVectorWithCosine(String authorId) {
         HashMapVector featureVector = new HashMapVector();
-        List<Paper> authorpapers = new ArrayList();
+        List<Paper> authorPapers = new ArrayList();
         Author author = getAuthors().get(authorId);//get author has Id equally authorId in ListofPapers
-        authorpapers = author.getPaper();//get list of papers of senior researchers 
-        for (Paper paper : authorpapers) {
+        authorPapers = author.getPaper();//get list of papers of senior researchers 
+        for (Paper paper : authorPapers) {
             featureVector.add(paper.getContent());
-            List citation = paper.getReference();//get list of citation papers of author's paper 
+            List citation = paper.getCitation();//get list of citation papers of author's paper 
             featureVector.add(sumFeatureVectorWithCosine(paper, citation));//add featureVector with featureVector of citation papers of author's paper 
             List reference = paper.getReference();//get list of reference papers of author's paper 
             featureVector.add(sumFeatureVectorWithCosine(paper, reference));//add featureVector with featureVector of reference papers of author's paper 
@@ -196,12 +199,12 @@ public class AuthorLogic implements Serializable {
      */
     public HashMapVector computeSeniorFeatureVectorWithRPY(String authorId) {
         HashMapVector featureVector = new HashMapVector();
-        List<Paper> authorpapers = new ArrayList();
+        List<Paper> authorPapers = new ArrayList();
         Author author = getAuthors().get(authorId);//get author has Id equally authorId in ListofPapers
-        authorpapers = author.getPaper();//get list of papers of senior researchers 
-        for (Paper paper : authorpapers) {
+        authorPapers = author.getPaper();//get list of papers of senior researchers 
+        for (Paper paper : authorPapers) {
             featureVector.add(paper.getContent());
-            List citation = paper.getReference();//get list of citation papers of author's paper 
+            List citation = paper.getCitation();//get list of citation papers of author's paper 
             featureVector.add(sumFeatureVectorWithRPY(paper, citation));//add featureVector with featureVector of citation papers of author's paper 
             List reference = paper.getReference();//get list of reference papers of author's paper 
             featureVector.add(sumFeatureVectorWithRPY(paper, reference));//add featureVector with featureVector of reference papers of author's paper 
