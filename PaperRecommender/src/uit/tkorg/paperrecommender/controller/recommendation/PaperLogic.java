@@ -24,7 +24,7 @@ public class PaperLogic {
 
     // Key of this hash map is paper id.
     // Value of this hash map is the relevant paper object.
-    private HashMap<String, Paper> papers = null;
+    private HashMap<String, Paper> papers;
 
     /**
      * @return the papers

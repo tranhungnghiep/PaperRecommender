@@ -6,6 +6,7 @@ package uit.tkorg.paperrecommender.controller.recommendation;
 
 import ir.vsr.HashMapVector;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -20,11 +21,15 @@ import uit.tkorg.paperrecommender.utility.Weighting;
  *
  * @author THNghiep
  */
-public class AuthorLogic {
+public class AuthorLogic implements Serializable {
 
     // Key of this hash map is paper id.
     // Value of this hash map is the relevant paper object.
-    private HashMap<String, Author> authors = null;
+    private HashMap<String, Author> authors;
+
+    public AuthorLogic() {
+        this.authors = null;
+    }
 
     /**
      * @return the authors
@@ -53,7 +58,7 @@ public class AuthorLogic {
      */
     public void computeAllPapersFeatureVector(String authorId, int weightScheme) {
         for (String entry : getAuthors().keySet()) {
-            authors.get(entry).setFeatureVector(computeAuthorFeatureVector(authorId, weightScheme));
+            getAuthors().get(entry).setFeatureVector(computeAuthorFeatureVector(authorId, weightScheme));
         }
     }
 
@@ -252,5 +257,4 @@ public class AuthorLogic {
         }
         return featureVector;
     }
-
 }

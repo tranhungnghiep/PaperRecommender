@@ -4,6 +4,7 @@
  */
 package uit.tkorg.paperrecommender.controller.recommendation;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -15,14 +16,22 @@ import uit.tkorg.paperrecommender.utility.Weighting;
 
 /**
  * This class handles logic for recommending papers to each author.
- * Data: none.
+ * Data: list of authors used as a universal recommendation list.
  * Method: 
  * - buildAllRecommendationLists: 
  * + input: list of authors, list of papers.
  * + output: list of authors with recommendation list included, also includes all data of the input list of authors.
+ * This output could be used as universal recommendation list, upto the input list of authors.
  * @author THNghiep
  */
-public class Recommender {
+public class Recommender implements Serializable {
+    // contents recommendation list.
+    private HashMap<String, Author> authors;
+
+    public Recommender() {
+        this.authors = null;
+    }
+
     /**
      * This method runs recommendation business.
      * @param authorsInput
@@ -32,17 +41,15 @@ public class Recommender {
      * + Sort list of papers, based on similarity.
      * + Take top ten papers with highest similarity for the recommendation list.
      * + Save recommendation list into current author.
-     * - Finish all authors, return the hashmap.
-     * @return authors: list of authors with all input data plus recommendation list.
+     * - Finish all authors, finish the hashmap of authors with all input data plus recommendation list.
      */
-    public HashMap<String, Author> buildAllRecommendationLists(HashMap authorsInput, HashMap papers) {
-        HashMap<String, Author> authors = new HashMap(authorsInput);
+    public void buildAllRecommendationLists(HashMap authorsInput, HashMap papers) {
+        setAuthors((HashMap<String, Author>) new HashMap(authorsInput));
         List<String> recommendationPapers = null;
-        for (String key : authors.keySet()) {
-            recommendationPapers = buildRecommdationList(authors.get(key), papers);
-            authors.get(key).setRecommendation(recommendationPapers);
+        for (String key : getAuthors().keySet()) {
+            recommendationPapers = buildRecommdationList(getAuthors().get(key), papers);
+            getAuthors().get(key).setRecommendation(recommendationPapers);
         }
-        return authors;
     }
 
     /**
@@ -75,6 +82,20 @@ public class Recommender {
         }
         
         return recommendationPapers;
+    }
+
+    /**
+     * @return the authors
+     */
+    public HashMap<String, Author> getAuthors() {
+        return authors;
+    }
+
+    /**
+     * @param authors the authors to set
+     */
+    public void setAuthors(HashMap<String, Author> authors) {
+        this.authors = authors;
     }
     
 }
