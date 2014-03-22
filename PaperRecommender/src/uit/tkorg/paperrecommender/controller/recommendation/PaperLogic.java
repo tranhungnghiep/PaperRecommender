@@ -25,10 +25,10 @@ public class PaperLogic {
     // Key of this hash map is paper id.
     // Value of this hash map is the relevant paper object.
     HashMap<String, Paper> papers = null;
-    
+
     //List feature vector of all papers
-    List<HashMapVector> allfeaturevectors=new ArrayList();
-    
+    HashMap<String, HashMapVector> allfeaturevectors = new HashMap<String, HashMapVector>();
+
     /**
      * This method builds a hashmap of papers.
      *
@@ -46,8 +46,8 @@ public class PaperLogic {
      * @param weightingScheme 0: linear; 1: cosine; 2: rpy
      */
     public void computeAllPapersFeatureVector(String paperId, int weightScheme) {
-        for(String entry:papers.keySet()){
-            allfeaturevectors.add(computePaperFeatureVector(papers.get(entry).getPaperId(), weightScheme));
+        for (String entry : papers.keySet()) {
+            allfeaturevectors.put(entry, computePaperFeatureVector(papers.get(entry).getPaperId(), weightScheme));
         }
     }
 

@@ -25,9 +25,9 @@ public class AuthorLogic {
     // Key of this hash map is paper id.
     // Value of this hash map is the relevant paper object.
     HashMap<String, Author> authors = null;
-    
-    //List feature vector of all authors
-    List<HashMapVector> allfeaturevectors = new ArrayList();    
+
+    //List feature vectors of all authors
+    HashMap<String, HashMapVector> allfeaturevectors = new HashMap<String, HashMapVector>();
 
     public void buildListOfAuthors() throws IOException {
         authors = ImportDataset1.buildListOfAuthors();
@@ -37,12 +37,12 @@ public class AuthorLogic {
      * This method computes and set value for all authors' full feature vector
      * (after combining citation and reference papers).
      *
-     * @param paperId
-     * @param weightingScheme 0: linear; 1: cosine; 2: rpy
+     * @param authorId
+     * @param weightScheme 0: linear; 1: cosine; 2: rpy
      */
     public void computeAllPapersFeatureVector(String authorId, int weightScheme) {
         for (String entry : authors.keySet()) {
-            allfeaturevectors.add(computeAuthorFeatureVector(authors.get(entry).getAuthorId(), weightScheme));
+            allfeaturevectors.put(entry, computeAuthorFeatureVector(authors.get(entry).getAuthorId(), weightScheme));
         }
     }
 
