@@ -302,7 +302,7 @@ public class ImportDataset1 {
         String name = null;
         String pathVectorFv = null;// ten duong dan den vector dac trung cua paper
         for (File file : files) {
-            name = file.getName().substring(1, 1); // lay ky tu dau cua ten de xet la Junior hay Senior
+            name = file.getName().substring(0, 1); // lay ky tu dau cua ten de xet la Junior hay Senior
             pathVectorFv = file.getAbsolutePath() + "\\".concat(file.getName()).concat("_fv"); //ten duong dan den den file chua vector dac trung cua paper i
             switch (name) {
                 case "y":
@@ -363,7 +363,7 @@ public class ImportDataset1 {
 
     public static HashMap<String, Author> buildListOfAuthors() throws IOException {
         HashMap<String, Author> authors = new HashMap();
-        readAllAuthor(new File(PaperRecommenerConstant.DATASETFOLDER + "\\JuniorR|SeniorR"), authors);
+        readAllAuthor(new File(PaperRecommenerConstant.DATASETFOLDER ), authors);
         return authors;
     }
 
