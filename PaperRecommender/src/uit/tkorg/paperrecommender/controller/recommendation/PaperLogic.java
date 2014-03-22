@@ -40,9 +40,6 @@ public class PaperLogic {
         this.papers = papers;
     }
 
-    //List feature vector of all papers
-    HashMap<String, HashMapVector> allfeaturevectors = new HashMap<String, HashMapVector>();
-
     /**
      * This method builds a hashmap of papers.
      *
@@ -57,11 +54,11 @@ public class PaperLogic {
      * (after combining citation and reference papers).
      *
      * @param paperId
-     * @param weightingScheme 0: linear; 1: cosine; 2: rpy
+     * @param weightScheme
      */
     public void computeAllPapersFeatureVector(String paperId, int weightScheme) {
         for (String entry : getPapers().keySet()) {
-            allfeaturevectors.put(entry, computePaperFeatureVector(getPapers().get(entry).getPaperId(), weightScheme));
+            papers.get(entry).setFeatureVector(computePaperFeatureVector(paperId, weightScheme));
         }
     }
 
@@ -188,5 +185,4 @@ public class PaperLogic {
         }
         return featureVector;
     }
-
 }

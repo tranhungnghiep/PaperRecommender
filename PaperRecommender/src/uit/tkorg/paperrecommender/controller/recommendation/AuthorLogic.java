@@ -40,9 +40,6 @@ public class AuthorLogic {
         this.authors = authors;
     }
 
-    //List feature vectors of all authors
-    HashMap<String, HashMapVector> allfeaturevectors = new HashMap<String, HashMapVector>();
-
     public void buildListOfAuthors() throws IOException {
         setAuthors(ImportDataset1.buildListOfAuthors());
     }
@@ -56,7 +53,7 @@ public class AuthorLogic {
      */
     public void computeAllPapersFeatureVector(String authorId, int weightScheme) {
         for (String entry : getAuthors().keySet()) {
-            allfeaturevectors.put(entry, computeAuthorFeatureVector(getAuthors().get(entry).getAuthorId(), weightScheme));
+            authors.get(entry).setFeatureVector(computeAuthorFeatureVector(authorId, weightScheme));
         }
     }
 

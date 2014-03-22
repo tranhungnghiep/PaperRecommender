@@ -12,8 +12,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import uit.tkorg.paperrecommender.model.Author;
 import uit.tkorg.paperrecommender.model.Paper;
 
@@ -30,6 +28,7 @@ public class ImportDataset1 {
      * them in an arraylist.
      *
      * @return allKeywords.
+     * @throws java.io.FileNotFoundException
      */
     public static List readAllKeywords() throws FileNotFoundException, IOException {
         List allKeywords = new ArrayList();
@@ -46,7 +45,7 @@ public class ImportDataset1 {
                         allKeywords.add(tokens[0]);
                     }
                 }
-            } catch (Exception ex) {
+            } catch (IOException ex) {
                 System.out.println(ex.getMessage());
             }
         }
@@ -62,14 +61,14 @@ public class ImportDataset1 {
         File[] files = dir.listFiles();
         List listfile = new ArrayList<String>();
         String name = null;
-        for (int i = 0; i < files.length; i++) {
-            if (files[i].isDirectory()) {
-                getPathFile(files[i]);
-            } else if (files[i].isFile()) {
-                name = files[i].getName().toString();
+        for (File file : files) {
+            if (file.isDirectory()) {
+                getPathFile(file);
+            } else if (file.isFile()) {
+                name = file.getName().toString();
             }
-            if (name == "*.txt") {
-                listfile.add(files[i].getAbsolutePath());
+            if ("*.txt".equals(name)) {
+                listfile.add(file.getAbsolutePath());
             }
         }
         return listfile;
@@ -211,7 +210,7 @@ public class ImportDataset1 {
             } else if (file1.isFile()) {
                 name = file1.getName().toString();
             }
-            if (name == "-rlv.txt") {
+            if ("-rlv.txt".equals(name)) {
                 try {
                     FileReader file = new FileReader(file1.getAbsoluteFile());
                     BufferedReader textReader = new BufferedReader(file);
