@@ -24,13 +24,27 @@ public class AuthorLogic {
 
     // Key of this hash map is paper id.
     // Value of this hash map is the relevant paper object.
-    HashMap<String, Author> authors = null;
+    private HashMap<String, Author> authors = null;
+
+    /**
+     * @return the authors
+     */
+    public HashMap<String, Author> getAuthors() {
+        return authors;
+    }
+
+    /**
+     * @param authors the authors to set
+     */
+    public void setAuthors(HashMap<String, Author> authors) {
+        this.authors = authors;
+    }
 
     //List feature vectors of all authors
     HashMap<String, HashMapVector> allfeaturevectors = new HashMap<String, HashMapVector>();
 
     public void buildListOfAuthors() throws IOException {
-        authors = ImportDataset1.buildListOfAuthors();
+        setAuthors(ImportDataset1.buildListOfAuthors());
     }
 
     /**
@@ -41,8 +55,8 @@ public class AuthorLogic {
      * @param weightScheme 0: linear; 1: cosine; 2: rpy
      */
     public void computeAllPapersFeatureVector(String authorId, int weightScheme) {
-        for (String entry : authors.keySet()) {
-            allfeaturevectors.put(entry, computeAuthorFeatureVector(authors.get(entry).getAuthorId(), weightScheme));
+        for (String entry : getAuthors().keySet()) {
+            allfeaturevectors.put(entry, computeAuthorFeatureVector(getAuthors().get(entry).getAuthorId(), weightScheme));
         }
     }
 
@@ -87,7 +101,7 @@ public class AuthorLogic {
     public HashMapVector computeJuniorFeatureVectorWithLinear(String authorId) {
         HashMapVector featureVector = new HashMapVector();
         Paper authorpaper = new Paper();
-        Author author = authors.get(authorId);//get author has Id equally authorId in ListofPapers
+        Author author = getAuthors().get(authorId);//get author has Id equally authorId in ListofPapers
         authorpaper = (Paper) author.getPaper().get(0);//get paper of junior researchers 
         featureVector = authorpaper.getContent();
         List reference = authorpaper.getReference();//get list of reference papers of author's paper 
@@ -104,7 +118,7 @@ public class AuthorLogic {
     public HashMapVector computeJuniorFeatureVectorWithCosine(String authorId) {
         HashMapVector featureVector = new HashMapVector();
         Paper authorpaper = new Paper();
-        Author author = authors.get(authorId);//get author has Id equally authorId in ListofPapers
+        Author author = getAuthors().get(authorId);//get author has Id equally authorId in ListofPapers
         authorpaper = (Paper) author.getPaper().get(0);//get paper of junior researchers 
         featureVector = authorpaper.getContent();
         List reference = authorpaper.getReference();//get list of reference papers of author's paper 
@@ -121,7 +135,7 @@ public class AuthorLogic {
     public HashMapVector computeJuniorFeatureVectorWithRPY(String authorId) {
         HashMapVector featureVector = new HashMapVector();
         Paper authorpaper = new Paper();
-        Author author = authors.get(authorId);//get author has Id equally authorId in ListofPapers
+        Author author = getAuthors().get(authorId);//get author has Id equally authorId in ListofPapers
         authorpaper = (Paper) author.getPaper().get(0);//get paper of junior researchers 
         featureVector = authorpaper.getContent();
         List reference = authorpaper.getReference();//get list of reference papers of author's paper 
@@ -139,7 +153,7 @@ public class AuthorLogic {
     public HashMapVector computeSeniorFeatureVectorWithLinear(String authorId) {
         HashMapVector featureVector = new HashMapVector();
         List<Paper> authorpapers = new ArrayList();
-        Author author = authors.get(authorId);//get author has Id equally authorId in ListofPapers
+        Author author = getAuthors().get(authorId);//get author has Id equally authorId in ListofPapers
         authorpapers = author.getPaper();//get list of papers of senior researchers 
         for (Paper paper : authorpapers) {
             featureVector.add(paper.getContent());
@@ -160,7 +174,7 @@ public class AuthorLogic {
     public HashMapVector computeSeniorFeatureVectorWithCosine(String authorId) {
         HashMapVector featureVector = new HashMapVector();
         List<Paper> authorpapers = new ArrayList();
-        Author author = authors.get(authorId);//get author has Id equally authorId in ListofPapers
+        Author author = getAuthors().get(authorId);//get author has Id equally authorId in ListofPapers
         authorpapers = author.getPaper();//get list of papers of senior researchers 
         for (Paper paper : authorpapers) {
             featureVector.add(paper.getContent());
@@ -181,7 +195,7 @@ public class AuthorLogic {
     public HashMapVector computeSeniorFeatureVectorWithRPY(String authorId) {
         HashMapVector featureVector = new HashMapVector();
         List<Paper> authorpapers = new ArrayList();
-        Author author = authors.get(authorId);//get author has Id equally authorId in ListofPapers
+        Author author = getAuthors().get(authorId);//get author has Id equally authorId in ListofPapers
         authorpapers = author.getPaper();//get list of papers of senior researchers 
         for (Paper paper : authorpapers) {
             featureVector.add(paper.getContent());
@@ -241,4 +255,5 @@ public class AuthorLogic {
         }
         return featureVector;
     }
+
 }

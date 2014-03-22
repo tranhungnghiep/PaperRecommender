@@ -18,9 +18,10 @@ import java.util.List;
 public class Author implements Serializable {
     private String authorId;
     private String authorType;
-    private List groundTruth;
+    private List groundTruth; // List string.
     private List paper;
     private HashMapVector featureVector;
+    private List Recommendation; // List string.
 
     /**
      * Default constructor used for serializable.
@@ -101,5 +102,19 @@ public class Author implements Serializable {
      */
     public void setFeatureVector(HashMapVector featureVector) {
         this.featureVector = featureVector;
+    }
+
+    /**
+     * @return the Recommendation
+     */
+    public List getRecommendation() {
+        return Recommendation;
+    }
+
+    /**
+     * @param Recommendation the Recommendation to set
+     */
+    public void setRecommendation(List Recommendation) {
+        this.Recommendation = Recommendation;
     }
 }
