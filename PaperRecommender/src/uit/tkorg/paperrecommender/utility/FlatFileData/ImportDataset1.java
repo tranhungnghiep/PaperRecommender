@@ -24,7 +24,8 @@ import uit.tkorg.paperrecommender.model.Paper;
 public class ImportDataset1 {
 
     // Prevent instantiation.
-    private ImportDataset1() {}
+    private ImportDataset1() {
+    }
 
     /**
      * This method read all keywords in all papers in the dataset 1 and return
@@ -137,14 +138,18 @@ public class ImportDataset1 {
     public static HashMapVector readFilePaper(File file) throws FileNotFoundException, IOException {
         HashMapVector content = new HashMapVector();
         String path = file.getAbsolutePath();
+//        System.out.println(path);
         try (BufferedReader br = new BufferedReader(new FileReader(path))) {
             String line = null;
             while ((line = br.readLine()) != null) {
                 String[] str = line.split(" ");
-                content.increment(str[0], Double.valueOf(str[1]));
+                if (str.length == 2) {
+                    content.increment(str[0], Double.valueOf(str[1]));
+                }
             }
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
+        } catch (Exception e) {
+            
+            System.out.println(e.getMessage()+path);
         }
         return content;
     }
@@ -304,14 +309,16 @@ public class ImportDataset1 {
         } else {
             File[] files = dir.listFiles();
             for (File file : files) {
-                Paper paper = new Paper();
-                pathVectorFv = file.getAbsolutePath() + "\\" + file.getName() + "_fv.txt";
-                paper.setPaperId(file.getName()); // set id paper i cua Senior
-                paper.setPaperType("paper of senior");
+                if (file.isDirectory()) {
+                    Paper paper = new Paper();
+                    pathVectorFv = file.getAbsolutePath() + "\\" + file.getName() + "_fv.txt";
+                    paper.setPaperId(file.getName()); // set id paper i cua Senior
+                    paper.setPaperType("paper of senior");
                 paper.setCitation(findCitOfPaper(file)); // set List cit cua  paper i
                 paper.setReference(findRefOfPaper(file)); // set List ref cua paper i
-                paper.setContent(readFilePaper(new File(pathVectorFv)));// set content cho paper i
-                papers.add(paper);
+                    paper.setContent(readFilePaper(new File(pathVectorFv)));// set content cho paper i
+                    papers.add(paper);
+                }
             }
         }
         return papers;
@@ -341,7 +348,7 @@ public class ImportDataset1 {
                         authors.put(junior.getName(), author);
                     }
                 }
-                if (file.getName().equals("SenioR")) {
+                if (file.getName().equals("SeniorR")) {
                     File[] seniors = file.listFiles();
                     for (File senior : seniors) {
                         Author author = new Author();
