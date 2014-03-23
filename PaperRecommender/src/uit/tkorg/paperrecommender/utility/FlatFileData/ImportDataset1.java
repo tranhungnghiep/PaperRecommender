@@ -213,7 +213,7 @@ public class ImportDataset1 {
             if (name.contains("-rlv.txt")) {
                 try {
                     BufferedReader br = new BufferedReader(new FileReader(file.getAbsoluteFile()));
-                    String line=null;
+                    String line = null;
                     while ((line = br.readLine()) != null) {
                         fileTruth.add(line);
                     }
@@ -248,7 +248,7 @@ public class ImportDataset1 {
                     pathVectorFv = file.getAbsolutePath();
                     paper.setPaperId(name.replaceAll("_fv.txt", ""));
                     paper.setPaperType("citation");
-                    paper.setContent(readFilePaper(new File(pathVectorFv)));                  
+                    paper.setContent(readFilePaper(new File(pathVectorFv)));
                     allCitRef.add(paper);
                 }
             }
@@ -275,9 +275,10 @@ public class ImportDataset1 {
             } else if (file.isFile()) {
                 name = file.getName();
                 Paper paper = new Paper();
-                if (name.equals("*" + "ref" + "*")) {
+                if (name.contains("ref")) {
                     pathVectorFv = file.getAbsolutePath();
                     paper.setPaperId(name.replaceAll("_fv.txt", ""));
+                    paper.setPaperType("reference");
                     paper.setContent(readFilePaper(new File(pathVectorFv)));
                     allCitRef.add(paper);
                 }
@@ -297,41 +298,43 @@ public class ImportDataset1 {
     public static List<Paper> findPaperOfAuthor(File dir) throws FileNotFoundException, IOException {
         List<Paper> papers = new ArrayList();
         Paper paper = null;
-        File[] files = dir.listFiles();
-        String name = null;
         String pathVectorFv = null;// ten duong dan den vector dac trung cua paper
-        for (File file : files) {
-            name = file.getName().substring(0, 1); // lay ky tu dau cua ten de xet la Junior hay Senior
-            pathVectorFv = file.getAbsolutePath()
-                    + "\\".concat(file.getName()).concat("_fv"); //ten duong dan den den file chua vector dac trung cua paper i
+        String IdAuthor = dir.getName();// lay id cua Author
+        if (IdAuthor.contains("y")) {
             paper = new Paper();
-            switch (name) {
-                case "y":
-                    paper.setPaperId(file.getName().concat("-1")); // set id paper i cua Senior
-                    break;
-                case "m":
-                    paper.setPaperId(file.getName()); // set id paper i cua Senior
-                    break;
-                default:
-                    break;
-            }
-            paper.setCitation(findCitOfAuthor(file)); // set List cit cua  paper i
-            paper.setReference(findRefOfAuthor(file)); // set List ref cua paper i
+            paper.setPaperId(dir.getName().concat("-1")); // set id paper Junior
+            pathVectorFv = dir.getAbsolutePath()
+                    + "\\".concat(dir.getName()).concat("-1").concat("_fv.txt"); //ten duong dan den den file chua vector dac trung cua paper 
+            paper.setReference(findRefOfAuthor(dir));
             paper.setContent(readFilePaper(new File(pathVectorFv)));// set content cho paper i
+
+        } else {
+            File[] files = dir.listFiles();
+            for (File file : files) {
+                paper = new Paper();
+                pathVectorFv = file.getAbsolutePath()
+                        + "\\".concat(file.getName()).concat("_fv.txt"); //ten duong dan den den file chua vector dac trung cua paper i
+                paper.setPaperId(file.getName()); // set id paper i cua Senior
+                paper.setCitation(findCitOfAuthor(file)); // set List cit cua  paper i
+                paper.setReference(findRefOfAuthor(file)); // set List ref cua paper i
+                paper.setContent(readFilePaper(new File(pathVectorFv)));// set content cho paper i
+
+            }
+
             papers.add(paper);
         }
         return papers;
     }
 
-    /**
-     * This is method read all author
-     *
-     * @param dir
-     * @return authors
-     * @throws FileNotFoundException
-     * @throws IOException
-     */
-    public static HashMap<String, Author> readAllAuthor(File dir) throws FileNotFoundException, IOException {
+/**
+ * This is method read all author
+ *
+ * @param dir
+ * @return authors
+ * @throws FileNotFoundException
+ * @throws IOException
+ */
+public static HashMap<String, Author> readAllAuthor(File dir) throws FileNotFoundException, IOException {
         File[] files = dir.listFiles();
         HashMap<String, Author> authors = new HashMap<String, Author>();
         String name = null;
