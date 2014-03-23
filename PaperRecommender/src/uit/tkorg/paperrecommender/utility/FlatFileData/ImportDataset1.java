@@ -302,7 +302,7 @@ public class ImportDataset1 {
             File[] files = dir.listFiles();
             for (File file : files) {
                 Paper paper = new Paper();
-                pathVectorFv = file.getAbsolutePath() + "\\" + file.getName() + "_fv.txt";///SAO RDGJFJGKFJGKHFJK
+                pathVectorFv = file.getAbsolutePath() + "\\" + file.getName() + "_fv.txt";
                 paper.setPaperId(file.getName()); // set id paper i cua Senior
                 paper.setPaperType("paper of senior");
                 paper.setCitation(findCitOfPaper(file)); // set List cit cua  paper i
