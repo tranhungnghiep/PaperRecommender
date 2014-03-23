@@ -22,6 +22,9 @@ public class Author implements Serializable {
     private List paper;
     private HashMapVector featureVector;
     private List Recommendation; // List string.
+    private double ndcg5;
+    private double ndcg10;
+    private double mrr;
 
     /**
      * Default constructor used for serializable.
@@ -32,6 +35,10 @@ public class Author implements Serializable {
         this.groundTruth = null;
         this.paper = null;
         this.featureVector = null;
+        this.Recommendation = null;
+        this.ndcg5 = 0;
+        this.ndcg10 = 0;
+        this.mrr = 0;
     }
 
     /**
@@ -116,5 +123,47 @@ public class Author implements Serializable {
      */
     public void setRecommendation(List Recommendation) {
         this.Recommendation = Recommendation;
+    }
+
+    /**
+     * @return the ndcg5
+     */
+    public double getNdcg5() {
+        return ndcg5;
+    }
+
+    /**
+     * @param ndcg5 the ndcg5 to set
+     */
+    public void setNdcg5(double ndcg5) {
+        this.ndcg5 = ndcg5;
+    }
+
+    /**
+     * @return the ndcg10
+     */
+    public double getNdcg10() {
+        return ndcg10;
+    }
+
+    /**
+     * @param ndcg10 the ndcg10 to set
+     */
+    public void setNdcg10(double ndcg10) {
+        this.ndcg10 = ndcg10;
+    }
+
+    /**
+     * @return the mrr
+     */
+    public double getMrr() {
+        return mrr;
+    }
+
+    /**
+     * @param mrr the mrr to set
+     */
+    public void setMrr(double mrr) {
+        this.mrr = mrr;
     }
 }

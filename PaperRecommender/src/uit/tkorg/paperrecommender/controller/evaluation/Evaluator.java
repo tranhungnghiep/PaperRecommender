@@ -5,6 +5,8 @@
 package uit.tkorg.paperrecommender.controller.evaluation;
 
 import java.util.HashMap;
+import uit.tkorg.paperrecommender.model.Author;
+import uit.tkorg.paperrecommender.utility.evaluation.NDCG;
 
 /**
  * This class handles all logics for evaluation of recommendation results.
@@ -18,15 +20,43 @@ import java.util.HashMap;
  * @author THNghiep
  */
 public class Evaluator {
+
+    HashMap<String, Author> authors;
+    
     /**
      * This method computes NDCG at position n.
+     * If n == 5 or 10 then save ndcg to author list.
      * @param authors
      * @param n
      * @return ndcg
      */
-    public double NDCG(HashMap authors, int n) {
+    public double NDCG(HashMap<String, Author> authorsInput, int n) {
         double ndcg = 0;
-        // coding here.
+        double currentNDCG = 0;
+        
+        this.authors = authorsInput;
+        
+        if (n == 5) {
+            for (String key : authorsInput.keySet()) {
+                currentNDCG = NDCG.computeNDCG(authorsInput.get(key).getRecommendation(), authorsInput.get(key).getGroundTruth(), n);
+                authors.get(key).setNdcg5(currentNDCG);
+                ndcg += currentNDCG;
+            }
+        } else if (n == 10) {
+            for (String key : authorsInput.keySet()) {
+                currentNDCG = NDCG.computeNDCG(authorsInput.get(key).getRecommendation(), authorsInput.get(key).getGroundTruth(), n);
+                authors.get(key).setNdcg10(currentNDCG);
+                ndcg += currentNDCG;
+            }
+            
+        } else {
+            for (String key : authorsInput.keySet()) {
+                ndcg += NDCG.computeNDCG(authorsInput.get(key).getRecommendation(), authorsInput.get(key).getGroundTruth(), n);
+            }
+        }
+        // Compute average.
+        ndcg = ndcg / authorsInput.size();
+        
         return ndcg;
     }
     
@@ -35,7 +65,7 @@ public class Evaluator {
      * @param authors
      * @return 
      */
-    public double MRR(HashMap authors) {
+    public double MRR(HashMap authorsInput) {
         double mrr = 0;
         // coding here.
         return mrr;
