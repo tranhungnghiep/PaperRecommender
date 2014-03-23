@@ -194,6 +194,7 @@ public class ImportDataset1 {
 
     /**
      * This is method find list paper ground truth of Author
+     *
      * @param dir
      * @return a string is groundTruth of author
      * @throws FileNotFoundException
@@ -203,21 +204,20 @@ public class ImportDataset1 {
         List<String> fileTruth = new ArrayList();
         File[] files = dir.listFiles();
         String name = null;
-        for (File file1 : files) {
-            if (file1.isDirectory()) {
-                findGroundTruth(file1);
-            } else if (file1.isFile()) {
-                name = file1.getName().toString();
+        for (File file : files) {
+            if (file.isDirectory()) {
+                findGroundTruth(file);
+            } else if (file.isFile()) {
+                name = file.getName().toString();
             }
-            if (name.equals("*".concat("-rlv.txt"))) {
+            if (name.contains("-rlv.txt")) {
                 try {
-                    FileReader file = new FileReader(file1.getAbsoluteFile());
-                    BufferedReader textReader = new BufferedReader(file);
-                    String line;
-                    while ((line = textReader.readLine()) != null) {
+                    BufferedReader br = new BufferedReader(new FileReader(file.getAbsoluteFile()));
+                    String line=null;
+                    while ((line = br.readLine()) != null) {
                         fileTruth.add(line);
                     }
-                }catch (IOException ex) {
+                } catch (IOException ex) {
                     System.out.println(ex.getMessage());
                 }
             }
@@ -244,10 +244,11 @@ public class ImportDataset1 {
             } else if (file.isFile()) {
                 name = file.getName();
                 Paper paper = new Paper();
-                if (name.equals("*" + "cit" + "*")) {
+                if (name.contains("cit")) {
                     pathVectorFv = file.getAbsolutePath();
                     paper.setPaperId(name.replaceAll("_fv.txt", ""));
-                    paper.setContent(readFilePaper(new File(pathVectorFv)));
+                    paper.setPaperType("citation");
+                    paper.setContent(readFilePaper(new File(pathVectorFv)));                  
                     allCitRef.add(paper);
                 }
             }
@@ -263,7 +264,6 @@ public class ImportDataset1 {
      * @throws FileNotFoundException
      * @throws IOException
      */
-
     public static List<Paper> findRefOfAuthor(File dir) throws FileNotFoundException, IOException {
         List<Paper> allCitRef = new ArrayList();
         File[] files = dir.listFiles();
@@ -274,7 +274,7 @@ public class ImportDataset1 {
                 findRefOfAuthor(file);
             } else if (file.isFile()) {
                 name = file.getName();
-                Paper paper= new Paper();
+                Paper paper = new Paper();
                 if (name.equals("*" + "ref" + "*")) {
                     pathVectorFv = file.getAbsolutePath();
                     paper.setPaperId(name.replaceAll("_fv.txt", ""));
@@ -296,16 +296,15 @@ public class ImportDataset1 {
      */
     public static List<Paper> findPaperOfAuthor(File dir) throws FileNotFoundException, IOException {
         List<Paper> papers = new ArrayList();
-       // Paper paper = new Paper();
-        Paper paper =null;
+        Paper paper = null;
         File[] files = dir.listFiles();
         String name = null;
         String pathVectorFv = null;// ten duong dan den vector dac trung cua paper
         for (File file : files) {
             name = file.getName().substring(0, 1); // lay ky tu dau cua ten de xet la Junior hay Senior
-            pathVectorFv = file.getAbsolutePath() + 
-            "\\".concat(file.getName()).concat("_fv"); //ten duong dan den den file chua vector dac trung cua paper i
-            paper= new Paper();
+            pathVectorFv = file.getAbsolutePath()
+                    + "\\".concat(file.getName()).concat("_fv"); //ten duong dan den den file chua vector dac trung cua paper i
+            paper = new Paper();
             switch (name) {
                 case "y":
                     paper.setPaperId(file.getName().concat("-1")); // set id paper i cua Senior
@@ -328,37 +327,39 @@ public class ImportDataset1 {
      * This is method read all author
      *
      * @param dir
-     * @param authors
+     * @return authors
      * @throws FileNotFoundException
      * @throws IOException
      */
-    public static HashMap<String, Author>  readAllAuthor(File dir ) throws FileNotFoundException, IOException {
+    public static HashMap<String, Author> readAllAuthor(File dir) throws FileNotFoundException, IOException {
         File[] files = dir.listFiles();
-        HashMap<String, Author> authors =new HashMap<String,Author>();
+        HashMap<String, Author> authors = new HashMap<String, Author>();
         String name = null;
-        Author author =null;
+        Author author = null;
         for (File file : files) {
-            author= new Author();
+            author = new Author();
             if (file.isDirectory()) {
                 name = file.getName();
                 String typeAuthor = name.substring(0, 1);
-                if (!"y".equals(typeAuthor) || !"m".equals(typeAuthor))readAllAuthor(file);
-                else    
-                switch (typeAuthor) {
-                    case "y":
-                        author.setAuthorId(name);
-                        author.setAuthorType("Junior");
-                        break;
-                    case "m":
-                        author.setAuthorId(name);
-                        author.setAuthorType("Senior");
-                        break;
-                    default:
-                        break;
+                if (!"y".equals(typeAuthor) || !"m".equals(typeAuthor)) {
+                    readAllAuthor(file);
+                } else {
+                    switch (typeAuthor) {
+                        case "y":
+                            author.setAuthorId(name);
+                            author.setAuthorType("Junior");
+                            break;
+                        case "m":
+                            author.setAuthorId(name);
+                            author.setAuthorType("Senior");
+                            break;
+                        default:
+                            break;
+                    }
                 }
-                 author.setGroundTruth(findGroundTruth(file));
-                 author.setPaper(findPaperOfAuthor(file));
-                 authors.put(name, author);
+                author.setGroundTruth(findGroundTruth(file));
+                author.setPaper(findPaperOfAuthor(file));
+                authors.put(name, author);
             }
         }
         return authors;
@@ -366,7 +367,7 @@ public class ImportDataset1 {
 
     public static HashMap<String, Author> buildListOfAuthors() throws IOException {
         HashMap<String, Author> authors = new HashMap();
-        authors = readAllAuthor(new File(PaperRecommenerConstant.DATASETFOLDER ));
+        authors = readAllAuthor(new File(PaperRecommenerConstant.DATASETFOLDER));
         return authors;
     }
 
