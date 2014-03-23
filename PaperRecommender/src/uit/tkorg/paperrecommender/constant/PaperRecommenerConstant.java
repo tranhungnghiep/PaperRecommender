@@ -8,7 +8,7 @@ public class PaperRecommenerConstant {
     public static final String SAVEDATAFOLDER = "";
     
     public static final String DB = "MYSQL";
-        //public static final String DB = "SQLSERVER";
+    //public static final String DB = "SQLSERVER";
 
     public static final String HOST = "localhost";
     public static final String PORT = "3306";

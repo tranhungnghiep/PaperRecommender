@@ -48,8 +48,8 @@ public class AuthorLogic implements Serializable {
         this.authors = authors;
     }
 
-    public void buildListOfAuthors() throws IOException {
-        setAuthors(ImportDataset1.buildListOfAuthors());
+    public void buildListOfAuthors(String Dataset1Folder) throws IOException {
+        setAuthors(ImportDataset1.buildListOfAuthors(Dataset1Folder));
     }
 
     /**
@@ -58,7 +58,7 @@ public class AuthorLogic implements Serializable {
      *
      * @param weightingScheme 0: linear; 1: cosine; 2: rpy
      */
-    public void computeAllPapersFeatureVector(int weightingScheme) {
+    public void computeAllAuthorsFeatureVector(int weightingScheme) {
         for (String key : authors.keySet()) {
             authors.get(key).setFeatureVector(computeAuthorFeatureVector(authors.get(key).getAuthorId(), weightingScheme));
         }

@@ -87,9 +87,9 @@ public class ImportDataset1 {
      * @return the hashmap contents all papers.
      * @throws java.io.IOException
      */
-    public static HashMap<String, Paper> buildListOfPapers() throws IOException {
+    public static HashMap<String, Paper> buildListOfPapers(String Dataset1Folder) throws IOException {
         HashMap<String, Paper> papers = new HashMap<String, Paper>();
-        papers = readAllCandidatePapers(new File(PaperRecommenerConstant.DATASETFOLDER + "\\RecCandidatePapersFV"));
+        papers = readAllCandidatePapers(new File(Dataset1Folder + "\\RecCandidatePapersFV"));
         return papers;
     }
 
@@ -364,9 +364,9 @@ public class ImportDataset1 {
         return authors;
     }
 
-    public static HashMap<String, Author> buildListOfAuthors() throws IOException {
+    public static HashMap<String, Author> buildListOfAuthors(String Dataset1Folder) throws IOException {
         HashMap<String, Author> authors = new HashMap();
-        authors = readAllAuthor(new File(PaperRecommenerConstant.DATASETFOLDER));
+        authors = readAllAuthor(new File(Dataset1Folder));
         return authors;
     }
 }

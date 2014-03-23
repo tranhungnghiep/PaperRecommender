@@ -4,17 +4,27 @@
  */
 package uit.tkorg.paperrecommender.view.gui;
 
+import javax.swing.JFileChooser;
+import uit.tkorg.paperrecommender.controller.central.PaperRecommender;
+
 /**
  *
  * @author THNghiep
  */
 public class PaperRecommenderGUI extends javax.swing.JFrame {
+    
+    // Controller handles all request from gui:
+    private PaperRecommender paperRecommender;
+    
+    private String[] response;
 
     /**
      * Creates new form PaperRecommenderGUI
      */
     public PaperRecommenderGUI() {
         initComponents();
+        paperRecommender = new PaperRecommender();
+        jTextFieldStatus.setText("Ready.");
     }
 
     /**
@@ -53,6 +63,13 @@ public class PaperRecommenderGUI extends javax.swing.JFrame {
         jTextFieldMRR = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
         jTextFieldStatus = new javax.swing.JTextField();
+        jPanel4 = new javax.swing.JPanel();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        jTextFieldDataset = new javax.swing.JTextField();
+        jTextFieldSaveData = new javax.swing.JTextField();
+        jButtonDatasetFolder = new javax.swing.JButton();
+        jButtonSaveDataFolder = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Paper Recommender");
@@ -222,7 +239,7 @@ public class PaperRecommenderGUI extends javax.swing.JFrame {
                         .addComponent(jButtonComputeAuthorFVCosine)
                         .addGap(18, 18, 18)
                         .addComponent(jButtonComputeAuthorFVRPY)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(54, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -270,47 +287,98 @@ public class PaperRecommenderGUI extends javax.swing.JFrame {
 
         jLabel5.setText("Status:");
 
+        jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder("Configuration"));
+
+        jLabel8.setText("Dateset Folder:");
+
+        jLabel9.setText("Save Data Folder:");
+
+        jButtonDatasetFolder.setText("Browse");
+        jButtonDatasetFolder.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonDatasetFolderActionPerformed(evt);
+            }
+        });
+
+        jButtonSaveDataFolder.setText("Browse");
+        jButtonSaveDataFolder.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonSaveDataFolderActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel9))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jTextFieldSaveData)
+                    .addComponent(jTextFieldDataset, javax.swing.GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE))
+                .addGap(26, 26, 26)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jButtonSaveDataFolder)
+                    .addComponent(jButtonDatasetFolder))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel8)
+                    .addComponent(jTextFieldDataset, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButtonDatasetFolder))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel9)
+                    .addComponent(jTextFieldSaveData, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButtonSaveDataFolder))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jLabel5)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextFieldStatus)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jButtonRecommendAllAuthor, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jButtonComputeMRR, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jButtonComputeNDCG5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jButtonComputeNDCG10, javax.swing.GroupLayout.Alignment.TRAILING))
-                        .addGap(24, 24, 24)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jTextFieldNDCG5)
-                            .addComponent(jTextFieldNDCG10)
-                            .addComponent(jTextFieldMRR, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addComponent(jLabel5)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jTextFieldStatus))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(jButtonRecommendAllAuthor, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createSequentialGroup()
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(jButtonComputeMRR, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jButtonComputeNDCG5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jButtonComputeNDCG10, javax.swing.GroupLayout.Alignment.TRAILING))
+                            .addGap(24, 24, 24)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(jTextFieldNDCG5)
+                                .addComponent(jTextFieldNDCG10)
+                                .addComponent(jTextFieldMRR, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
+                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(18, 18, 18)
                 .addComponent(jButtonRecommendAllAuthor)
                 .addGap(10, 10, 10)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -324,7 +392,7 @@ public class PaperRecommenderGUI extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButtonComputeMRR)
                     .addComponent(jTextFieldMRR, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 29, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jTextFieldStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel5)))
@@ -337,67 +405,136 @@ public class PaperRecommenderGUI extends javax.swing.JFrame {
 
     private void jButtonReadPaperActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonReadPaperActionPerformed
         // TODO add your handling code here:
+        jTextFieldStatus.setText("Reading papers... ");
+        response = paperRecommender.centralController("Read paper", jTextFieldDataset.getText());
+        jTextFieldStatus.setText(jTextFieldStatus.getText() + response[0]);
     }//GEN-LAST:event_jButtonReadPaperActionPerformed
 
     private void jButtonSavePaperActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSavePaperActionPerformed
         // TODO add your handling code here:
+        jTextFieldStatus.setText("Saving papers... ");
+        response = paperRecommender.centralController("Save paper", jTextFieldSaveData.getText());
+        jTextFieldStatus.setText(jTextFieldStatus.getText() + response[0]);
     }//GEN-LAST:event_jButtonSavePaperActionPerformed
 
     private void jButtonComputePaperFVLinearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonComputePaperFVLinearActionPerformed
         // TODO add your handling code here:
+        jTextFieldStatus.setText("Computing paper feature vector with linear weight... ");
+        response = paperRecommender.centralController("Paper FV linear", null);
+        jTextFieldStatus.setText(jTextFieldStatus.getText() + response[0]);
     }//GEN-LAST:event_jButtonComputePaperFVLinearActionPerformed
 
     private void jButtonComputePaperFVCosineActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonComputePaperFVCosineActionPerformed
         // TODO add your handling code here:
+        jTextFieldStatus.setText("Computing paper feature vector with cosine weight... ");
+        response = paperRecommender.centralController("Paper FV cosine", null);
+        jTextFieldStatus.setText(jTextFieldStatus.getText() + response[0]);
     }//GEN-LAST:event_jButtonComputePaperFVCosineActionPerformed
 
     private void jButtonRecommendAllAuthorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRecommendAllAuthorActionPerformed
         // TODO add your handling code here:
+        jTextFieldStatus.setText("Generating recommendation list for all authors... ");
+        response = paperRecommender.centralController("Recommend", null);
+        jTextFieldStatus.setText(jTextFieldStatus.getText() + response[0]);
     }//GEN-LAST:event_jButtonRecommendAllAuthorActionPerformed
 
     private void jButtonComputeNDCG5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonComputeNDCG5ActionPerformed
         // TODO add your handling code here:
+        jTextFieldStatus.setText("Computing NDCG@5... ");
+        response = paperRecommender.centralController("NDCG5", null);
+        jTextFieldNDCG5.setText(response[1]);
+        jTextFieldStatus.setText(jTextFieldStatus.getText() + response[0]);
     }//GEN-LAST:event_jButtonComputeNDCG5ActionPerformed
 
     private void jButtonLoadPaperActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonLoadPaperActionPerformed
         // TODO add your handling code here:
+        jTextFieldStatus.setText("Loading papers... ");
+        response = paperRecommender.centralController("Load paper", jTextFieldSaveData.getText());
+        jTextFieldStatus.setText(jTextFieldStatus.getText() + response[0]);
     }//GEN-LAST:event_jButtonLoadPaperActionPerformed
 
     private void jButtonReadAuthorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonReadAuthorActionPerformed
         // TODO add your handling code here:
+        jTextFieldStatus.setText("Reading authors... ");
+        response = paperRecommender.centralController("Read author", jTextFieldDataset.getText());
+        jTextFieldStatus.setText(jTextFieldStatus.getText() + response[0]);
     }//GEN-LAST:event_jButtonReadAuthorActionPerformed
 
     private void jButtonSaveAuthorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSaveAuthorActionPerformed
         // TODO add your handling code here:
+        jTextFieldStatus.setText("Saving authors... ");
+        response = paperRecommender.centralController("Save author", jTextFieldSaveData.getText());
+        jTextFieldStatus.setText(jTextFieldStatus.getText() + response[0]);
     }//GEN-LAST:event_jButtonSaveAuthorActionPerformed
 
     private void jButtonLoadAuthorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonLoadAuthorActionPerformed
         // TODO add your handling code here:
+        jTextFieldStatus.setText("Loading authors... ");
+        response = paperRecommender.centralController("Load author", jTextFieldSaveData.getText());
+        jTextFieldStatus.setText(jTextFieldStatus.getText() + response[0]);
     }//GEN-LAST:event_jButtonLoadAuthorActionPerformed
 
     private void jButtonComputePaperFVRPYActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonComputePaperFVRPYActionPerformed
         // TODO add your handling code here:
+        jTextFieldStatus.setText("Computing paper feature vector with RPY weight... ");
+        response = paperRecommender.centralController("Paper FV RPY", null);
+        jTextFieldStatus.setText(jTextFieldStatus.getText() + response[0]);
     }//GEN-LAST:event_jButtonComputePaperFVRPYActionPerformed
 
     private void jButtonComputeAuthorFVLinearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonComputeAuthorFVLinearActionPerformed
         // TODO add your handling code here:
+        jTextFieldStatus.setText("Computing author feature vector with linear weight... ");
+        response = paperRecommender.centralController("Author FV linear", null);
+        jTextFieldStatus.setText(jTextFieldStatus.getText() + response[0]);
     }//GEN-LAST:event_jButtonComputeAuthorFVLinearActionPerformed
 
     private void jButtonComputeAuthorFVCosineActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonComputeAuthorFVCosineActionPerformed
         // TODO add your handling code here:
+        jTextFieldStatus.setText("Computing author feature vector with cosine weight... ");
+        response = paperRecommender.centralController("Author FV cosine", null);
+        jTextFieldStatus.setText(jTextFieldStatus.getText() + response[0]);
     }//GEN-LAST:event_jButtonComputeAuthorFVCosineActionPerformed
 
     private void jButtonComputeAuthorFVRPYActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonComputeAuthorFVRPYActionPerformed
         // TODO add your handling code here:
+        jTextFieldStatus.setText("Computing author feature vector with RPY weight... ");
+        response = paperRecommender.centralController("Author FV RPY", null);
+        jTextFieldStatus.setText(jTextFieldStatus.getText() + response[0]);
     }//GEN-LAST:event_jButtonComputeAuthorFVRPYActionPerformed
 
     private void jButtonComputeNDCG10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonComputeNDCG10ActionPerformed
         // TODO add your handling code here:
+        jTextFieldStatus.setText("Computing NDCG@10... ");
+        response = paperRecommender.centralController("NDCG10", null);
+        jTextFieldNDCG10.setText(response[1]);
+        jTextFieldStatus.setText(jTextFieldStatus.getText() + response[0]);
     }//GEN-LAST:event_jButtonComputeNDCG10ActionPerformed
 
     private void jButtonComputeMRRActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonComputeMRRActionPerformed
         // TODO add your handling code here:
+        jTextFieldStatus.setText("Computing MRR... ");
+        response = paperRecommender.centralController("MRR", null);
+        jTextFieldMRR.setText(response[1]);
+        jTextFieldStatus.setText(jTextFieldStatus.getText() + response[0]);
     }//GEN-LAST:event_jButtonComputeMRRActionPerformed
+
+    private void jButtonDatasetFolderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDatasetFolderActionPerformed
+
+        JFileChooser fc = new JFileChooser();
+        fc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+        fc.showOpenDialog(this);
+        // Show open dialog; this method does not return until the dialog is closed
+        jTextFieldDataset.setText(fc.getSelectedFile().getAbsolutePath());
+    }//GEN-LAST:event_jButtonDatasetFolderActionPerformed
+
+    private void jButtonSaveDataFolderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSaveDataFolderActionPerformed
+
+        JFileChooser fc = new JFileChooser();
+        fc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+        fc.showOpenDialog(this);
+        // Show open dialog; this method does not return until the dialog is closed
+        jTextFieldSaveData.setText(fc.getSelectedFile().getAbsolutePath());
+    }//GEN-LAST:event_jButtonSaveDataFolderActionPerformed
 
     /**
      * @param args the command line arguments
@@ -443,23 +580,30 @@ public class PaperRecommenderGUI extends javax.swing.JFrame {
     private javax.swing.JButton jButtonComputePaperFVCosine;
     private javax.swing.JButton jButtonComputePaperFVLinear;
     private javax.swing.JButton jButtonComputePaperFVRPY;
+    private javax.swing.JButton jButtonDatasetFolder;
     private javax.swing.JButton jButtonLoadAuthor;
     private javax.swing.JButton jButtonLoadPaper;
     private javax.swing.JButton jButtonReadAuthor;
     private javax.swing.JButton jButtonReadPaper;
     private javax.swing.JButton jButtonRecommendAllAuthor;
     private javax.swing.JButton jButtonSaveAuthor;
+    private javax.swing.JButton jButtonSaveDataFolder;
     private javax.swing.JButton jButtonSavePaper;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel4;
+    private javax.swing.JTextField jTextFieldDataset;
     private javax.swing.JTextField jTextFieldMRR;
     private javax.swing.JTextField jTextFieldNDCG10;
     private javax.swing.JTextField jTextFieldNDCG5;
+    private javax.swing.JTextField jTextFieldSaveData;
     private javax.swing.JTextField jTextFieldStatus;
     // End of variables declaration//GEN-END:variables
 }

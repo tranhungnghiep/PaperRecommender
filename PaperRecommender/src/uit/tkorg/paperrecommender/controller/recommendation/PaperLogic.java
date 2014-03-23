@@ -50,15 +50,15 @@ public class PaperLogic implements Serializable {
      *
      * @throws java.io.IOException
      */
-    public void buildListOfPapers() throws IOException {
-        setPapers(ImportDataset1.buildListOfPapers());
+    public void buildListOfPapers(String Dataset1Folder) throws IOException {
+        setPapers(ImportDataset1.buildListOfPapers(Dataset1Folder));
     }
 
     /**
      * This method computes and set value for all papers' full feature vector
      * (after combining citation and reference papers).
      *
-     * @param weightingScheme
+     * @param weightingScheme 0: linear; 1: cosine; 2: rpy
      */
     public void computeAllPapersFeatureVector(int weightingScheme) {
         for (String key : getPapers().keySet()) {
