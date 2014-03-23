@@ -23,6 +23,9 @@ import uit.tkorg.paperrecommender.model.Paper;
  */
 public class ImportDataset1 {
 
+    // Prevent instantiation.
+    private ImportDataset1() {}
+
     /**
      * This method read all keywords in all papers in the dataset 1 and return
      * them in an arraylist.

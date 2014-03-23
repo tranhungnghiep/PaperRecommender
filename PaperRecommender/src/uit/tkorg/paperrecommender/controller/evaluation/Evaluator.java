@@ -4,6 +4,8 @@
  */
 package uit.tkorg.paperrecommender.controller.evaluation;
 
+import java.util.HashMap;
+
 /**
  * This class handles all logics for evaluation of recommendation results.
  * Method:
@@ -16,5 +18,26 @@ package uit.tkorg.paperrecommender.controller.evaluation;
  * @author THNghiep
  */
 public class Evaluator {
+    /**
+     * This method computes NDCG at position n.
+     * @param authors
+     * @param n
+     * @return ndcg
+     */
+    public double NDCG(HashMap authors, int n) {
+        double ndcg = 0;
+        // coding here.
+        return ndcg;
+    }
     
+    /**
+     * This method computes MRR.
+     * @param authors
+     * @return 
+     */
+    public double MRR(HashMap authors) {
+        double mrr = 0;
+        // coding here.
+        return mrr;
+    }
 }

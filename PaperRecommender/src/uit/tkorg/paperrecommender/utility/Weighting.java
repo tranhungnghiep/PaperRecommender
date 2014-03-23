@@ -12,6 +12,9 @@ import ir.vsr.HashMapVector;
  */
 public class Weighting {
 
+    // Prevent instantiation.
+    private Weighting() {}
+
     /**
      * Compute cosine angle of two vector. Use HashMapVector from ir package as
      * vector datatype: need to examine how to use correctly.

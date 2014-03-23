@@ -18,7 +18,10 @@ import java.util.Map;
  * @author THNghiep
  */
 public class General {
-    
+
+    // Prevent instantiation.
+    private General() {}
+
     /**
      * This method sort similarities descending
      *

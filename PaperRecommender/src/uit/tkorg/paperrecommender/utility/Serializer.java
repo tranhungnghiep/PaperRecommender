@@ -16,10 +16,14 @@ import java.io.ObjectOutputStream;
  * Support class for serializing and deserializing.
  */
 public class Serializer {
+
+    // Prevent instantiation.
+    private Serializer() {}
+
     /**
      * Serialize.
      */
-    public void saveObjectToFile(Object o, String fileName) {
+    public static void saveObjectToFile(Object o, String fileName) {
       try {
          FileOutputStream fileOut = new FileOutputStream(fileName);
          ObjectOutputStream out = new ObjectOutputStream(fileOut);
@@ -34,7 +38,7 @@ public class Serializer {
     /**
      * Deserialize.
      */
-    public Object loadObjectFromFile(String fileName) {
+    public static Object loadObjectFromFile(String fileName) {
       Object o = null;
       try {
          FileInputStream fileIn = new FileInputStream(fileName);
