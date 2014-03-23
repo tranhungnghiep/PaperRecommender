@@ -7,6 +7,7 @@ package uit.tkorg.paperrecommender.controller.evaluation;
 import java.util.HashMap;
 import uit.tkorg.paperrecommender.model.Author;
 import uit.tkorg.paperrecommender.utility.evaluation.NDCG;
+import uit.tkorg.paperrecommender.utility.evaluation.ReciprocalRank;
 
 /**
  * This class handles all logics for evaluation of recommendation results.
@@ -32,10 +33,9 @@ public class Evaluator {
      */
     public double NDCG(HashMap<String, Author> authorsInput, int n) {
         double ndcg = 0;
+        
         double currentNDCG = 0;
-        
         this.authors = authorsInput;
-        
         if (n == 5) {
             for (String key : authorsInput.keySet()) {
                 currentNDCG = NDCG.computeNDCG(authorsInput.get(key).getRecommendation(), authorsInput.get(key).getGroundTruth(), n);
@@ -65,9 +65,18 @@ public class Evaluator {
      * @param authors
      * @return 
      */
-    public double MRR(HashMap authorsInput) {
+    public double MRR(HashMap<String, Author> authorsInput) {
         double mrr = 0;
-        // coding here.
+
+        double currentRR = 0;
+        this.authors = authorsInput;
+        for (String key : authorsInput.keySet()) {
+            currentRR = ReciprocalRank.computeRR(authorsInput.get(key).getRecommendation(), authorsInput.get(key).getGroundTruth());
+            authors.get(key).setRr(currentRR);
+            mrr += currentRR;
+        }
+        mrr = mrr / authorsInput.size();
+
         return mrr;
     }
 }

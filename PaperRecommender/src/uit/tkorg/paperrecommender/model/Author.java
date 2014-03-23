@@ -24,7 +24,7 @@ public class Author implements Serializable {
     private List Recommendation; // List string.
     private double ndcg5;
     private double ndcg10;
-    private double mrr;
+    private double rr;
 
     /**
      * Default constructor used for serializable.
@@ -38,7 +38,7 @@ public class Author implements Serializable {
         this.Recommendation = null;
         this.ndcg5 = 0;
         this.ndcg10 = 0;
-        this.mrr = 0;
+        this.rr = 0;
     }
 
     /**
@@ -154,16 +154,16 @@ public class Author implements Serializable {
     }
 
     /**
-     * @return the mrr
+     * @return the rr
      */
-    public double getMrr() {
-        return mrr;
+    public double getRr() {
+        return rr;
     }
 
     /**
-     * @param mrr the mrr to set
+     * @param rr the rr to set
      */
-    public void setMrr(double mrr) {
-        this.mrr = mrr;
+    public void setRr(double rr) {
+        this.rr = rr;
     }
 }
