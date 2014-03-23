@@ -79,12 +79,32 @@ public class PaperRecommenderGUI extends javax.swing.JFrame {
         });
 
         jButtonLoadPaper.setText("Load");
+        jButtonLoadPaper.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonLoadPaperActionPerformed(evt);
+            }
+        });
 
         jButtonReadAuthor.setText("Read from DS1");
+        jButtonReadAuthor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonReadAuthorActionPerformed(evt);
+            }
+        });
 
         jButtonSaveAuthor.setText("Save");
+        jButtonSaveAuthor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonSaveAuthorActionPerformed(evt);
+            }
+        });
 
         jButtonLoadAuthor.setText("Load");
+        jButtonLoadAuthor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonLoadAuthorActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -150,12 +170,32 @@ public class PaperRecommenderGUI extends javax.swing.JFrame {
         });
 
         jButtonComputePaperFVRPY.setText("RPY");
+        jButtonComputePaperFVRPY.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonComputePaperFVRPYActionPerformed(evt);
+            }
+        });
 
         jButtonComputeAuthorFVLinear.setText("Linear");
+        jButtonComputeAuthorFVLinear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonComputeAuthorFVLinearActionPerformed(evt);
+            }
+        });
 
         jButtonComputeAuthorFVCosine.setText("Cosine");
+        jButtonComputeAuthorFVCosine.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonComputeAuthorFVCosineActionPerformed(evt);
+            }
+        });
 
         jButtonComputeAuthorFVRPY.setText("RPY");
+        jButtonComputeAuthorFVRPY.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonComputeAuthorFVRPYActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -215,8 +255,18 @@ public class PaperRecommenderGUI extends javax.swing.JFrame {
         });
 
         jButtonComputeNDCG10.setText("NDCG@10");
+        jButtonComputeNDCG10.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonComputeNDCG10ActionPerformed(evt);
+            }
+        });
 
         jButtonComputeMRR.setText("MRR");
+        jButtonComputeMRR.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonComputeMRRActionPerformed(evt);
+            }
+        });
 
         jLabel5.setText("Status:");
 
@@ -308,6 +358,46 @@ public class PaperRecommenderGUI extends javax.swing.JFrame {
     private void jButtonComputeNDCG5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonComputeNDCG5ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jButtonComputeNDCG5ActionPerformed
+
+    private void jButtonLoadPaperActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonLoadPaperActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButtonLoadPaperActionPerformed
+
+    private void jButtonReadAuthorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonReadAuthorActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButtonReadAuthorActionPerformed
+
+    private void jButtonSaveAuthorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSaveAuthorActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButtonSaveAuthorActionPerformed
+
+    private void jButtonLoadAuthorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonLoadAuthorActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButtonLoadAuthorActionPerformed
+
+    private void jButtonComputePaperFVRPYActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonComputePaperFVRPYActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButtonComputePaperFVRPYActionPerformed
+
+    private void jButtonComputeAuthorFVLinearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonComputeAuthorFVLinearActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButtonComputeAuthorFVLinearActionPerformed
+
+    private void jButtonComputeAuthorFVCosineActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonComputeAuthorFVCosineActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButtonComputeAuthorFVCosineActionPerformed
+
+    private void jButtonComputeAuthorFVRPYActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonComputeAuthorFVRPYActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButtonComputeAuthorFVRPYActionPerformed
+
+    private void jButtonComputeNDCG10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonComputeNDCG10ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButtonComputeNDCG10ActionPerformed
+
+    private void jButtonComputeMRRActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonComputeMRRActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButtonComputeMRRActionPerformed
 
     /**
      * @param args the command line arguments

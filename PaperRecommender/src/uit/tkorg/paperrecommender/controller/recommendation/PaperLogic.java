@@ -27,8 +27,8 @@ public class PaperLogic implements Serializable {
     // Value of this hash map is the relevant paper object.
     private HashMap<String, Paper> papers;
 
-    public PaperLogic(HashMap<String, Paper> papers) {
-        this.papers = papers;
+    public PaperLogic() {
+        this.papers = null;
     }
 
     /**
