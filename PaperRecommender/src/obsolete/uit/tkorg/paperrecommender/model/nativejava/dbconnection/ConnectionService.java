@@ -3,7 +3,7 @@ package obsolete.uit.tkorg.paperrecommender.model.nativejava.dbconnection;
 import java.sql.Connection;
 import java.sql.DriverManager;
 
-import constant.PaperRecommenerConstant;
+import uit.tkorg.paperrecommender.constant.PaperRecommenerConstant;
 
 public class ConnectionService {
 

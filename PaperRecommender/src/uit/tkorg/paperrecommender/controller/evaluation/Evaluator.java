@@ -4,6 +4,7 @@
  */
 package uit.tkorg.paperrecommender.controller.evaluation;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import uit.tkorg.paperrecommender.model.Author;
 import uit.tkorg.paperrecommender.utility.evaluation.NDCG;
@@ -20,9 +21,13 @@ import uit.tkorg.paperrecommender.utility.evaluation.ReciprocalRank;
  * + output: MRR.
  * @author THNghiep
  */
-public class Evaluator {
+public class Evaluator implements Serializable {
 
-    HashMap<String, Author> authors;
+    private HashMap<String, Author> authors;
+
+    public Evaluator() {
+        this.authors = null;
+    }
     
     /**
      * This method computes NDCG at position n.
@@ -78,5 +83,19 @@ public class Evaluator {
         mrr = mrr / authorsInput.size();
 
         return mrr;
+    }
+
+    /**
+     * @return the authors
+     */
+    public HashMap<String, Author> getAuthors() {
+        return authors;
+    }
+
+    /**
+     * @param authors the authors to set
+     */
+    public void setAuthors(HashMap<String, Author> authors) {
+        this.authors = authors;
     }
 }

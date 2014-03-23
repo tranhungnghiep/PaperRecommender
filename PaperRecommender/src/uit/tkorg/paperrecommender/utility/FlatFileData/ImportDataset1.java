@@ -4,7 +4,7 @@
  */
 package uit.tkorg.paperrecommender.utility.FlatFileData;
 
-import constant.PaperRecommenerConstant;
+import uit.tkorg.paperrecommender.constant.PaperRecommenerConstant;
 import ir.vsr.HashMapVector;
 import java.io.BufferedReader;
 import java.io.File;
