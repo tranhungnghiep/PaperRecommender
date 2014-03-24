@@ -4,6 +4,12 @@
  */
 package uit.tkorg.paperrecommender.controller.central;
 
+import java.awt.print.Paper;
+import ir.vsr.HashMapVector;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import static javax.swing.UIManager.get;
 import uit.tkorg.paperrecommender.constant.PaperRecommenerConstant;
 import uit.tkorg.paperrecommender.controller.evaluation.Evaluator;
 import uit.tkorg.paperrecommender.controller.recommendation.AuthorLogic;
@@ -20,16 +26,17 @@ import uit.tkorg.paperrecommender.utility.Serializer;
  * Also control all traffic from gui.
  */
 public class PaperRecommender {
-    private AuthorLogic authorLogic;
-    private PaperLogic paperLogic;
-    private Recommender recommender;
-    private Evaluator evaluator;
+    private AuthorLogic authorLogic=new AuthorLogic() ;
+    private PaperLogic paperLogic=new PaperLogic();
+    private Recommender recommender= new Recommender();
+    private Evaluator evaluator =new Evaluator();
     
     /**
      * @param args the command line arguments
      * This method is used as a entry point for testing.
      */
-    public static void main(String[] args) {        
+    public static void main(String[] args) throws IOException { 
+        
     }
     
     /**
@@ -38,11 +45,12 @@ public class PaperRecommender {
      * @param param 
      * @return response: result of request after processing.
      */
+    
     public String[] centralController(String request, String param) {
         String[] response = new String[2];
         
-        authorLogic = new AuthorLogic();
-        paperLogic = new PaperLogic();
+////        authorLogic = new AuthorLogic();
+////        paperLogic = new PaperLogic();
         
         String Dataset1Folder;
         String SaveDataFolder;
@@ -110,7 +118,7 @@ public class PaperRecommender {
                     response[0] = "Success.";
                     break;
                 case "Paper FV linear":
-                    paperLogic.computeAllPapersFeatureVector(0);
+                   paperLogic.computeAllPapersFeatureVector(0);
                     response[0] = "Success.";
                     break;
                 case "Paper FV cosine":
