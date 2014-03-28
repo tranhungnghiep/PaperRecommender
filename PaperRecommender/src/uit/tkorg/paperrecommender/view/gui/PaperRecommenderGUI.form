@@ -32,23 +32,21 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jTextFieldStatus" max="32767" attributes="0"/>
                   </Group>
-                  <Group type="103" alignment="0" groupAlignment="0" max="-2" attributes="0">
-                      <Component id="jButtonRecommendAllAuthor" max="32767" attributes="0"/>
-                      <Group type="102" attributes="0">
-                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                              <Component id="jButtonComputeMRR" max="32767" attributes="0"/>
-                              <Component id="jButtonComputeNDCG5" alignment="1" max="32767" attributes="0"/>
-                              <Component id="jButtonComputeNDCG10" alignment="1" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace min="-2" pref="24" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                              <Component id="jTextFieldNDCG5" alignment="0" max="32767" attributes="0"/>
-                              <Component id="jTextFieldNDCG10" alignment="0" max="32767" attributes="0"/>
-                              <Component id="jTextFieldMRR" alignment="0" min="-2" pref="75" max="-2" attributes="0"/>
-                          </Group>
+                  <Component id="jButtonRecommendAllAuthor" max="32767" attributes="0"/>
+                  <Group type="102" attributes="0">
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Component id="jButtonComputeMRR" max="32767" attributes="0"/>
+                          <Component id="jButtonComputeNDCG5" alignment="1" max="32767" attributes="0"/>
+                          <Component id="jButtonComputeNDCG10" alignment="1" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="-2" pref="24" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Component id="jTextFieldNDCG5" alignment="0" max="32767" attributes="0"/>
+                          <Component id="jTextFieldNDCG10" alignment="0" max="32767" attributes="0"/>
+                          <Component id="jTextFieldMRR" alignment="0" min="-2" pref="75" max="-2" attributes="0"/>
                       </Group>
                   </Group>
-                  <Component id="jPanel1" alignment="0" pref="0" max="32767" attributes="0"/>
+                  <Component id="jPanel1" alignment="0" pref="350" max="32767" attributes="0"/>
                   <Component id="jPanel4" alignment="0" max="32767" attributes="1"/>
                   <Component id="jPanel2" alignment="0" max="32767" attributes="0"/>
               </Group>
@@ -100,9 +98,6 @@
           </Border>
         </Property>
       </Properties>
-      <AccessibilityProperties>
-        <Property name="AccessibleContext.accessibleName" type="java.lang.String" value="Data"/>
-      </AccessibilityProperties>
 
       <Layout>
         <DimensionLayout dim="0">
