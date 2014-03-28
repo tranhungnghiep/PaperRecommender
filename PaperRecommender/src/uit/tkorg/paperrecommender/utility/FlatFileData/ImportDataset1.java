@@ -1,9 +1,10 @@
-/*
+    /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
 package uit.tkorg.paperrecommender.utility.FlatFileData;
 
+import java.io.*;
 import uit.tkorg.paperrecommender.constant.PaperRecommenerConstant;
 import ir.vsr.HashMapVector;
 import java.io.BufferedReader;
@@ -23,8 +24,12 @@ import uit.tkorg.paperrecommender.model.Paper;
  */
 public class ImportDataset1 {
 
+    static List<Paper> allRefOfPaper=new ArrayList();
+    static List<Paper> allCitOfPaper= new ArrayList() ;
+
     // Prevent instantiation.
-    private ImportDataset1() {
+    ImportDataset1() {
+
     }
 
     /**
@@ -101,7 +106,7 @@ public class ImportDataset1 {
      * @throws java.io.IOException
      */
     public static HashMap<String, Paper> readAllCandidatePapers(File dir) throws IOException {
-        HashMap<String, Paper> papers = new HashMap<String, Paper>();
+        HashMap<String, Paper> papers = new HashMap<>();
         File[] files = dir.listFiles();//Get list of all files in directory
         //Browse all files in directory
         for (File file : files) {
@@ -110,8 +115,8 @@ public class ImportDataset1 {
             paper.setPaperId(paperid);//set PaperId for paper
             paper.setYear(paperYear(paperid));//set Year for paper
             paper.setContent(readFilePaper(file.getAbsoluteFile()));//set Content for paper
-            paper.setCitation(addCitation(file.getAbsolutePath()));//set Citation for paper
-            paper.setReference(addReference(file.getAbsolutePath()));//set Reference for paper
+            paper.setCitation(addCitation(paperid));//set Citation for paper
+            paper.setReference(addReference(paperid));//set Reference for paper
             papers.put(paperid, paper);
         }
         return papers;
@@ -140,7 +145,7 @@ public class ImportDataset1 {
         String path = file.getAbsolutePath();
 //        System.out.println(path);
         try (BufferedReader br = new BufferedReader(new FileReader(path))) {
-            String line = null;
+            String line;
             while ((line = br.readLine()) != null) {
                 String[] str = line.split(" ");
                 if (str.length == 2) {
@@ -148,8 +153,8 @@ public class ImportDataset1 {
                 }
             }
         } catch (Exception e) {
-            
-            System.out.println(e.getMessage()+path);
+
+            System.out.println(e.getMessage() + path);
         }
         return content;
     }
@@ -162,7 +167,7 @@ public class ImportDataset1 {
      * @throws java.io.FileNotFoundException
      */
     public static List<String> addCitation(String paperId) throws FileNotFoundException, IOException {
-        List<String> citation = new ArrayList<String>();
+        List<String> citation = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(PaperRecommenerConstant.DATASETFOLDER + "\\InterLink\\acl.20080325.net"))) {
             String line = null;
             while ((line = br.readLine()) != null) {
@@ -185,7 +190,7 @@ public class ImportDataset1 {
      * @throws java.io.FileNotFoundException
      */
     public static List<String> addReference(String paperId) throws FileNotFoundException, IOException {
-        List<String> reference = new ArrayList<String>();
+        List<String> reference = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(PaperRecommenerConstant.DATASETFOLDER + "\\InterLink\\acl.20080325.net"))) {
             String line = null;
             while ((line = br.readLine()) != null) {
@@ -240,15 +245,15 @@ public class ImportDataset1 {
      * @throws IOException
      */
     public static List<Paper> findCitOfPaper(File dir) throws FileNotFoundException, IOException {
-        List<Paper> allCitOfPaper = new ArrayList();
         File[] files = dir.listFiles();
+       // List<Paper> allCitOfPaper = new ArrayList();
         for (File file : files) {
             if (file.isDirectory()) {
                 findCitOfPaper(file);
             } else if (file.isFile()) {
                 if (file.getName().contains("cit")) {
                     Paper paper = new Paper();
-                    paper.setPaperId(file.getName().replaceAll("_fv.txt", ""));
+                    paper.setPaperId(file.getName().replaceAll("_fv.txt|.txt", ""));
                     paper.setPaperType("citation");
                     paper.setContent(readFilePaper(new File(file.getAbsolutePath())));
                     allCitOfPaper.add(paper);
@@ -267,8 +272,9 @@ public class ImportDataset1 {
      * @throws IOException
      */
     public static List<Paper> findRefOfPaper(File dir) throws FileNotFoundException, IOException {
-        List<Paper> allRefOfPaper = new ArrayList();
         File[] files = dir.listFiles();
+     // List<Paper>  allRefOfPaper = new ArrayList();
+
         for (File file : files) {
             if (file.isDirectory()) {
                 findRefOfPaper(file);
@@ -278,11 +284,12 @@ public class ImportDataset1 {
                     paper.setPaperId(file.getName().replaceAll("_fv.txt", ""));
                     paper.setPaperType("reference");
                     paper.setContent(readFilePaper(new File(file.getAbsolutePath())));
-                    allRefOfPaper.add(paper);
+                    allRefOfPaper.add(paper);                   
                 }
             }
         }
         return allRefOfPaper;
+        
     }
 
     /**
@@ -294,28 +301,34 @@ public class ImportDataset1 {
      * @throws IOException
      */
     public static List<Paper> findPaperOfAuthor(File dir) throws FileNotFoundException, IOException {
+        
         List<Paper> papers = new ArrayList();
         String pathVectorFv = null;// ten duong dan den vector dac trung cua paper
         String idAuthor = dir.getName();// lay id cua Author
+        
         if (idAuthor.contains("y")) {
             Paper paper = new Paper();
             paper.setPaperId(dir.getName() + "-1"); // set id paper Junior
             paper.setPaperType("paper of junior");
             pathVectorFv = dir.getAbsolutePath() + "\\" + dir.getName() + "-1" + "_fv.txt";
+            allRefOfPaper = new ArrayList();
             paper.setReference(findRefOfPaper(dir));
             paper.setContent(readFilePaper(new File(pathVectorFv)));// set content cho paper i
             papers.add(paper);
 
-        } else {
+        } 
+        else {
             File[] files = dir.listFiles();
             for (File file : files) {
                 if (file.isDirectory()) {
                     Paper paper = new Paper();
                     pathVectorFv = file.getAbsolutePath() + "\\" + file.getName() + "_fv.txt";
                     paper.setPaperId(file.getName()); // set id paper i cua Senior
-                    paper.setPaperType("paper of senior");
-                paper.setCitation(findCitOfPaper(file)); // set List cit cua  paper i
-                paper.setReference(findRefOfPaper(file)); // set List ref cua paper i
+                    paper.setPaperType("paper of i" + "senior");
+                    allCitOfPaper = new ArrayList();
+                    paper.setCitation(findCitOfPaper(file)); // set List cit cua  paper i
+                    allRefOfPaper = new ArrayList();
+                    paper.setReference(findRefOfPaper(file)); // set List ref cua paper i
                     paper.setContent(readFilePaper(new File(pathVectorFv)));// set content cho paper i
                     papers.add(paper);
                 }

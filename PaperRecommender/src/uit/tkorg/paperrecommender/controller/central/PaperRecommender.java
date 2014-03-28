@@ -3,10 +3,9 @@
  * and open the template in the editor.
  */
 package uit.tkorg.paperrecommender.controller.central;
-
-import java.awt.print.Paper;
 import ir.vsr.HashMapVector;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import static javax.swing.UIManager.get;
@@ -15,7 +14,10 @@ import uit.tkorg.paperrecommender.controller.evaluation.Evaluator;
 import uit.tkorg.paperrecommender.controller.recommendation.AuthorLogic;
 import uit.tkorg.paperrecommender.controller.recommendation.PaperLogic;
 import uit.tkorg.paperrecommender.controller.recommendation.Recommender;
+import uit.tkorg.paperrecommender.model.Author;
+import uit.tkorg.paperrecommender.model.Paper;
 import uit.tkorg.paperrecommender.utility.Serializer;
+import uit.tkorg.paperrecommender.utility.FlatFileData.ImportDataset1;
 
 
 /**
@@ -30,12 +32,13 @@ public class PaperRecommender {
     private PaperLogic paperLogic=new PaperLogic();
     private Recommender recommender= new Recommender();
     private Evaluator evaluator =new Evaluator();
-    
     /**
      * @param args the command line arguments
      * This method is used as a entry point for testing.
      */
     public static void main(String[] args) throws IOException { 
+      
+        
         
     }
     
@@ -68,7 +71,7 @@ public class PaperRecommender {
                     response[0] = "Success.";
                     break;
                 case "Read author":
-                    // Read param to get dataset 1 folder.
+                   // Read param to get dataset 1 folder.
                     if ((param != null) && !(param.isEmpty())) {
                         Dataset1Folder = param;
                     } else {

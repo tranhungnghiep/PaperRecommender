@@ -15,11 +15,9 @@ import uit.tkorg.paperrecommender.utility.Weighting;
 
 /**
  *
- * @author THNghiep 
- * This class handles all logics for paper object. 
- * Method: 
- * - Generate list of papers (key: paper id, value: object paper). 
- * - Compute papers' full vector: linear, cosine, rpy.
+ * @author THNghiep This class handles all logics for paper object. Method: -
+ * Generate list of papers (key: paper id, value: object paper). - Compute
+ * papers' full vector: linear, cosine, rpy.
  */
 public class PaperLogic implements Serializable {
 
@@ -43,6 +41,7 @@ public class PaperLogic implements Serializable {
      */
     public void setPapers(HashMap<String, Paper> papers) {
         this.papers = papers;
+
     }
 
     /**
@@ -63,6 +62,7 @@ public class PaperLogic implements Serializable {
     public void computeAllPapersFeatureVector(int weightingScheme) {
         for (String key : getPapers().keySet()) {
             papers.get(key).setFeatureVector(computePaperFeatureVector(papers.get(key).getPaperId(), weightingScheme));
+
         }
     }
 
@@ -148,8 +148,10 @@ public class PaperLogic implements Serializable {
     public HashMapVector sumFeatureVectorWithLinear(List<String> paperIds) {
         HashMapVector featureVector = new HashMapVector();
         for (String paperId : paperIds) {
-            Paper paper = getPapers().get(paperId);
-            featureVector.add(paper.getContent());
+            if (getPapers().containsKey(paperId)) {
+                Paper paper = getPapers().get(paperId);
+                featureVector.add(paper.getContent());
+            }
         }
         return featureVector;
     }
@@ -165,9 +167,11 @@ public class PaperLogic implements Serializable {
     public HashMapVector sumFeatureVectorWithCosine(Paper cpaper, List<String> paperIds) {
         HashMapVector featureVector = new HashMapVector();
         for (String paperId : paperIds) {
-            Paper paper = getPapers().get(paperId);
-            double cosine = Weighting.computeCosine(cpaper.getContent(), paper.getContent());
-            featureVector.addScaled(paper.getContent(), cosine);
+            if (getPapers().containsKey(paperId)) {
+                Paper paper = getPapers().get(paperId);
+                double cosine = Weighting.computeCosine(cpaper.getContent(), paper.getContent());
+                featureVector.addScaled(paper.getContent(), cosine);
+            }
         }
         return featureVector;
     }
@@ -183,9 +187,11 @@ public class PaperLogic implements Serializable {
     public HashMapVector sumFeatureVectorWithRPY(Paper cpaper, List<String> paperIds) {
         HashMapVector featureVector = new HashMapVector();
         for (String paperId : paperIds) {
-            Paper paper = getPapers().get(paperId);
-            double rpy = Weighting.computeRPY(cpaper.getYear(), paper.getYear());
-            featureVector.addScaled(paper.getContent(), rpy);
+            if (getPapers().containsKey(paperId)) {
+                Paper paper = getPapers().get(paperId);
+                double rpy = Weighting.computeRPY(cpaper.getYear(), paper.getYear());
+                featureVector.addScaled(paper.getContent(), rpy);
+            }
         }
         return featureVector;
     }
