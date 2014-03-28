@@ -28,15 +28,15 @@ import uit.tkorg.paperrecommender.utility.FlatFileData.ImportDataset1;
  * Also control all traffic from gui.
  */
 public class PaperRecommender {
-    private AuthorLogic authorLogic=new AuthorLogic() ;
-    private PaperLogic paperLogic=new PaperLogic();
-    private Recommender recommender= new Recommender();
-    private Evaluator evaluator =new Evaluator();
+    private AuthorLogic authorLogic;
+    private PaperLogic paperLogic;
+    private Recommender recommender;
+    private Evaluator evaluator;
     /**
      * @param args the command line arguments
      * This method is used as a entry point for testing.
      */
-    public static void main(String[] args) throws IOException { 
+    public static void main(String[] args) { 
       
         
         
@@ -52,8 +52,10 @@ public class PaperRecommender {
     public String[] centralController(String request, String param) {
         String[] response = new String[2];
         
-////        authorLogic = new AuthorLogic();
-////        paperLogic = new PaperLogic();
+        authorLogic = new AuthorLogic();
+        paperLogic = new PaperLogic();
+        recommender = new Recommender();
+        evaluator = new Evaluator();
         
         String Dataset1Folder;
         String SaveDataFolder;
