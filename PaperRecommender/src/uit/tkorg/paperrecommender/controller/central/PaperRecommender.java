@@ -62,7 +62,7 @@ public class PaperRecommender {
                     } else {
                         Dataset1Folder = PaperRecommenerConstant.DATASETFOLDER;
                     }
-                    ImportDataset1.buildListOfPapers(Dataset1Folder);
+                    papers = ImportDataset1.buildListOfPapers(Dataset1Folder);
                     response[0] = "Success.";
                     break;
                 case "Read author":
@@ -72,7 +72,7 @@ public class PaperRecommender {
                     } else {
                         Dataset1Folder = PaperRecommenerConstant.DATASETFOLDER;
                     }
-                    ImportDataset1.buildListOfAuthors(Dataset1Folder);
+                    authors = ImportDataset1.buildListOfAuthors(Dataset1Folder);
                     response[0] = "Success.";
                     break;
                 case "Save paper":
