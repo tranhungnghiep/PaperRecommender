@@ -11,7 +11,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import uit.tkorg.paperrecommender.model.Author;
 import uit.tkorg.paperrecommender.model.Paper;
-import uit.tkorg.paperrecommender.utility.General;
+import uit.tkorg.paperrecommender.utility.GeneralUtility;
 import uit.tkorg.paperrecommender.utility.Weighting;
 
 /**
@@ -24,11 +24,11 @@ import uit.tkorg.paperrecommender.utility.Weighting;
  * This output could be used as universal recommendation list, upto the input list of authors.
  * @author THNghiep
  */
-public class Recommender implements Serializable {
+public class ContentBasedRecommender implements Serializable {
     // contents recommendation list.
     private HashMap<String, Author> authors;
 
-    public Recommender() {
+    public ContentBasedRecommender() {
         this.authors = null;
     }
 
@@ -69,7 +69,7 @@ public class Recommender implements Serializable {
         }
         
         // Sort papers descending based on similarity.
-        paperSimilarity = General.sortHashMap(paperSimilarity);
+        paperSimilarity = GeneralUtility.sortHashMap(paperSimilarity);
         
         // Take top ten papers.
         int counter = 0;

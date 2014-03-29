@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package uit.tkorg.paperrecommender.controller.recommendation;
+package uit.tkorg.paperrecommender.controller.datapreparation;
 
 import ir.vsr.HashMapVector;
 import java.io.IOException;
@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import uit.tkorg.paperrecommender.model.Author;
 import uit.tkorg.paperrecommender.model.Paper;
-import uit.tkorg.paperrecommender.utility.FlatFileData.ImportDataset1;
+import uit.tkorg.paperrecommender.utility.dataimport.flatfile.ImportDataset1;
 import uit.tkorg.paperrecommender.utility.Weighting;
 
 /**
@@ -24,13 +24,13 @@ import uit.tkorg.paperrecommender.utility.Weighting;
  *
  * @author THNghiep
  */
-public class AuthorLogic implements Serializable {
+public class AuthorFV implements Serializable {
 
     // Key of this hash map is paper id.
     // Value of this hash map is the relevant paper object.
     private HashMap<String, Author> authors;
 
-    public AuthorLogic() {
+    public AuthorFV() {
         this.authors = null;
     }
 

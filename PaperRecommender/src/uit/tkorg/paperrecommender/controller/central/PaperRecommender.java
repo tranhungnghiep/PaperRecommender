@@ -3,21 +3,12 @@
  * and open the template in the editor.
  */
 package uit.tkorg.paperrecommender.controller.central;
-import ir.vsr.HashMapVector;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import static javax.swing.UIManager.get;
 import uit.tkorg.paperrecommender.constant.PaperRecommenerConstant;
 import uit.tkorg.paperrecommender.controller.evaluation.Evaluator;
-import uit.tkorg.paperrecommender.controller.recommendation.AuthorLogic;
-import uit.tkorg.paperrecommender.controller.recommendation.PaperLogic;
-import uit.tkorg.paperrecommender.controller.recommendation.Recommender;
-import uit.tkorg.paperrecommender.model.Author;
-import uit.tkorg.paperrecommender.model.Paper;
+import uit.tkorg.paperrecommender.controller.datapreparation.AuthorFV;
+import uit.tkorg.paperrecommender.controller.datapreparation.PaperFV;
+import uit.tkorg.paperrecommender.controller.recommendation.ContentBasedRecommender;
 import uit.tkorg.paperrecommender.utility.Serializer;
-import uit.tkorg.paperrecommender.utility.FlatFileData.ImportDataset1;
 
 
 /**
@@ -28,18 +19,15 @@ import uit.tkorg.paperrecommender.utility.FlatFileData.ImportDataset1;
  * Also control all traffic from gui.
  */
 public class PaperRecommender {
-    private AuthorLogic authorLogic;
-    private PaperLogic paperLogic;
-    private Recommender recommender;
+    private AuthorFV authorLogic;
+    private PaperFV paperLogic;
+    private ContentBasedRecommender recommender;
     private Evaluator evaluator;
     /**
      * @param args the command line arguments
      * This method is used as a entry point for testing.
      */
     public static void main(String[] args) { 
-      
-        
-        
     }
     
     /**
@@ -52,9 +40,9 @@ public class PaperRecommender {
     public String[] centralController(String request, String param) {
         String[] response = new String[2];
         
-        authorLogic = new AuthorLogic();
-        paperLogic = new PaperLogic();
-        recommender = new Recommender();
+        authorLogic = new AuthorFV();
+        paperLogic = new PaperFV();
+        recommender = new ContentBasedRecommender();
         evaluator = new Evaluator();
         
         String Dataset1Folder;
@@ -109,7 +97,7 @@ public class PaperRecommender {
                     } else {
                         SaveDataFolder = PaperRecommenerConstant.SAVEDATAFOLDER;
                     }
-                    paperLogic = (PaperLogic) Serializer.loadObjectFromFile(SaveDataFolder + "\\PaperLogic.dat");
+                    paperLogic = (PaperFV) Serializer.loadObjectFromFile(SaveDataFolder + "\\PaperLogic.dat");
                     response[0] = "Success.";
                     break;
                 case "Load author":
@@ -119,7 +107,7 @@ public class PaperRecommender {
                     } else {
                         SaveDataFolder = PaperRecommenerConstant.SAVEDATAFOLDER;
                     }
-                    authorLogic = (AuthorLogic) Serializer.loadObjectFromFile(SaveDataFolder + "\\AuthorLogic.dat");
+                    authorLogic = (AuthorFV) Serializer.loadObjectFromFile(SaveDataFolder + "\\AuthorLogic.dat");
                     response[0] = "Success.";
                     break;
                 case "Paper FV linear":

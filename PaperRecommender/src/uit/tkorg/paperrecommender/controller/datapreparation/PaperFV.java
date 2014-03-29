@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package uit.tkorg.paperrecommender.controller.recommendation;
+package uit.tkorg.paperrecommender.controller.datapreparation;
 
 import ir.vsr.HashMapVector;
 import java.io.IOException;
@@ -10,7 +10,7 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import uit.tkorg.paperrecommender.model.Paper;
-import uit.tkorg.paperrecommender.utility.FlatFileData.ImportDataset1;
+import uit.tkorg.paperrecommender.utility.dataimport.flatfile.ImportDataset1;
 import uit.tkorg.paperrecommender.utility.Weighting;
 
 /**
@@ -19,13 +19,13 @@ import uit.tkorg.paperrecommender.utility.Weighting;
  * Generate list of papers (key: paper id, value: object paper). - Compute
  * papers' full vector: linear, cosine, rpy.
  */
-public class PaperLogic implements Serializable {
+public class PaperFV implements Serializable {
 
     // Key of this hash map is paper id.
     // Value of this hash map is the relevant paper object.
     private HashMap<String, Paper> papers;
 
-    public PaperLogic() {
+    public PaperFV() {
         this.papers = null;
     }
 

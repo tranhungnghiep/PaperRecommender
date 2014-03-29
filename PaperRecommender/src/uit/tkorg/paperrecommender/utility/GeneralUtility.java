@@ -17,10 +17,10 @@ import java.util.Map;
  * This class contents all general utilities.
  * @author THNghiep
  */
-public class General {
+public class GeneralUtility {
 
     // Prevent instantiation.
-    private General() {}
+    private GeneralUtility() {}
 
     /**
      * This method sort similarities descending
