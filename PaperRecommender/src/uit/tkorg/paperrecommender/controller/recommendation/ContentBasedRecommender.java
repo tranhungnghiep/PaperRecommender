@@ -41,7 +41,7 @@ public class ContentBasedRecommender {
      * + Save recommendation list into current author.
      * - Finish all authors, finish the hashmap of authors with all input data plus recommendation list.
      */
-    public static HashMap<String, Author> buildAllRecommendationLists(HashMap<String, Author> authorsInput, HashMap<String, Paper> papers) {
+    public static HashMap<String, Author> buildAllRecommendationLists(HashMap<String, Author> authorsInput, HashMap<String, Paper> papers) throws Exception {
         HashMap<String, Author> authors = authorsInput;
         List<String> recommendationPapers;
         for (String key : authorsInput.keySet()) {
@@ -57,7 +57,7 @@ public class ContentBasedRecommender {
      * @param papers: hashmap of all papers to recommend.
      * @return recommendationPapers
      */
-    private static List<String> buildRecommdationList(Author author, HashMap<String, Paper> papers) {
+    private static List<String> buildRecommdationList(Author author, HashMap<String, Paper> papers) throws Exception {
         List<String> recommendationPapers = new ArrayList();
         LinkedHashMap<String, Double> paperSimilarity = new LinkedHashMap();
         

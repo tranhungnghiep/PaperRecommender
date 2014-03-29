@@ -28,7 +28,7 @@ public class GeneralUtility {
      * @param hashMap
      * @return sortMap
      */
-    public static LinkedHashMap sortHashMap(HashMap<String, Double> hashMap) {
+    public static LinkedHashMap sortHashMap(HashMap<String, Double> hashMap) throws Exception {
         List list = new LinkedList(hashMap.entrySet());
         
         //sort list based on comparator

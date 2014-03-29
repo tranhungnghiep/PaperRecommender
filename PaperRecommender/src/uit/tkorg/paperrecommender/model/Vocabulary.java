@@ -48,12 +48,8 @@ public class Vocabulary implements Serializable{
     /**
      * Fill in data for vocabulary list.
      */
-    public void buildVocabulary() {
-        try {
-            vocabulary = ImportDataset1.readAllKeywords();
-            Collections.sort(vocabulary);
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
-        }
+    public void buildVocabulary() throws Exception {
+        vocabulary = ImportDataset1.readAllKeywords();
+        Collections.sort(vocabulary);
     }
 }

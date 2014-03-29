@@ -36,7 +36,7 @@ public class Evaluator {
      * @param n
      * @return ndcg
      */
-    public static double NDCG(HashMap<String, Author> authorsInput, int n) {
+    public static double NDCG(HashMap<String, Author> authorsInput, int n) throws Exception {
         double ndcg = 0;
         
         double currentNDCG = 0;
@@ -71,7 +71,7 @@ public class Evaluator {
      * @param authors
      * @return 
      */
-    public static double MRR(HashMap<String, Author> authorsInput) {
+    public static double MRR(HashMap<String, Author> authorsInput) throws Exception {
         double mrr = 0;
 
         double currentRR = 0;

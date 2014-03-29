@@ -162,6 +162,7 @@ public class PaperRecommender {
             }
         } catch (Exception e) {
             System.out.println(e.getMessage());
+            e.printStackTrace(System.out);
             response[0] = "Fail.";
             return response;
         }

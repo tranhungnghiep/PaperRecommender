@@ -26,7 +26,7 @@ public class ReciprocalRank {
      * @param idealList
      * @return reciprocal rank.
      */
-    public static double computeRR(List rankList, List idealList) {
+    public static double computeRR(List rankList, List idealList) throws Exception {
 
         for (int i = 0; i < rankList.size(); i++) {
             if (idealList.contains(rankList.get(i))) {

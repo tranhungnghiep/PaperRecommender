@@ -23,36 +23,25 @@ public class Serializer {
     /**
      * Serialize.
      */
-    public static void saveObjectToFile(Object o, String fileName) {
-      try {
-         FileOutputStream fileOut = new FileOutputStream(fileName);
-         ObjectOutputStream out = new ObjectOutputStream(fileOut);
-         out.writeObject(o);
-         out.close();
-         fileOut.close();
-      } catch(IOException i) {
-          i.printStackTrace();
-      }
+    public static void saveObjectToFile(Object o, String fileName) throws Exception {
+        FileOutputStream fileOut = new FileOutputStream(fileName);
+        ObjectOutputStream out = new ObjectOutputStream(fileOut);
+        out.writeObject(o);
+        out.close();
+        fileOut.close();
     }
     
     /**
      * Deserialize.
      */
-    public static Object loadObjectFromFile(String fileName) {
-      Object o = null;
-      try {
-         FileInputStream fileIn = new FileInputStream(fileName);
-         ObjectInputStream in = new ObjectInputStream(fileIn);
-         o = in.readObject();
-         in.close();
-         fileIn.close();
-         return o;
-      } catch(IOException i) {
-         i.printStackTrace();
-         return null;
-      } catch(ClassNotFoundException c) {
-         c.printStackTrace();
-         return null;
-      }
+    public static Object loadObjectFromFile(String fileName) throws Exception {
+        Object o = null;
+
+        FileInputStream fileIn = new FileInputStream(fileName);
+        ObjectInputStream in = new ObjectInputStream(fileIn);
+        o = in.readObject();
+        in.close();
+        fileIn.close();
+        return o;
     }
 }

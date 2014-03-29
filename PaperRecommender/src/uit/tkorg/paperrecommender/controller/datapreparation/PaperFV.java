@@ -29,7 +29,7 @@ public class PaperFV {
      *
      * @param weightingScheme 0: linear; 1: cosine; 2: rpy
      */
-    public static HashMap<String, Paper> computeAllPapersFeatureVector(HashMap<String, Paper> papersInput, int weightingScheme) {
+    public static HashMap<String, Paper> computeAllPapersFeatureVector(HashMap<String, Paper> papersInput, int weightingScheme) throws Exception {
         HashMap<String, Paper> papers = papersInput;
         for (String key : papersInput.keySet()) {
             papers.get(key).setFeatureVector(computePaperFeatureVector(papersInput, papers.get(key).getPaperId(), weightingScheme));
@@ -45,7 +45,7 @@ public class PaperFV {
      * @param weightingScheme 0: linear; 1: cosine; 2: rpy
      * @return list represents feature vector.
      */
-    public static HashMapVector computePaperFeatureVector(HashMap<String, Paper> papersInput, String paperId, int weightingScheme) {
+    public static HashMapVector computePaperFeatureVector(HashMap<String, Paper> papersInput, String paperId, int weightingScheme) throws Exception {
         HashMapVector featureVector;
         if (weightingScheme == 0) {
             featureVector = computePaperFeatureVectorWithLinear(papersInput, paperId);
@@ -63,7 +63,7 @@ public class PaperFV {
      * @param paperId
      * @return featureVector
      */
-    public static HashMapVector computePaperFeatureVectorWithLinear(HashMap<String, Paper> papersInput, String paperId) {
+    public static HashMapVector computePaperFeatureVectorWithLinear(HashMap<String, Paper> papersInput, String paperId) throws Exception {
         HashMapVector featureVector;
         Paper paper = papersInput.get(paperId);//get paper has Id is paperId in ListofPapers
         featureVector = paper.getContent();//assign HashMapVector featureVector equal HashMapVector paper
@@ -80,7 +80,7 @@ public class PaperFV {
      * @param paperId
      * @return featureVector
      */
-    public static HashMapVector computePaperFeatureVectorWithCosine(HashMap<String, Paper> papersInput, String paperId) {
+    public static HashMapVector computePaperFeatureVectorWithCosine(HashMap<String, Paper> papersInput, String paperId) throws Exception {
         HashMapVector featureVector;
         Paper paper = papersInput.get(paperId);//get paper has paperId in ListofPapers
         featureVector = paper.getContent();//assign HashMapVector featureVector equal HashMapVector paper
@@ -97,7 +97,7 @@ public class PaperFV {
      * @param paperId
      * @return featureVector
      */
-    public static HashMapVector computePaperFeatureVectorWithRPY(HashMap<String, Paper> papersInput, String paperId) {
+    public static HashMapVector computePaperFeatureVectorWithRPY(HashMap<String, Paper> papersInput, String paperId) throws Exception {
         HashMapVector featureVector;
         Paper paper = papersInput.get(paperId);//assign HashMapVector featureVector equal HashMapVector paper
         featureVector = paper.getContent();//get list of citation paper
@@ -115,7 +115,7 @@ public class PaperFV {
      * @param paperIds
      * @return featureVector
      */
-    public static HashMapVector sumFeatureVectorWithLinear(HashMap<String, Paper> papersInput, List<String> paperIds) {
+    public static HashMapVector sumFeatureVectorWithLinear(HashMap<String, Paper> papersInput, List<String> paperIds) throws Exception {
         HashMapVector featureVector = new HashMapVector();
         for (String paperId : paperIds) {
             if (papersInput.containsKey(paperId)) {
@@ -133,7 +133,7 @@ public class PaperFV {
      * @param paperIds
      * @return featureVector
      */
-    public static HashMapVector sumFeatureVectorWithCosine(HashMap<String, Paper> papersInput, Paper cpaper, List<String> paperIds) {
+    public static HashMapVector sumFeatureVectorWithCosine(HashMap<String, Paper> papersInput, Paper cpaper, List<String> paperIds) throws Exception {
         HashMapVector featureVector = new HashMapVector();
         for (String paperId : paperIds) {
             if (papersInput.containsKey(paperId)) {
@@ -152,7 +152,7 @@ public class PaperFV {
      * @param paperIds
      * @return featureVector
      */
-    public static HashMapVector sumFeatureVectorWithRPY(HashMap<String, Paper> papersInput, Paper cpaper, List<String> paperIds) {
+    public static HashMapVector sumFeatureVectorWithRPY(HashMap<String, Paper> papersInput, Paper cpaper, List<String> paperIds) throws Exception {
         HashMapVector featureVector = new HashMapVector();
         for (String paperId : paperIds) {
             if (papersInput.containsKey(paperId)) {

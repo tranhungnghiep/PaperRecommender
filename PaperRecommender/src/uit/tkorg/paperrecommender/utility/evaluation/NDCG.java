@@ -32,7 +32,7 @@ public class NDCG {
      * @param k
      * @return ndcg
      */
-    public static double computeNDCG(List rankList, List idealList, int k) {
+    public static double computeNDCG(List rankList, List idealList, int k) throws Exception {
         double ndcg = 0;
         
         ndcg = computeDCG(rankList, idealList, k) / computeIDCG(k);
@@ -47,7 +47,7 @@ public class NDCG {
      * @param k
      * @return dcg
      */
-    public static double computeDCG(List rankList, List idealList, int k) {
+    public static double computeDCG(List rankList, List idealList, int k) throws Exception {
         double dcg = 0;
         
         // Items out of ranklist are irrelevant items and gain 0.
@@ -72,7 +72,7 @@ public class NDCG {
      * @param k
      * @return idcg
      */
-    public static double computeIDCG(int k) {
+    public static double computeIDCG(int k) throws Exception {
         double idcg = 0;
 
         // With our assumption, the ideal list contents k relevant items.
@@ -92,7 +92,7 @@ public class NDCG {
      * @param k
      * @return cg
      */
-    public static double computeCG(List rankList, List idealList, int k) {
+    public static double computeCG(List rankList, List idealList, int k) throws Exception {
         double cg = 0;
         
         // Items out of ranklist are irrelevant items and gain 0.

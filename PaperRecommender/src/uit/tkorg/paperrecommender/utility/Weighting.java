@@ -23,7 +23,7 @@ public class Weighting {
      * @param v2
      * @return cosine.
      */
-    public static double computeCosine(HashMapVector v1, HashMapVector v2) {
+    public static double computeCosine(HashMapVector v1, HashMapVector v2) throws Exception {
         double cosine = 0;
         cosine = v1.cosineTo(v2);
         return cosine;
@@ -36,7 +36,7 @@ public class Weighting {
      * @param y2
      * @return RPY
      */
-    public static double computeRPY(int y1, int y2) {
+    public static double computeRPY(int y1, int y2) throws Exception {
         double rpy = 0;
         if (y1 == y2) {
             rpy = 10 / 9;

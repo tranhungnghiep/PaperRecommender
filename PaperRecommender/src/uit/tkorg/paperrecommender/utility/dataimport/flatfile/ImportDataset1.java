@@ -39,23 +39,19 @@ public class ImportDataset1 {
      * @return allKeywords.
      * @throws java.io.FileNotFoundException
      */
-    public static List readAllKeywords() throws FileNotFoundException, IOException {
+    public static List readAllKeywords() throws Exception {
         List allKeywords = new ArrayList();
         List<String> ffile = getPathFile(new File(PaperRecommenerConstant.DATASETFOLDER));
         for (int i = 0; i < ffile.size(); i++) {
-            try {
-                FileReader file = new FileReader(ffile.get(i));
-                BufferedReader textReader = new BufferedReader(file);
-                String line;
-                String[] tokens;
-                while ((line = textReader.readLine()) != null) {
-                    tokens = line.split(" ");
-                    if (tokens.length == 2) {
-                        allKeywords.add(tokens[0]);
-                    }
+            FileReader file = new FileReader(ffile.get(i));
+            BufferedReader textReader = new BufferedReader(file);
+            String line;
+            String[] tokens;
+            while ((line = textReader.readLine()) != null) {
+                tokens = line.split(" ");
+                if (tokens.length == 2) {
+                    allKeywords.add(tokens[0]);
                 }
-            } catch (IOException ex) {
-                System.out.println(ex.getMessage());
             }
         }
         return allKeywords;
@@ -66,7 +62,7 @@ public class ImportDataset1 {
      * @param dir
      * @return list file
      */
-    private static List<String> getPathFile(File dir) {
+    private static List<String> getPathFile(File dir) throws Exception {
         File[] files = dir.listFiles();
         List listfile = new ArrayList<String>();
         String name = null;
@@ -93,7 +89,7 @@ public class ImportDataset1 {
      * @return the hashmap contents all papers.
      * @throws java.io.IOException
      */
-    public static HashMap<String, Paper> buildListOfPapers(String Dataset1Folder) throws IOException {
+    public static HashMap<String, Paper> buildListOfPapers(String Dataset1Folder) throws Exception {
         HashMap<String, Paper> papers = new HashMap<String, Paper>();
         papers = readAllCandidatePapers(new File(Dataset1Folder + "\\RecCandidatePapersFV"));
         return papers;
@@ -106,7 +102,7 @@ public class ImportDataset1 {
      * @return papers: list of candidate papers
      * @throws java.io.IOException
      */
-    private static HashMap<String, Paper> readAllCandidatePapers(File dir) throws IOException {
+    private static HashMap<String, Paper> readAllCandidatePapers(File dir) throws Exception {
         HashMap<String, Paper> papers = new HashMap<>();
         File[] files = dir.listFiles();//Get list of all files in directory
         //Browse all files in directory
@@ -129,7 +125,7 @@ public class ImportDataset1 {
      * @param paperId
      * @return year of paper
      */
-    private static int paperYear(String paperId) {
+    private static int paperYear(String paperId) throws Exception {
         paperId = paperId.substring(1, 2);
         return Integer.parseInt("20" + paperId);
     }
@@ -141,10 +137,13 @@ public class ImportDataset1 {
      * @return content
      * @throws java.io.FileNotFoundException
      */
-    private static HashMapVector readFilePaper(File file) throws FileNotFoundException, IOException {
+    private static HashMapVector readFilePaper(File file) throws Exception {
         HashMapVector content = new HashMapVector();
         String path = file.getAbsolutePath();
-//        System.out.println(path);
+        
+        // try-with-resources Statement.
+        // A resource is an object that must be closed after the program is finished with it. 
+        // The try-with-resources statement ensures that each resource is closed at the end of the statement.
         try (BufferedReader br = new BufferedReader(new FileReader(path))) {
             String line;
             while ((line = br.readLine()) != null) {
@@ -154,8 +153,8 @@ public class ImportDataset1 {
                 }
             }
         } catch (Exception e) {
-
             System.out.println(e.getMessage() + path);
+            throw e;
         }
         return content;
     }
@@ -167,7 +166,7 @@ public class ImportDataset1 {
      * @return citation
      * @throws java.io.FileNotFoundException
      */
-    private static List<String> addCitation(String paperId) throws FileNotFoundException, IOException {
+    private static List<String> addCitation(String paperId) throws Exception {
         List<String> citation = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(PaperRecommenerConstant.DATASETFOLDER + "\\InterLink\\acl.20080325.net"))) {
             String line = null;
@@ -179,6 +178,7 @@ public class ImportDataset1 {
             }
         } catch (IOException e) {
             System.out.println(e.getMessage());
+            throw e;
         }
         return citation;
     }
@@ -190,7 +190,7 @@ public class ImportDataset1 {
      * @return reference
      * @throws java.io.FileNotFoundException
      */
-    private static List<String> addReference(String paperId) throws FileNotFoundException, IOException {
+    private static List<String> addReference(String paperId) throws Exception {
         List<String> reference = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(PaperRecommenerConstant.DATASETFOLDER + "\\InterLink\\acl.20080325.net"))) {
             String line = null;
@@ -202,6 +202,7 @@ public class ImportDataset1 {
             }
         } catch (IOException e) {
             System.out.println(e.getMessage());
+            throw e;
         }
         return reference;
     }
@@ -214,7 +215,7 @@ public class ImportDataset1 {
      * @throws FileNotFoundException
      * @throws IOException
      */
-    private static List<String> findGroundTruth(File dir) throws FileNotFoundException, IOException {
+    private static List<String> findGroundTruth(File dir) throws Exception {
         List<String> fileTruth = new ArrayList();
         File[] files = dir.listFiles();
         for (File file : files) {
@@ -222,14 +223,10 @@ public class ImportDataset1 {
                 findGroundTruth(file);
             } else if (file.isFile()) {
                 if (file.getName().contains("-rlv.txt")) {
-                    try {
-                        BufferedReader br = new BufferedReader(new FileReader(file.getAbsolutePath()));
-                        String line = null;
-                        while ((line = br.readLine()) != null) {
-                            fileTruth.add(line);
-                        }
-                    } catch (IOException ex) {
-                        System.out.println(ex.getMessage());
+                    BufferedReader br = new BufferedReader(new FileReader(file.getAbsolutePath()));
+                    String line = null;
+                    while ((line = br.readLine()) != null) {
+                        fileTruth.add(line);
                     }
                 }
             }
@@ -245,7 +242,7 @@ public class ImportDataset1 {
      * @throws FileNotFoundException
      * @throws IOException
      */
-    private static List<Paper> findCitOfPaper(File dir) throws FileNotFoundException, IOException {
+    private static List<Paper> findCitOfPaper(File dir) throws Exception {
         File[] files = dir.listFiles();
        // List<Paper> allCitOfPaper = new ArrayList();
         for (File file : files) {
@@ -272,7 +269,7 @@ public class ImportDataset1 {
      * @throws FileNotFoundException
      * @throws IOException
      */
-    private static List<Paper> findRefOfPaper(File dir) throws FileNotFoundException, IOException {
+    private static List<Paper> findRefOfPaper(File dir) throws Exception {
         File[] files = dir.listFiles();
      // List<Paper>  allRefOfPaper = new ArrayList();
 
@@ -301,7 +298,7 @@ public class ImportDataset1 {
      * @throws FileNotFoundException
      * @throws IOException
      */
-    private static List<Paper> findPaperOfAuthor(File dir) throws FileNotFoundException, IOException {
+    private static List<Paper> findPaperOfAuthor(File dir) throws Exception {
         
         List<Paper> papers = new ArrayList();
         String pathVectorFv = null;// ten duong dan den vector dac trung cua paper
@@ -346,7 +343,7 @@ public class ImportDataset1 {
      * @throws FileNotFoundException
      * @throws IOException
      */
-    private static HashMap<String, Author> readAllAuthor(File dir) throws FileNotFoundException, IOException {
+    private static HashMap<String, Author> readAllAuthor(File dir) throws Exception {
         HashMap<String, Author> authors = new HashMap<String, Author>();
         File[] files = dir.listFiles();
         for (File file : files) {
@@ -388,7 +385,7 @@ public class ImportDataset1 {
      * @return the hashmap contents all authors.
      * @throws java.io.IOException
      */
-    public static HashMap<String, Author> buildListOfAuthors(String Dataset1Folder) throws IOException {
+    public static HashMap<String, Author> buildListOfAuthors(String Dataset1Folder) throws Exception {
         HashMap<String, Author> authors = new HashMap();
         authors = readAllAuthor(new File(Dataset1Folder));
         return authors;

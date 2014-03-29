@@ -32,7 +32,7 @@ public class AuthorFV {
      *
      * @param weightingScheme 0: linear; 1: cosine; 2: rpy
      */
-    public static HashMap<String, Author> computeAllAuthorsFeatureVector(HashMap<String, Author> authorsInput, int weightingScheme) {
+    public static HashMap<String, Author> computeAllAuthorsFeatureVector(HashMap<String, Author> authorsInput, int weightingScheme) throws Exception {
         HashMap<String, Author> authors = authorsInput;
         for (String key : authorsInput.keySet()) {
             authors.get(key).setFeatureVector(computeAuthorFeatureVector(authorsInput, authors.get(key).getAuthorId(), weightingScheme));
@@ -48,7 +48,7 @@ public class AuthorFV {
      * @param weightingScheme 0: linear; 1: cosine; 2: rpy
      * @return list represents feature vector.
      */
-    private static HashMapVector computeAuthorFeatureVector(HashMap<String, Author> authorsInput, String authorId, int weightingScheme) {
+    private static HashMapVector computeAuthorFeatureVector(HashMap<String, Author> authorsInput, String authorId, int weightingScheme) throws Exception {
         HashMapVector featureVector;
         if (weightingScheme == 0) {
             if (authorId.contains("y")) {
@@ -78,7 +78,7 @@ public class AuthorFV {
      * @param authorId
      * @return featureVector
      */
-    private static HashMapVector computeJuniorFeatureVectorWithLinear(HashMap<String, Author> authorsInput, String authorId) {
+    private static HashMapVector computeJuniorFeatureVectorWithLinear(HashMap<String, Author> authorsInput, String authorId) throws Exception {
         HashMapVector featureVector;
         Paper authorPaper;
         Author author = authorsInput.get(authorId);//get author has Id equally authorId in ListofPapers
@@ -95,7 +95,7 @@ public class AuthorFV {
      * @param authorId
      * @return featureVector
      */
-    private static HashMapVector computeJuniorFeatureVectorWithCosine(HashMap<String, Author> authorsInput, String authorId) {
+    private static HashMapVector computeJuniorFeatureVectorWithCosine(HashMap<String, Author> authorsInput, String authorId) throws Exception {
         HashMapVector featureVector;
         Paper authorPaper;
         Author author = authorsInput.get(authorId);//get author has Id equally authorId in ListofPapers
@@ -112,7 +112,7 @@ public class AuthorFV {
      * @param authorId
      * @return featureVector
      */
-    private static HashMapVector computeJuniorFeatureVectorWithRPY(HashMap<String, Author> authorsInput, String authorId) {
+    private static HashMapVector computeJuniorFeatureVectorWithRPY(HashMap<String, Author> authorsInput, String authorId) throws Exception {
         HashMapVector featureVector;
         Paper authorPaper;
         Author author = authorsInput.get(authorId);//get author has Id equally authorId in ListofPapers
@@ -130,7 +130,7 @@ public class AuthorFV {
      * @param authorId
      * @return featureVector
      */
-    private static HashMapVector computeSeniorFeatureVectorWithLinear(HashMap<String, Author> authorsInput, String authorId) {
+    private static HashMapVector computeSeniorFeatureVectorWithLinear(HashMap<String, Author> authorsInput, String authorId) throws Exception {
         HashMapVector featureVector = new HashMapVector();
         List<Paper> authorPapers;
         Author author = authorsInput.get(authorId);//get author has Id equally authorId in ListofPapers
@@ -151,7 +151,7 @@ public class AuthorFV {
      * @param authorId
      * @return featureVector
      */
-    private static HashMapVector computeSeniorFeatureVectorWithCosine(HashMap<String, Author> authorsInput, String authorId) {
+    private static HashMapVector computeSeniorFeatureVectorWithCosine(HashMap<String, Author> authorsInput, String authorId) throws Exception {
         HashMapVector featureVector = new HashMapVector();
         List<Paper> authorPapers;
         Author author = authorsInput.get(authorId);//get author has Id equally authorId in ListofPapers
@@ -172,7 +172,7 @@ public class AuthorFV {
      * @param authorId
      * @return featureVector
      */
-    private static HashMapVector computeSeniorFeatureVectorWithRPY(HashMap<String, Author> authorsInput, String authorId) {
+    private static HashMapVector computeSeniorFeatureVectorWithRPY(HashMap<String, Author> authorsInput, String authorId) throws Exception {
         HashMapVector featureVector = new HashMapVector();
         List<Paper> authorPapers;
         Author author = authorsInput.get(authorId);//get author has Id equally authorId in ListofPapers
@@ -194,7 +194,7 @@ public class AuthorFV {
      * @param papers
      * @return featureVector
      */
-    private static HashMapVector sumFeatureVectorWithLinear(List<Paper> papers) {
+    private static HashMapVector sumFeatureVectorWithLinear(List<Paper> papers) throws Exception {
         HashMapVector featureVector = new HashMapVector();
         for (Paper paper : papers) {
             featureVector.add(paper.getContent());
@@ -210,7 +210,7 @@ public class AuthorFV {
      * @param papers
      * @return featureVector
      */
-    private static HashMapVector sumFeatureVectorWithCosine(Paper cpaper, List<Paper> papers) {
+    private static HashMapVector sumFeatureVectorWithCosine(Paper cpaper, List<Paper> papers) throws Exception {
         HashMapVector featureVector = new HashMapVector();
         for (Paper paper : papers) {
             double cosine = Weighting.computeCosine(cpaper.getContent(), paper.getContent());
@@ -227,7 +227,7 @@ public class AuthorFV {
      * @param papers
      * @return featureVector
      */
-    private static HashMapVector sumFeatureVectorWithRPY(Paper cpaper, List<Paper> papers) {
+    private static HashMapVector sumFeatureVectorWithRPY(Paper cpaper, List<Paper> papers) throws Exception {
         HashMapVector featureVector = new HashMapVector();
         for (Paper paper : papers) {
             double rpy = Weighting.computeRPY(cpaper.getYear(), paper.getYear());
