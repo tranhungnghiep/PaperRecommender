@@ -24,8 +24,8 @@ import uit.tkorg.paperrecommender.model.Paper;
  */
 public class ImportDataset1 {
 
-    static List<Paper> allRefOfPaper=new ArrayList();
-    static List<Paper> allCitOfPaper= new ArrayList() ;
+    static List<Paper> allRefOfPaper = new ArrayList();
+    static List<Paper> allCitOfPaper = new ArrayList();
 
     // Prevent instantiation.
     private ImportDataset1() {
@@ -90,7 +90,7 @@ public class ImportDataset1 {
      * @throws java.io.IOException
      */
     public static HashMap<String, Paper> buildListOfPapers(String Dataset1Folder) throws Exception {
-        HashMap<String, Paper> papers = new HashMap<String, Paper>();
+        HashMap<String, Paper> papers;
         papers = readAllCandidatePapers(new File(Dataset1Folder + "\\RecCandidatePapersFV"));
         return papers;
     }
@@ -307,7 +307,7 @@ public class ImportDataset1 {
         if (idAuthor.contains("y")) {
             Paper paper = new Paper();
             paper.setPaperId(dir.getName() + "-1"); // set id paper Junior
-            paper.setPaperType("paper of junior");
+            paper.setPaperType("Paper of junior");
             pathVectorFv = dir.getAbsolutePath() + "\\" + dir.getName() + "-1" + "_fv.txt";
             allRefOfPaper = new ArrayList();
             paper.setReference(findRefOfPaper(dir));
@@ -322,7 +322,7 @@ public class ImportDataset1 {
                     Paper paper = new Paper();
                     pathVectorFv = file.getAbsolutePath() + "\\" + file.getName() + "_fv.txt";
                     paper.setPaperId(file.getName()); // set id paper i cua Senior
-                    paper.setPaperType("paper of i" + "senior");
+                    paper.setPaperType("Paper of senior");
                     allCitOfPaper = new ArrayList();
                     paper.setCitation(findCitOfPaper(file)); // set List cit cua  paper i
                     allRefOfPaper = new ArrayList();

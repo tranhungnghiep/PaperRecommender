@@ -5,7 +5,7 @@ import java.util.logging.Level;
 public class PaperRecommenerConstant {
 
     public static final String DATASETFOLDER = "D:\\Dropbox\\De tai Paper Recommendation\\Data\\Dataset 1\\20100825-SchPaperRecData\\20100825-SchPaperRecData";
-    public static final String SAVEDATAFOLDER = "";
+    public static final String SAVEDATAFOLDER = "E:\\ResE\\Paper recommendation\\Save Object Dataset 1";
     
     public static final String DB = "MYSQL";
     //public static final String DB = "SQLSERVER";
