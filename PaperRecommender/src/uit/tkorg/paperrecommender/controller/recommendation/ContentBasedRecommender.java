@@ -24,12 +24,10 @@ import uit.tkorg.paperrecommender.utility.Weighting;
  * This output could be used as universal recommendation list, upto the input list of authors.
  * @author THNghiep
  */
-public class ContentBasedRecommender implements Serializable {
-    // contents recommendation list.
-    private HashMap<String, Author> authors;
-
-    public ContentBasedRecommender() {
-        this.authors = null;
+public class ContentBasedRecommender {
+    
+    // Prevent instantiation.
+    private ContentBasedRecommender() {
     }
 
     /**
@@ -43,13 +41,14 @@ public class ContentBasedRecommender implements Serializable {
      * + Save recommendation list into current author.
      * - Finish all authors, finish the hashmap of authors with all input data plus recommendation list.
      */
-    public void buildAllRecommendationLists(HashMap authorsInput, HashMap papers) {
-        setAuthors((HashMap<String, Author>) new HashMap(authorsInput));
-        List<String> recommendationPapers = null;
-        for (String key : getAuthors().keySet()) {
-            recommendationPapers = buildRecommdationList(getAuthors().get(key), papers);
-            getAuthors().get(key).setRecommendation(recommendationPapers);
+    public static HashMap<String, Author> buildAllRecommendationLists(HashMap<String, Author> authorsInput, HashMap<String, Paper> papers) {
+        HashMap<String, Author> authors = authorsInput;
+        List<String> recommendationPapers;
+        for (String key : authorsInput.keySet()) {
+            recommendationPapers = buildRecommdationList(authors.get(key), papers);
+            authors.get(key).setRecommendation(recommendationPapers);
         }
+        return authors;
     }
 
     /**
@@ -58,7 +57,7 @@ public class ContentBasedRecommender implements Serializable {
      * @param papers: hashmap of all papers to recommend.
      * @return recommendationPapers
      */
-    private List<String> buildRecommdationList(Author author, HashMap<String, Paper> papers) {
+    private static List<String> buildRecommdationList(Author author, HashMap<String, Paper> papers) {
         List<String> recommendationPapers = new ArrayList();
         LinkedHashMap<String, Double> paperSimilarity = new LinkedHashMap();
         
@@ -83,19 +82,4 @@ public class ContentBasedRecommender implements Serializable {
         
         return recommendationPapers;
     }
-
-    /**
-     * @return the authors
-     */
-    public HashMap<String, Author> getAuthors() {
-        return authors;
-    }
-
-    /**
-     * @param authors the authors to set
-     */
-    public void setAuthors(HashMap<String, Author> authors) {
-        this.authors = authors;
-    }
-    
 }

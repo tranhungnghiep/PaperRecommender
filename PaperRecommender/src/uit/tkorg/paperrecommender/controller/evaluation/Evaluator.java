@@ -21,36 +21,35 @@ import uit.tkorg.paperrecommender.utility.evaluation.ReciprocalRank;
  * + output: MRR.
  * @author THNghiep
  */
-public class Evaluator implements Serializable {
+public class Evaluator {
 
-    private HashMap<String, Author> authors;
-
-    public Evaluator() {
-        this.authors = null;
+    // Prevent instantiation.
+    private Evaluator() {
     }
     
     /**
      * This method computes NDCG at position n.
      * If n == 5 or 10 then save ndcg to author list.
+     * Note: this method return the ndcg value and change the author hashmap input directly.
+     * 
      * @param authors
      * @param n
      * @return ndcg
      */
-    public double NDCG(HashMap<String, Author> authorsInput, int n) {
+    public static double NDCG(HashMap<String, Author> authorsInput, int n) {
         double ndcg = 0;
         
         double currentNDCG = 0;
-        this.authors = authorsInput;
         if (n == 5) {
             for (String key : authorsInput.keySet()) {
                 currentNDCG = NDCG.computeNDCG(authorsInput.get(key).getRecommendation(), authorsInput.get(key).getGroundTruth(), n);
-                authors.get(key).setNdcg5(currentNDCG);
+                authorsInput.get(key).setNdcg5(currentNDCG);
                 ndcg += currentNDCG;
             }
         } else if (n == 10) {
             for (String key : authorsInput.keySet()) {
                 currentNDCG = NDCG.computeNDCG(authorsInput.get(key).getRecommendation(), authorsInput.get(key).getGroundTruth(), n);
-                authors.get(key).setNdcg10(currentNDCG);
+                authorsInput.get(key).setNdcg10(currentNDCG);
                 ndcg += currentNDCG;
             }
             
@@ -67,35 +66,22 @@ public class Evaluator implements Serializable {
     
     /**
      * This method computes MRR.
+     * Note: this method return the mrr value and change the author hashmap input directly.
+     * 
      * @param authors
      * @return 
      */
-    public double MRR(HashMap<String, Author> authorsInput) {
+    public static double MRR(HashMap<String, Author> authorsInput) {
         double mrr = 0;
 
         double currentRR = 0;
-        this.authors = authorsInput;
         for (String key : authorsInput.keySet()) {
             currentRR = ReciprocalRank.computeRR(authorsInput.get(key).getRecommendation(), authorsInput.get(key).getGroundTruth());
-            authors.get(key).setRr(currentRR);
+            authorsInput.get(key).setRr(currentRR);
             mrr += currentRR;
         }
         mrr = mrr / authorsInput.size();
 
         return mrr;
-    }
-
-    /**
-     * @return the authors
-     */
-    public HashMap<String, Author> getAuthors() {
-        return authors;
-    }
-
-    /**
-     * @param authors the authors to set
-     */
-    public void setAuthors(HashMap<String, Author> authors) {
-        this.authors = authors;
     }
 }

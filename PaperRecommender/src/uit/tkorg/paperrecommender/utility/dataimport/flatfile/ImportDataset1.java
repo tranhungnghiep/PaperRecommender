@@ -1,11 +1,9 @@
-    /*
+/*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
 package uit.tkorg.paperrecommender.utility.dataimport.flatfile;
 
-import java.io.*;
-import uit.tkorg.paperrecommender.constant.PaperRecommenerConstant;
 import ir.vsr.HashMapVector;
 import java.io.BufferedReader;
 import java.io.File;
@@ -13,12 +11,14 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
+import uit.tkorg.paperrecommender.constant.PaperRecommenerConstant;
 import uit.tkorg.paperrecommender.model.Author;
 import uit.tkorg.paperrecommender.model.Paper;
 
 /**
  *
- * @author THNghiep This class contents all method to import data from dataset1.
+ * @author THNghiep 
+ * This class contents all method to import data from dataset1.
  * Import process needs to filter out noisy data such as keywords longer than 50
  * characters.
  */
@@ -66,7 +66,7 @@ public class ImportDataset1 {
      * @param dir
      * @return list file
      */
-    static List<String> getPathFile(File dir) {
+    private static List<String> getPathFile(File dir) {
         File[] files = dir.listFiles();
         List listfile = new ArrayList<String>();
         String name = null;
@@ -84,10 +84,11 @@ public class ImportDataset1 {
     }
 
     /**
-     * This method read dataset folder (from constant class), then for each
+     * This method read dataset 1 folder, then for each
      * paper, create a Paper object and put it in the hashmap.
      *
-     * HashMap Key: paper id (in file name) HashMap Value: paper object.
+     * HashMap Key: paper id (in file name) 
+     * HashMap Value: paper object.
      *
      * @return the hashmap contents all papers.
      * @throws java.io.IOException
@@ -105,7 +106,7 @@ public class ImportDataset1 {
      * @return papers: list of candidate papers
      * @throws java.io.IOException
      */
-    static HashMap<String, Paper> readAllCandidatePapers(File dir) throws IOException {
+    private static HashMap<String, Paper> readAllCandidatePapers(File dir) throws IOException {
         HashMap<String, Paper> papers = new HashMap<>();
         File[] files = dir.listFiles();//Get list of all files in directory
         //Browse all files in directory
@@ -128,7 +129,7 @@ public class ImportDataset1 {
      * @param paperId
      * @return year of paper
      */
-    static int paperYear(String paperId) {
+    private static int paperYear(String paperId) {
         paperId = paperId.substring(1, 2);
         return Integer.parseInt("20" + paperId);
     }
@@ -140,7 +141,7 @@ public class ImportDataset1 {
      * @return content
      * @throws java.io.FileNotFoundException
      */
-    static HashMapVector readFilePaper(File file) throws FileNotFoundException, IOException {
+    private static HashMapVector readFilePaper(File file) throws FileNotFoundException, IOException {
         HashMapVector content = new HashMapVector();
         String path = file.getAbsolutePath();
 //        System.out.println(path);
@@ -166,7 +167,7 @@ public class ImportDataset1 {
      * @return citation
      * @throws java.io.FileNotFoundException
      */
-    static List<String> addCitation(String paperId) throws FileNotFoundException, IOException {
+    private static List<String> addCitation(String paperId) throws FileNotFoundException, IOException {
         List<String> citation = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(PaperRecommenerConstant.DATASETFOLDER + "\\InterLink\\acl.20080325.net"))) {
             String line = null;
@@ -189,7 +190,7 @@ public class ImportDataset1 {
      * @return reference
      * @throws java.io.FileNotFoundException
      */
-    static List<String> addReference(String paperId) throws FileNotFoundException, IOException {
+    private static List<String> addReference(String paperId) throws FileNotFoundException, IOException {
         List<String> reference = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(PaperRecommenerConstant.DATASETFOLDER + "\\InterLink\\acl.20080325.net"))) {
             String line = null;
@@ -213,7 +214,7 @@ public class ImportDataset1 {
      * @throws FileNotFoundException
      * @throws IOException
      */
-    static List<String> findGroundTruth(File dir) throws FileNotFoundException, IOException {
+    private static List<String> findGroundTruth(File dir) throws FileNotFoundException, IOException {
         List<String> fileTruth = new ArrayList();
         File[] files = dir.listFiles();
         for (File file : files) {
@@ -244,7 +245,7 @@ public class ImportDataset1 {
      * @throws FileNotFoundException
      * @throws IOException
      */
-    static List<Paper> findCitOfPaper(File dir) throws FileNotFoundException, IOException {
+    private static List<Paper> findCitOfPaper(File dir) throws FileNotFoundException, IOException {
         File[] files = dir.listFiles();
        // List<Paper> allCitOfPaper = new ArrayList();
         for (File file : files) {
@@ -271,7 +272,7 @@ public class ImportDataset1 {
      * @throws FileNotFoundException
      * @throws IOException
      */
-    static List<Paper> findRefOfPaper(File dir) throws FileNotFoundException, IOException {
+    private static List<Paper> findRefOfPaper(File dir) throws FileNotFoundException, IOException {
         File[] files = dir.listFiles();
      // List<Paper>  allRefOfPaper = new ArrayList();
 
@@ -300,7 +301,7 @@ public class ImportDataset1 {
      * @throws FileNotFoundException
      * @throws IOException
      */
-    static List<Paper> findPaperOfAuthor(File dir) throws FileNotFoundException, IOException {
+    private static List<Paper> findPaperOfAuthor(File dir) throws FileNotFoundException, IOException {
         
         List<Paper> papers = new ArrayList();
         String pathVectorFv = null;// ten duong dan den vector dac trung cua paper
@@ -345,7 +346,7 @@ public class ImportDataset1 {
      * @throws FileNotFoundException
      * @throws IOException
      */
-    static HashMap<String, Author> readAllAuthor(File dir) throws FileNotFoundException, IOException {
+    private static HashMap<String, Author> readAllAuthor(File dir) throws FileNotFoundException, IOException {
         HashMap<String, Author> authors = new HashMap<String, Author>();
         File[] files = dir.listFiles();
         for (File file : files) {
@@ -377,6 +378,16 @@ public class ImportDataset1 {
         return authors;
     }
 
+    /**
+     * This method read dataset 1 folder, then for each
+     * author, create an Atuhor object and put it in the hashmap.
+     *
+     * HashMap Key: author id (in file name) 
+     * HashMap Value: author object.
+     *
+     * @return the hashmap contents all authors.
+     * @throws java.io.IOException
+     */
     public static HashMap<String, Author> buildListOfAuthors(String Dataset1Folder) throws IOException {
         HashMap<String, Author> authors = new HashMap();
         authors = readAllAuthor(new File(Dataset1Folder));

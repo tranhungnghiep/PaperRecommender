@@ -5,14 +5,10 @@
 package uit.tkorg.paperrecommender.controller.datapreparation;
 
 import ir.vsr.HashMapVector;
-import java.io.IOException;
-import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import uit.tkorg.paperrecommender.model.Author;
 import uit.tkorg.paperrecommender.model.Paper;
-import uit.tkorg.paperrecommender.utility.dataimport.flatfile.ImportDataset1;
 import uit.tkorg.paperrecommender.utility.Weighting;
 
 /**
@@ -24,32 +20,10 @@ import uit.tkorg.paperrecommender.utility.Weighting;
  *
  * @author THNghiep
  */
-public class AuthorFV implements Serializable {
+public class AuthorFV {
 
-    // Key of this hash map is paper id.
-    // Value of this hash map is the relevant paper object.
-    private HashMap<String, Author> authors;
-
-    public AuthorFV() {
-        this.authors = null;
-    }
-
-    /**
-     * @return the authors
-     */
-    public HashMap<String, Author> getAuthors() {
-        return authors;
-    }
-
-    /**
-     * @param authors the authors to set
-     */
-    public void setAuthors(HashMap<String, Author> authors) {
-        this.authors = authors;
-    }
-
-    public void buildListOfAuthors(String Dataset1Folder) throws IOException {
-        setAuthors(ImportDataset1.buildListOfAuthors(Dataset1Folder));
+    // Prevent instantiation.
+    private AuthorFV() {
     }
 
     /**
@@ -58,10 +32,12 @@ public class AuthorFV implements Serializable {
      *
      * @param weightingScheme 0: linear; 1: cosine; 2: rpy
      */
-    public void computeAllAuthorsFeatureVector(int weightingScheme) {
-        for (String key : authors.keySet()) {
-            authors.get(key).setFeatureVector(computeAuthorFeatureVector(authors.get(key).getAuthorId(), weightingScheme));
+    public static HashMap<String, Author> computeAllAuthorsFeatureVector(HashMap<String, Author> authorsInput, int weightingScheme) {
+        HashMap<String, Author> authors = authorsInput;
+        for (String key : authorsInput.keySet()) {
+            authors.get(key).setFeatureVector(computeAuthorFeatureVector(authorsInput, authors.get(key).getAuthorId(), weightingScheme));
         }
+        return authors;
     }
 
     /**
@@ -72,25 +48,25 @@ public class AuthorFV implements Serializable {
      * @param weightingScheme 0: linear; 1: cosine; 2: rpy
      * @return list represents feature vector.
      */
-    public HashMapVector computeAuthorFeatureVector(String authorId, int weightingScheme) {
-        HashMapVector featureVector = null;
+    private static HashMapVector computeAuthorFeatureVector(HashMap<String, Author> authorsInput, String authorId, int weightingScheme) {
+        HashMapVector featureVector;
         if (weightingScheme == 0) {
             if (authorId.contains("y")) {
-                featureVector=computeJuniorFeatureVectorWithLinear(authorId);
+                featureVector = computeJuniorFeatureVectorWithLinear(authorsInput, authorId);
             } else {
-                featureVector=computeSeniorFeatureVectorWithLinear(authorId);
+                featureVector = computeSeniorFeatureVectorWithLinear(authorsInput, authorId);
             }
         } else if (weightingScheme == 1) {
             if (authorId.contains("y")) {
-                featureVector=computeJuniorFeatureVectorWithCosine(authorId);
+                featureVector = computeJuniorFeatureVectorWithCosine(authorsInput, authorId);
             } else {
-                featureVector=computeSeniorFeatureVectorWithCosine(authorId);
+                featureVector = computeSeniorFeatureVectorWithCosine(authorsInput, authorId);
             }
         } else {
             if (authorId.contains("y")) {
-                featureVector=computeJuniorFeatureVectorWithRPY(authorId);
+                featureVector = computeJuniorFeatureVectorWithRPY(authorsInput, authorId);
             } else {
-                featureVector=computeSeniorFeatureVectorWithRPY(authorId);
+                featureVector = computeSeniorFeatureVectorWithRPY(authorsInput, authorId);
             }
         }
         return featureVector;
@@ -102,13 +78,13 @@ public class AuthorFV implements Serializable {
      * @param authorId
      * @return featureVector
      */
-    public HashMapVector computeJuniorFeatureVectorWithLinear(String authorId) {
-        HashMapVector featureVector = new HashMapVector();
-        Paper authorPaper = new Paper();
-        Author author = getAuthors().get(authorId);//get author has Id equally authorId in ListofPapers
+    private static HashMapVector computeJuniorFeatureVectorWithLinear(HashMap<String, Author> authorsInput, String authorId) {
+        HashMapVector featureVector;
+        Paper authorPaper;
+        Author author = authorsInput.get(authorId);//get author has Id equally authorId in ListofPapers
         authorPaper = (Paper) author.getPaper().get(0);//get paper of junior researchers 
         featureVector = authorPaper.getContent();
-        List reference = authorPaper.getReference();//get list of reference papers of author's paper 
+        List<Paper> reference = authorPaper.getReference();//get list of reference papers of author's paper 
         featureVector.add(sumFeatureVectorWithLinear(reference));//add featureVector with featureVector of reference papers of author's paper 
         return featureVector;
     }
@@ -119,13 +95,13 @@ public class AuthorFV implements Serializable {
      * @param authorId
      * @return featureVector
      */
-    public HashMapVector computeJuniorFeatureVectorWithCosine(String authorId) {
-        HashMapVector featureVector = new HashMapVector();
-        Paper authorPaper = new Paper();
-        Author author = getAuthors().get(authorId);//get author has Id equally authorId in ListofPapers
+    private static HashMapVector computeJuniorFeatureVectorWithCosine(HashMap<String, Author> authorsInput, String authorId) {
+        HashMapVector featureVector;
+        Paper authorPaper;
+        Author author = authorsInput.get(authorId);//get author has Id equally authorId in ListofPapers
         authorPaper = (Paper) author.getPaper().get(0);//get paper of junior researchers 
         featureVector = authorPaper.getContent();
-        List reference = authorPaper.getReference();//get list of reference papers of author's paper 
+        List<Paper> reference = authorPaper.getReference();//get list of reference papers of author's paper 
         featureVector.add(sumFeatureVectorWithCosine(authorPaper, reference));//add featureVector with featureVector of reference papers of author's paper 
         return featureVector;
     }
@@ -136,13 +112,13 @@ public class AuthorFV implements Serializable {
      * @param authorId
      * @return featureVector
      */
-    public HashMapVector computeJuniorFeatureVectorWithRPY(String authorId) {
-        HashMapVector featureVector = new HashMapVector();
-        Paper authorPaper = new Paper();
-        Author author = getAuthors().get(authorId);//get author has Id equally authorId in ListofPapers
+    private static HashMapVector computeJuniorFeatureVectorWithRPY(HashMap<String, Author> authorsInput, String authorId) {
+        HashMapVector featureVector;
+        Paper authorPaper;
+        Author author = authorsInput.get(authorId);//get author has Id equally authorId in ListofPapers
         authorPaper = (Paper) author.getPaper().get(0);//get paper of junior researchers 
         featureVector = authorPaper.getContent();
-        List reference = authorPaper.getReference();//get list of reference papers of author's paper 
+        List<Paper> reference = authorPaper.getReference();//get list of reference papers of author's paper 
         featureVector.add(sumFeatureVectorWithRPY(authorPaper, reference));//add featureVector with featureVector of reference papers of author's paper 
         return featureVector;
     }
@@ -154,16 +130,16 @@ public class AuthorFV implements Serializable {
      * @param authorId
      * @return featureVector
      */
-    public HashMapVector computeSeniorFeatureVectorWithLinear(String authorId) {
+    private static HashMapVector computeSeniorFeatureVectorWithLinear(HashMap<String, Author> authorsInput, String authorId) {
         HashMapVector featureVector = new HashMapVector();
-        List<Paper> authorPapers = new ArrayList();
-        Author author = getAuthors().get(authorId);//get author has Id equally authorId in ListofPapers
+        List<Paper> authorPapers;
+        Author author = authorsInput.get(authorId);//get author has Id equally authorId in ListofPapers
         authorPapers = author.getPaper();//get list of papers of senior researchers 
         for (Paper paper : authorPapers) {
             featureVector.add(paper.getContent());
-            List citation = paper.getCitation();//get list of citation papers of author's paper 
+            List<Paper> citation = paper.getCitation();//get list of citation papers of author's paper 
             featureVector.add(sumFeatureVectorWithLinear(citation));//add featureVector with featureVector of citation papers of author's paper 
-            List reference = paper.getReference();//get list of reference papers of author's paper 
+            List<Paper> reference = paper.getReference();//get list of reference papers of author's paper 
             featureVector.add(sumFeatureVectorWithLinear(reference));//add featureVector with featureVector of reference papers of author's paper 
         }
         return featureVector;
@@ -175,16 +151,16 @@ public class AuthorFV implements Serializable {
      * @param authorId
      * @return featureVector
      */
-    public HashMapVector computeSeniorFeatureVectorWithCosine(String authorId) {
+    private static HashMapVector computeSeniorFeatureVectorWithCosine(HashMap<String, Author> authorsInput, String authorId) {
         HashMapVector featureVector = new HashMapVector();
-        List<Paper> authorPapers = new ArrayList();
-        Author author = getAuthors().get(authorId);//get author has Id equally authorId in ListofPapers
+        List<Paper> authorPapers;
+        Author author = authorsInput.get(authorId);//get author has Id equally authorId in ListofPapers
         authorPapers = author.getPaper();//get list of papers of senior researchers 
         for (Paper paper : authorPapers) {
             featureVector.add(paper.getContent());
-            List citation = paper.getCitation();//get list of citation papers of author's paper 
+            List<Paper> citation = paper.getCitation();//get list of citation papers of author's paper 
             featureVector.add(sumFeatureVectorWithCosine(paper, citation));//add featureVector with featureVector of citation papers of author's paper 
-            List reference = paper.getReference();//get list of reference papers of author's paper 
+            List<Paper> reference = paper.getReference();//get list of reference papers of author's paper 
             featureVector.add(sumFeatureVectorWithCosine(paper, reference));//add featureVector with featureVector of reference papers of author's paper 
         }
         return featureVector;
@@ -196,16 +172,16 @@ public class AuthorFV implements Serializable {
      * @param authorId
      * @return featureVector
      */
-    public HashMapVector computeSeniorFeatureVectorWithRPY(String authorId) {
+    private static HashMapVector computeSeniorFeatureVectorWithRPY(HashMap<String, Author> authorsInput, String authorId) {
         HashMapVector featureVector = new HashMapVector();
-        List<Paper> authorPapers = new ArrayList();
-        Author author = getAuthors().get(authorId);//get author has Id equally authorId in ListofPapers
+        List<Paper> authorPapers;
+        Author author = authorsInput.get(authorId);//get author has Id equally authorId in ListofPapers
         authorPapers = author.getPaper();//get list of papers of senior researchers 
         for (Paper paper : authorPapers) {
             featureVector.add(paper.getContent());
-            List citation = paper.getCitation();//get list of citation papers of author's paper 
+            List<Paper> citation = paper.getCitation();//get list of citation papers of author's paper 
             featureVector.add(sumFeatureVectorWithRPY(paper, citation));//add featureVector with featureVector of citation papers of author's paper 
-            List reference = paper.getReference();//get list of reference papers of author's paper 
+            List<Paper> reference = paper.getReference();//get list of reference papers of author's paper 
             featureVector.add(sumFeatureVectorWithRPY(paper, reference));//add featureVector with featureVector of reference papers of author's paper 
         }
         return featureVector;
@@ -218,7 +194,7 @@ public class AuthorFV implements Serializable {
      * @param papers
      * @return featureVector
      */
-    public HashMapVector sumFeatureVectorWithLinear(List<Paper> papers) {
+    private static HashMapVector sumFeatureVectorWithLinear(List<Paper> papers) {
         HashMapVector featureVector = new HashMapVector();
         for (Paper paper : papers) {
             featureVector.add(paper.getContent());
@@ -234,7 +210,7 @@ public class AuthorFV implements Serializable {
      * @param papers
      * @return featureVector
      */
-    public HashMapVector sumFeatureVectorWithCosine(Paper cpaper, List<Paper> papers) {
+    private static HashMapVector sumFeatureVectorWithCosine(Paper cpaper, List<Paper> papers) {
         HashMapVector featureVector = new HashMapVector();
         for (Paper paper : papers) {
             double cosine = Weighting.computeCosine(cpaper.getContent(), paper.getContent());
@@ -251,7 +227,7 @@ public class AuthorFV implements Serializable {
      * @param papers
      * @return featureVector
      */
-    public HashMapVector sumFeatureVectorWithRPY(Paper cpaper, List<Paper> papers) {
+    private static HashMapVector sumFeatureVectorWithRPY(Paper cpaper, List<Paper> papers) {
         HashMapVector featureVector = new HashMapVector();
         for (Paper paper : papers) {
             double rpy = Weighting.computeRPY(cpaper.getYear(), paper.getYear());
