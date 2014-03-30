@@ -24,11 +24,12 @@ public class Serializer {
      * Serialize.
      */
     public static void saveObjectToFile(Object o, String fileName) throws Exception {
-        FileOutputStream fileOut = new FileOutputStream(fileName);
-        ObjectOutputStream out = new ObjectOutputStream(fileOut);
-        out.writeObject(o);
-        out.close();
-        fileOut.close();
+        try (
+                FileOutputStream fileOut = new FileOutputStream(fileName); 
+                ObjectOutputStream out = new ObjectOutputStream(fileOut)
+                ) {
+            out.writeObject(o);
+        }
     }
     
     /**
@@ -36,12 +37,12 @@ public class Serializer {
      */
     public static Object loadObjectFromFile(String fileName) throws Exception {
         Object o = null;
-
-        FileInputStream fileIn = new FileInputStream(fileName);
-        ObjectInputStream in = new ObjectInputStream(fileIn);
-        o = in.readObject();
-        in.close();
-        fileIn.close();
+        try (
+                FileInputStream fileIn = new FileInputStream(fileName); 
+                ObjectInputStream in = new ObjectInputStream(fileIn)
+                ) {
+            o = in.readObject();
+        }
         return o;
     }
 }

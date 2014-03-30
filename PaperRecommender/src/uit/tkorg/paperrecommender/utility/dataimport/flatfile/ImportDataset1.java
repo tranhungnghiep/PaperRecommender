@@ -126,8 +126,8 @@ public class ImportDataset1 {
      * @return year of paper
      */
     private static int paperYear(String paperId) throws Exception {
-        paperId = paperId.substring(1, 2);
-        return Integer.parseInt("20" + paperId);
+        String year = paperId.substring(1, 3);
+        return Integer.parseInt("20" + year);
     }
 
     /**

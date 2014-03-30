@@ -4,7 +4,6 @@
  */
 package uit.tkorg.paperrecommender.controller.evaluation;
 
-import java.io.Serializable;
 import java.util.HashMap;
 import uit.tkorg.paperrecommender.model.Author;
 import uit.tkorg.paperrecommender.utility.evaluation.NDCG;

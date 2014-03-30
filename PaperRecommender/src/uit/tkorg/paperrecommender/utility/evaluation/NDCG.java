@@ -27,6 +27,12 @@ public class NDCG {
     /**
      * This method compute the basic NDCG metric.
      * Relevance score: binary, means relevant item: 1, irrelevant item: 0.
+     * 
+     * Note: 
+     * This implementation uses the second formula on wiki page. 
+     * This formula is more popular and is consistent regard of log base.
+     * But this formula produce lower score than the first formula.
+     * 
      * @param rankList
      * @param idealList
      * @param k
