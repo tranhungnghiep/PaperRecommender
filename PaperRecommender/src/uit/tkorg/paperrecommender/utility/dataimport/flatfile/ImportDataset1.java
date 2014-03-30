@@ -17,8 +17,7 @@ import uit.tkorg.paperrecommender.model.Paper;
 
 /**
  *
- * @author THNghiep 
- * This class contents all method to import data from dataset1.
+ * @author THNghiep This class contents all method to import data from dataset1.
  * Import process needs to filter out noisy data such as keywords longer than 50
  * characters.
  */
@@ -80,11 +79,10 @@ public class ImportDataset1 {
     }
 
     /**
-     * This method read dataset 1 folder, then for each
-     * paper, create a Paper object and put it in the hashmap.
+     * This method read dataset 1 folder, then for each paper, create a Paper
+     * object and put it in the hashmap.
      *
-     * HashMap Key: paper id (in file name) 
-     * HashMap Value: paper object.
+     * HashMap Key: paper id (in file name) HashMap Value: paper object.
      *
      * @return the hashmap contents all papers.
      * @throws java.io.IOException
@@ -140,7 +138,7 @@ public class ImportDataset1 {
     private static HashMapVector readFilePaper(File file) throws Exception {
         HashMapVector content = new HashMapVector();
         String path = file.getAbsolutePath();
-        
+
         // try-with-resources Statement.
         // A resource is an object that must be closed after the program is finished with it. 
         // The try-with-resources statement ensures that each resource is closed at the end of the statement.
@@ -149,7 +147,9 @@ public class ImportDataset1 {
             while ((line = br.readLine()) != null) {
                 String[] str = line.split(" ");
                 if (str.length == 2) {
-                    content.increment(str[0], Double.valueOf(str[1]));
+                    if (str[0].length() < 30 && isNum(str[1])) {
+                        content.increment(str[0], Double.valueOf(str[1]));
+                    }
                 }
             }
         } catch (Exception e) {
@@ -157,6 +157,24 @@ public class ImportDataset1 {
             throw e;
         }
         return content;
+    }
+
+    /**
+     * Check String is Numeric or String
+     *
+     * @param strNum
+     * @return
+     */
+    public static boolean isNum(String strNum) {
+        boolean ret = true;
+        try {
+
+            Double.parseDouble(strNum);
+
+        } catch (NumberFormatException e) {
+            ret = false;
+        }
+        return ret;
     }
 
     /**
@@ -244,7 +262,7 @@ public class ImportDataset1 {
      */
     private static List<Paper> findCitOfPaper(File dir) throws Exception {
         File[] files = dir.listFiles();
-       // List<Paper> allCitOfPaper = new ArrayList();
+        // List<Paper> allCitOfPaper = new ArrayList();
         for (File file : files) {
             if (file.isDirectory()) {
                 findCitOfPaper(file);
@@ -271,7 +289,7 @@ public class ImportDataset1 {
      */
     private static List<Paper> findRefOfPaper(File dir) throws Exception {
         File[] files = dir.listFiles();
-     // List<Paper>  allRefOfPaper = new ArrayList();
+        // List<Paper>  allRefOfPaper = new ArrayList();
 
         for (File file : files) {
             if (file.isDirectory()) {
@@ -282,12 +300,12 @@ public class ImportDataset1 {
                     paper.setPaperId(file.getName().replaceAll("_fv.txt", ""));
                     paper.setPaperType("reference");
                     paper.setContent(readFilePaper(new File(file.getAbsolutePath())));
-                    allRefOfPaper.add(paper);                   
+                    allRefOfPaper.add(paper);
                 }
             }
         }
         return allRefOfPaper;
-        
+
     }
 
     /**
@@ -299,11 +317,11 @@ public class ImportDataset1 {
      * @throws IOException
      */
     private static List<Paper> findPaperOfAuthor(File dir) throws Exception {
-        
+
         List<Paper> papers = new ArrayList();
         String pathVectorFv = null;// ten duong dan den vector dac trung cua paper
         String idAuthor = dir.getName();// lay id cua Author
-        
+
         if (idAuthor.contains("y")) {
             Paper paper = new Paper();
             paper.setPaperId(dir.getName() + "-1"); // set id paper Junior
@@ -314,8 +332,7 @@ public class ImportDataset1 {
             paper.setContent(readFilePaper(new File(pathVectorFv)));// set content cho paper i
             papers.add(paper);
 
-        } 
-        else {
+        } else {
             File[] files = dir.listFiles();
             for (File file : files) {
                 if (file.isDirectory()) {
@@ -376,11 +393,10 @@ public class ImportDataset1 {
     }
 
     /**
-     * This method read dataset 1 folder, then for each
-     * author, create an Atuhor object and put it in the hashmap.
+     * This method read dataset 1 folder, then for each author, create an Atuhor
+     * object and put it in the hashmap.
      *
-     * HashMap Key: author id (in file name) 
-     * HashMap Value: author object.
+     * HashMap Key: author id (in file name) HashMap Value: author object.
      *
      * @return the hashmap contents all authors.
      * @throws java.io.IOException
