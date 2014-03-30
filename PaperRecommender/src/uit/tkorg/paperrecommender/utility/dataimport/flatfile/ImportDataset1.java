@@ -24,9 +24,6 @@ import uit.tkorg.paperrecommender.model.Paper;
  */
 public class ImportDataset1 {
 
-    static List<Paper> allRefOfPaper ;
-    static List<Paper> allCitOfPaper ;
-
     // Prevent instantiation.
     private ImportDataset1() {
 
@@ -146,7 +143,7 @@ public class ImportDataset1 {
         try (BufferedReader br = new BufferedReader(new FileReader(path))) {
             String line;
             while ((line = br.readLine()) != null) {
-                String[] str = line.split(" ");
+                String[] str = line.split("\\s+");
                 if (str.length == 2) {
                     if (str[0].length() < 30 && isNum(str[1])) {
                         content.increment(str[0], Double.valueOf(str[1]));
@@ -238,15 +235,11 @@ public class ImportDataset1 {
         List<String> fileTruth = new ArrayList();
         File[] files = dir.listFiles();
         for (File file : files) {
-            if (file.isDirectory()) {
-                findGroundTruth(file);
-            } else if (file.isFile()) {
-                if (file.getName().contains("-rlv.txt")) {
-                    BufferedReader br = new BufferedReader(new FileReader(file.getAbsolutePath()));
-                    String line = null;
-                    while ((line = br.readLine()) != null) {
-                        fileTruth.add(line);
-                    }
+            if ((file.isFile()) && (file.getName().contains("-rlv.txt"))) {
+                BufferedReader br = new BufferedReader(new FileReader(file.getAbsolutePath()));
+                String line = null;
+                while ((line = br.readLine()) != null) {
+                    fileTruth.add(line);
                 }
             }
         }
@@ -262,22 +255,19 @@ public class ImportDataset1 {
      * @throws IOException
      */
     private static List<Paper> findCitOfPaper(File dir) throws Exception {
+        List cites = new ArrayList();
+        
         File[] files = dir.listFiles();
-      //   allCitOfPaper = new ArrayList();
+
         for (File file : files) {
-            if (file.isDirectory()) {
-                findCitOfPaper(file);
-            } else if (file.isFile()) {
-                if (file.getName().contains("cit")) {
-                    Paper paper = new Paper();
-                    paper.setPaperId(file.getName().replaceAll("_fv.txt|.txt", ""));
-                    paper.setPaperType("citation");
-                    paper.setContent(readFilePaper(new File(file.getAbsolutePath())));
-                    allCitOfPaper.add(paper);
-                }
-            }
+            Paper paper = new Paper();
+            paper.setPaperId(file.getName().replaceAll("_fv.txt|.txt", ""));
+            paper.setPaperType("Citation");
+            paper.setContent(readFilePaper(new File(file.getAbsolutePath())));
+            
+            cites.add(paper);
         }
-        return allCitOfPaper;
+        return cites;
     }
 
     /**
@@ -289,23 +279,20 @@ public class ImportDataset1 {
      * @throws IOException
      */
     private static List<Paper> findRefOfPaper(File dir) throws Exception {
+        List refs = new ArrayList();
+        
         File[] files = dir.listFiles();
-      //   allRefOfPaper = new ArrayList();
 
         for (File file : files) {
-            if (file.isDirectory()) {
-                findRefOfPaper(file);
-            } else if (file.isFile()) {
-                if (file.getName().contains("ref")) {
-                    Paper paper = new Paper();
-                    paper.setPaperId(file.getName().replaceAll("_fv.txt", ""));
-                    paper.setPaperType("reference");
-                    paper.setContent(readFilePaper(new File(file.getAbsolutePath())));
-                    allRefOfPaper.add(paper);
-                }
-            }
+            Paper paper = new Paper();
+            paper.setPaperId(file.getName().replaceAll("_fv.txt", ""));
+            paper.setPaperType("Reference");
+            paper.setContent(readFilePaper(new File(file.getAbsolutePath())));
+            
+            refs.add(paper);
         }
-        return allRefOfPaper;
+        
+        return refs;
 
     }
 
@@ -320,17 +307,20 @@ public class ImportDataset1 {
     private static List<Paper> findPaperOfAuthor(File dir) throws Exception {
 
         List<Paper> papers = new ArrayList();
-        String pathVectorFv = null;// ten duong dan den vector dac trung cua paper
-        String idAuthor = dir.getName();// lay id cua Author
+        String authorId = dir.getName();// lay id cua Author
 
-        if (idAuthor.contains("y")) {
+        if (authorId.contains("y")) {
             Paper paper = new Paper();
             paper.setPaperId(dir.getName() + "-1"); // set id paper Junior
             paper.setPaperType("Paper of junior");
-            pathVectorFv = dir.getAbsolutePath() + "\\" + dir.getName() + "-1" + "_fv.txt";
-            allRefOfPaper = new ArrayList();
-            paper.setReference(findRefOfPaper(dir));
+
+            String refPath = dir.getAbsolutePath() + "\\" + authorId + "RefsFV";
+            paper.setReference(findRefOfPaper(new File(refPath)));
+
+            // ten duong dan den vector dac trung cua paper
+            String pathVectorFv = dir.getAbsolutePath() + "\\" + authorId + "-1" + "_fv.txt";
             paper.setContent(readFilePaper(new File(pathVectorFv)));// set content cho paper i
+            
             papers.add(paper);
 
         } else {
@@ -338,14 +328,20 @@ public class ImportDataset1 {
             for (File file : files) {
                 if (file.isDirectory()) {
                     Paper paper = new Paper();
-                    pathVectorFv = file.getAbsolutePath() + "\\" + file.getName() + "_fv.txt";
-                    paper.setPaperId(file.getName()); // set id paper i cua Senior
+                    
+                    String paperId = file.getName();
+                    paper.setPaperId(paperId); // set id paper i cua Senior
                     paper.setPaperType("Paper of senior");
-                    allCitOfPaper = new ArrayList();
-                    paper.setCitation(findCitOfPaper(file)); // set List cit cua  paper i
-                    allRefOfPaper = new ArrayList();
-                    paper.setReference(findRefOfPaper(file)); // set List ref cua paper i
+
+                    String citePath = file.getAbsolutePath() + "\\" + paperId + "CitsFV";
+                    paper.setCitation(findCitOfPaper(new File(citePath))); // set List cit cua  paper i
+                    
+                    String refPath = file.getAbsolutePath() + "\\" + paperId + "RefsFV";
+                    paper.setReference(findRefOfPaper(new File(refPath))); // set List ref cua paper i
+                    
+                    String pathVectorFv = file.getAbsolutePath() + "\\" + file.getName() + "_fv.txt";
                     paper.setContent(readFilePaper(new File(pathVectorFv)));// set content cho paper i
+                    
                     papers.add(paper);
                 }
             }
@@ -370,21 +366,24 @@ public class ImportDataset1 {
                     File[] juniors = file.listFiles();
                     for (File junior : juniors) {
                         Author author = new Author();
+                        
                         author.setAuthorId(junior.getName());
                         author.setAuthorType("Junior");
                         author.setGroundTruth(findGroundTruth(junior));
                         author.setPaper(findPaperOfAuthor(junior));
+                        
                         authors.put(junior.getName(), author);
                     }
-                }
-                if (file.getName().equals("SeniorR")) {
+                } else if (file.getName().equals("SeniorR")) {
                     File[] seniors = file.listFiles();
                     for (File senior : seniors) {
                         Author author = new Author();
+                        
                         author.setAuthorId(senior.getName());
                         author.setAuthorType("Senior");
                         author.setGroundTruth(findGroundTruth(senior));
                         author.setPaper(findPaperOfAuthor(senior));
+                        
                         authors.put(senior.getName(), author);
                     }
                 }
