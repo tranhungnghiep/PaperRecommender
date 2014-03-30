@@ -4,7 +4,6 @@
  */
 package uit.tkorg.paperrecommender.controller.recommendation;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;

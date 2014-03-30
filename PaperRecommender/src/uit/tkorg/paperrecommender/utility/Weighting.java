@@ -25,7 +25,11 @@ public class Weighting {
      */
     public static double computeCosine(HashMapVector v1, HashMapVector v2) throws Exception {
         double cosine = 0;
+        
         cosine = v1.cosineTo(v2);
+        
+        cosine = GeneralUtility.standardizeSimilarityValue(cosine);
+
         return cosine;
     }
 

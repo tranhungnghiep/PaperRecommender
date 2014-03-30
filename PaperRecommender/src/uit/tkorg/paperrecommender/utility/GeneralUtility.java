@@ -51,4 +51,24 @@ public class GeneralUtility {
         
         return sortedMap;
     }
+    
+    /**
+     * This method standardizes the similarity value of cosine.
+     * Value range would be between 0 and 1.
+     * 
+     * @param d
+     * @return standardized value of d.
+     */
+    public static double standardizeSimilarityValue(double d) {
+        
+        if (d < 0) {
+            d = 0.0;
+        } else if (d > 1) {
+            d = 1.0;
+        } else if (Double.isNaN(d)) {
+            d = 0.0;
+        }
+        
+        return d;
+    }
 }
