@@ -24,8 +24,8 @@ import uit.tkorg.paperrecommender.model.Paper;
  */
 public class ImportDataset1 {
 
-    static List<Paper> allRefOfPaper = new ArrayList();
-    static List<Paper> allCitOfPaper = new ArrayList();
+    static List<Paper> allRefOfPaper ;
+    static List<Paper> allCitOfPaper ;
 
     // Prevent instantiation.
     private ImportDataset1() {
@@ -263,7 +263,7 @@ public class ImportDataset1 {
      */
     private static List<Paper> findCitOfPaper(File dir) throws Exception {
         File[] files = dir.listFiles();
-        // List<Paper> allCitOfPaper = new ArrayList();
+      //   allCitOfPaper = new ArrayList();
         for (File file : files) {
             if (file.isDirectory()) {
                 findCitOfPaper(file);
@@ -290,7 +290,7 @@ public class ImportDataset1 {
      */
     private static List<Paper> findRefOfPaper(File dir) throws Exception {
         File[] files = dir.listFiles();
-        // List<Paper>  allRefOfPaper = new ArrayList();
+      //   allRefOfPaper = new ArrayList();
 
         for (File file : files) {
             if (file.isDirectory()) {
