@@ -17,7 +17,8 @@ import uit.tkorg.paperrecommender.model.Paper;
 
 /**
  *
- * @author THNghiep This class contents all method to import data from dataset1.
+ * @author THNghiep 
+ * This class contents all method to import data from dataset1.
  * Import process needs to filter out noisy data such as keywords longer than 50
  * characters.
  */
@@ -393,7 +394,7 @@ public class ImportDataset1 {
     }
 
     /**
-     * This method read dataset 1 folder, then for each author, create an Atuhor
+     * This method read dataset 1 folder, then for each author, create an Author
      * object and put it in the hashmap.
      *
      * HashMap Key: author id (in file name) HashMap Value: author object.

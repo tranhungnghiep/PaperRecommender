@@ -208,6 +208,7 @@ public class PaperRecommenderGUI extends javax.swing.JFrame {
         });
 
         jButtonComputeAuthorFVRPY.setText("RPY");
+        jButtonComputeAuthorFVRPY.setEnabled(false);
         jButtonComputeAuthorFVRPY.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonComputeAuthorFVRPYActionPerformed(evt);
@@ -398,8 +399,6 @@ public class PaperRecommenderGUI extends javax.swing.JFrame {
                     .addComponent(jTextFieldStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel5)))
         );
-
-        jPanel1.getAccessibleContext().setAccessibleName("Data Import");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents

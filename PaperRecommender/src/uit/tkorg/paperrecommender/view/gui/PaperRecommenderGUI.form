@@ -99,9 +99,6 @@
           </Border>
         </Property>
       </Properties>
-      <AccessibilityProperties>
-        <Property name="AccessibleContext.accessibleName" type="java.lang.String" value="Data Import"/>
-      </AccessibilityProperties>
 
       <Layout>
         <DimensionLayout dim="0">
@@ -333,6 +330,7 @@
         <Component class="javax.swing.JButton" name="jButtonComputeAuthorFVRPY">
           <Properties>
             <Property name="text" type="java.lang.String" value="RPY"/>
+            <Property name="enabled" type="boolean" value="false"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonComputeAuthorFVRPYActionPerformed"/>

@@ -37,8 +37,10 @@ public class Weighting {
      * @return RPY
      */
     public static double computeRPY(int y1, int y2) throws Exception {
-        double rpy = 0;
-        if (y1 == y2) {
+        double rpy;
+        if ((y1 == 0) || (y2 == 0)) {
+            rpy = 1;
+        } else if (y1 == y2) {
             rpy = 10 / 9;
         } else {
             rpy = 1 / Math.abs(y1 - y2);

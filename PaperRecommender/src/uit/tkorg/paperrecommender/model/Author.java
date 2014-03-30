@@ -18,9 +18,9 @@ import java.util.List;
 public class Author implements Serializable {
     private String authorId;
     private String authorType;
-    private List groundTruth; // List string.
     private List paper;
     private HashMapVector featureVector;
+    private List groundTruth; // List string.
     private List Recommendation; // List string.
     private double ndcg5;
     private double ndcg10;
