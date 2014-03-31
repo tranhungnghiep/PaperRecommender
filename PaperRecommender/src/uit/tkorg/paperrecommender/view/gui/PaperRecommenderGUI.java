@@ -54,13 +54,6 @@ public class PaperRecommenderGUI extends javax.swing.JFrame {
         jButtonComputeAuthorFVLinear = new javax.swing.JButton();
         jButtonComputeAuthorFVCosine = new javax.swing.JButton();
         jButtonComputeAuthorFVRPY = new javax.swing.JButton();
-        jButtonRecommendAllAuthor = new javax.swing.JButton();
-        jButtonComputeNDCG5 = new javax.swing.JButton();
-        jButtonComputeNDCG10 = new javax.swing.JButton();
-        jButtonComputeMRR = new javax.swing.JButton();
-        jTextFieldNDCG5 = new javax.swing.JTextField();
-        jTextFieldNDCG10 = new javax.swing.JTextField();
-        jTextFieldMRR = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
         jTextFieldStatus = new javax.swing.JTextField();
         jPanel4 = new javax.swing.JPanel();
@@ -70,6 +63,14 @@ public class PaperRecommenderGUI extends javax.swing.JFrame {
         jTextFieldSaveData = new javax.swing.JTextField();
         jButtonDatasetFolder = new javax.swing.JButton();
         jButtonSaveDataFolder = new javax.swing.JButton();
+        jPanel3 = new javax.swing.JPanel();
+        jLabel7 = new javax.swing.JLabel();
+        jButtonRecommendAllAuthor = new javax.swing.JButton();
+        jTextFieldNDCG5 = new javax.swing.JTextField();
+        jTextFieldNDCG10 = new javax.swing.JTextField();
+        jTextFieldMRR = new javax.swing.JTextField();
+        jLabel10 = new javax.swing.JLabel();
+        jLabel12 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Paper Recommender");
@@ -238,7 +239,7 @@ public class PaperRecommenderGUI extends javax.swing.JFrame {
                         .addComponent(jButtonComputePaperFVCosine, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jButtonComputePaperFVRPY, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(28, Short.MAX_VALUE))
         );
 
         jPanel2Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jButtonComputeAuthorFVCosine, jButtonComputeAuthorFVRPY, jButtonComputePaperFVCosine, jButtonComputePaperFVLinear, jButtonComputePaperFVRPY});
@@ -257,36 +258,8 @@ public class PaperRecommenderGUI extends javax.swing.JFrame {
                     .addComponent(jButtonComputeAuthorFVLinear)
                     .addComponent(jButtonComputeAuthorFVCosine)
                     .addComponent(jButtonComputeAuthorFVRPY))
-                .addGap(4, 4, 4))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-
-        jButtonRecommendAllAuthor.setText("Recommend");
-        jButtonRecommendAllAuthor.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonRecommendAllAuthorActionPerformed(evt);
-            }
-        });
-
-        jButtonComputeNDCG5.setText("NDCG@5");
-        jButtonComputeNDCG5.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonComputeNDCG5ActionPerformed(evt);
-            }
-        });
-
-        jButtonComputeNDCG10.setText("NDCG@10");
-        jButtonComputeNDCG10.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonComputeNDCG10ActionPerformed(evt);
-            }
-        });
-
-        jButtonComputeMRR.setText("MRR");
-        jButtonComputeMRR.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonComputeMRRActionPerformed(evt);
-            }
-        });
 
         jLabel5.setText("Status:");
 
@@ -343,32 +316,80 @@ public class PaperRecommenderGUI extends javax.swing.JFrame {
                     .addComponent(jButtonSaveDataFolder)))
         );
 
+        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder("Recommendation and Evaluation"));
+
+        jLabel7.setText("NDCG@5:");
+
+        jButtonRecommendAllAuthor.setText("Recommend and Evaluate");
+        jButtonRecommendAllAuthor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonRecommendAllAuthorActionPerformed(evt);
+            }
+        });
+
+        jLabel10.setText("NDCG@10:");
+
+        jLabel12.setText("MRR:");
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel7)
+                    .addComponent(jLabel12)
+                    .addComponent(jLabel10))
+                .addGap(28, 28, 28)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jTextFieldNDCG5)
+                    .addComponent(jTextFieldNDCG10)
+                    .addComponent(jTextFieldMRR, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
+            .addComponent(jButtonRecommendAllAuthor, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addComponent(jButtonRecommendAllAuthor)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(13, 13, 13)
+                        .addComponent(jLabel7))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jTextFieldNDCG5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jTextFieldNDCG10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel10))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jTextFieldMRR, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel12))))
+                .addContainerGap())
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(11, 11, 11)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jButtonComputeMRR, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jButtonComputeNDCG5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jButtonComputeNDCG10, javax.swing.GroupLayout.Alignment.TRAILING))
-                        .addGap(24, 24, 24)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jTextFieldNDCG5, javax.swing.GroupLayout.DEFAULT_SIZE, 179, Short.MAX_VALUE)
-                            .addComponent(jTextFieldNDCG10)
-                            .addComponent(jTextFieldMRR))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(11, 11, 11)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel5)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jTextFieldStatus))
+                            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel5)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextFieldStatus))
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButtonRecommendAllAuthor, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addContainerGap()
+                        .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -380,21 +401,9 @@ public class PaperRecommenderGUI extends javax.swing.JFrame {
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(12, 12, 12)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jButtonRecommendAllAuthor)
-                .addGap(10, 10, 10)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButtonComputeNDCG5)
-                    .addComponent(jTextFieldNDCG5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButtonComputeNDCG10)
-                    .addComponent(jTextFieldNDCG10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButtonComputeMRR)
-                    .addComponent(jTextFieldMRR, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 25, Short.MAX_VALUE)
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jTextFieldStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel5)))
@@ -433,18 +442,28 @@ public class PaperRecommenderGUI extends javax.swing.JFrame {
 
     private void jButtonRecommendAllAuthorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRecommendAllAuthorActionPerformed
         // TODO add your handling code here:
+        
+        // Recommend (content-based):
         jTextFieldStatus.setText("Generating recommendation list for all authors... ");
         response = paperRecommender.centralController("Recommend", null);
         jTextFieldStatus.setText(jTextFieldStatus.getText() + response[0]);
-    }//GEN-LAST:event_jButtonRecommendAllAuthorActionPerformed
 
-    private void jButtonComputeNDCG5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonComputeNDCG5ActionPerformed
-        // TODO add your handling code here:
+        // Evaluate:
         jTextFieldStatus.setText("Computing NDCG@5... ");
         response = paperRecommender.centralController("NDCG5", null);
         jTextFieldNDCG5.setText(response[1]);
         jTextFieldStatus.setText(jTextFieldStatus.getText() + response[0]);
-    }//GEN-LAST:event_jButtonComputeNDCG5ActionPerformed
+
+        jTextFieldStatus.setText("Computing NDCG@10... ");
+        response = paperRecommender.centralController("NDCG10", null);
+        jTextFieldNDCG10.setText(response[1]);
+        jTextFieldStatus.setText(jTextFieldStatus.getText() + response[0]);
+
+        jTextFieldStatus.setText("Computing MRR... ");
+        response = paperRecommender.centralController("MRR", null);
+        jTextFieldMRR.setText(response[1]);
+        jTextFieldStatus.setText(jTextFieldStatus.getText() + response[0]);
+    }//GEN-LAST:event_jButtonRecommendAllAuthorActionPerformed
 
     private void jButtonLoadPaperActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonLoadPaperActionPerformed
         // TODO add your handling code here:
@@ -502,22 +521,6 @@ public class PaperRecommenderGUI extends javax.swing.JFrame {
         jTextFieldStatus.setText(jTextFieldStatus.getText() + response[0]);
     }//GEN-LAST:event_jButtonComputeAuthorFVRPYActionPerformed
 
-    private void jButtonComputeNDCG10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonComputeNDCG10ActionPerformed
-        // TODO add your handling code here:
-        jTextFieldStatus.setText("Computing NDCG@10... ");
-        response = paperRecommender.centralController("NDCG10", null);
-        jTextFieldNDCG10.setText(response[1]);
-        jTextFieldStatus.setText(jTextFieldStatus.getText() + response[0]);
-    }//GEN-LAST:event_jButtonComputeNDCG10ActionPerformed
-
-    private void jButtonComputeMRRActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonComputeMRRActionPerformed
-        // TODO add your handling code here:
-        jTextFieldStatus.setText("Computing MRR... ");
-        response = paperRecommender.centralController("MRR", null);
-        jTextFieldMRR.setText(response[1]);
-        jTextFieldStatus.setText(jTextFieldStatus.getText() + response[0]);
-    }//GEN-LAST:event_jButtonComputeMRRActionPerformed
-
     private void jButtonDatasetFolderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDatasetFolderActionPerformed
 
         JFileChooser fc = new JFileChooser();
@@ -574,9 +577,6 @@ public class PaperRecommenderGUI extends javax.swing.JFrame {
     private javax.swing.JButton jButtonComputeAuthorFVCosine;
     private javax.swing.JButton jButtonComputeAuthorFVLinear;
     private javax.swing.JButton jButtonComputeAuthorFVRPY;
-    private javax.swing.JButton jButtonComputeMRR;
-    private javax.swing.JButton jButtonComputeNDCG10;
-    private javax.swing.JButton jButtonComputeNDCG5;
     private javax.swing.JButton jButtonComputePaperFVCosine;
     private javax.swing.JButton jButtonComputePaperFVLinear;
     private javax.swing.JButton jButtonComputePaperFVRPY;
@@ -590,14 +590,18 @@ public class PaperRecommenderGUI extends javax.swing.JFrame {
     private javax.swing.JButton jButtonSaveDataFolder;
     private javax.swing.JButton jButtonSavePaper;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JTextField jTextFieldDataset;
     private javax.swing.JTextField jTextFieldMRR;
