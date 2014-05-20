@@ -23,10 +23,10 @@ import uit.tkorg.pr.utility.general.Weighting;
  * This output could be used as universal recommendation list, upto the input list of authors.
  * @author THNghiep
  */
-public class ContentBasedRecommender {
+public class CBFRecommender {
     
     // Prevent instantiation.
-    private ContentBasedRecommender() {
+    private CBFRecommender() {
     }
 
     /**

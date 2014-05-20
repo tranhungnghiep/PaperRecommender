@@ -11,9 +11,10 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
-import uit.tkorg.pr.constant.PaperRecommenerConstant;
+import uit.tkorg.pr.constant.PRConstant;
 import uit.tkorg.pr.dataimport.model.Author;
 import uit.tkorg.pr.dataimport.model.Paper;
+import uit.tkorg.pr.utility.general.GeneralUtility;
 
 /**
  *
@@ -38,7 +39,7 @@ public class NUSDataset1 {
      */
     public static List readAllKeywords() throws Exception {
         List allKeywords = new ArrayList();
-        List<String> ffile = getPathFile(new File(PaperRecommenerConstant.DATASETFOLDER));
+        List<String> ffile = GeneralUtility.getPathFile(new File(PRConstant.FOLDER_NUS_DATASET1));
         for (int i = 0; i < ffile.size(); i++) {
             FileReader file = new FileReader(ffile.get(i));
             BufferedReader textReader = new BufferedReader(file);
@@ -52,28 +53,6 @@ public class NUSDataset1 {
             }
         }
         return allKeywords;
-    }
-
-    /**
-     *
-     * @param dir
-     * @return list file
-     */
-    private static List<String> getPathFile(File dir) throws Exception {
-        File[] files = dir.listFiles();
-        List listfile = new ArrayList<String>();
-        String name = null;
-        for (File file : files) {
-            if (file.isDirectory()) {
-                getPathFile(file);
-            } else if (file.isFile()) {
-                name = file.getName().toString();
-            }
-            if ("*.txt".equals(name)) {
-                listfile.add(file.getAbsolutePath());
-            }
-        }
-        return listfile;
     }
 
     /**
@@ -145,7 +124,7 @@ public class NUSDataset1 {
             while ((line = br.readLine()) != null) {
                 String[] str = line.split("\\s+");
                 if (str.length == 2) {
-                    if (str[0].length() < 30 && isNum(str[1])) {
+                    if (str[0].length() < 30 && GeneralUtility.isNum(str[1])) {
                         content.increment(str[0], Double.valueOf(str[1]));
                     }
                 }
@@ -158,24 +137,6 @@ public class NUSDataset1 {
     }
 
     /**
-     * Check String is Numeric or String
-     *
-     * @param strNum
-     * @return
-     */
-    public static boolean isNum(String strNum) {
-        boolean ret = true;
-        try {
-
-            Double.parseDouble(strNum);
-
-        } catch (NumberFormatException e) {
-            ret = false;
-        }
-        return ret;
-    }
-
-    /**
      * This method add Citation for paper
      *
      * @param paperId
@@ -184,7 +145,7 @@ public class NUSDataset1 {
      */
     private static List<String> addCitation(String paperId) throws Exception {
         List<String> citation = new ArrayList<>();
-        try (BufferedReader br = new BufferedReader(new FileReader(PaperRecommenerConstant.DATASETFOLDER + "\\InterLink\\acl.20080325.net"))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(PRConstant.FOLDER_NUS_DATASET1 + "\\InterLink\\acl.20080325.net"))) {
             String line = null;
             while ((line = br.readLine()) != null) {
                 String[] str = line.split(" ==> ");
@@ -208,7 +169,7 @@ public class NUSDataset1 {
      */
     private static List<String> addReference(String paperId) throws Exception {
         List<String> reference = new ArrayList<>();
-        try (BufferedReader br = new BufferedReader(new FileReader(PaperRecommenerConstant.DATASETFOLDER + "\\InterLink\\acl.20080325.net"))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(PRConstant.FOLDER_NUS_DATASET1 + "\\InterLink\\acl.20080325.net"))) {
             String line = null;
             while ((line = br.readLine()) != null) {
                 String[] str = line.split(" ==> ");

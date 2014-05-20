@@ -4,11 +4,11 @@
  */
 package uit.tkorg.pr.centralcontroller;
 import java.util.HashMap;
-import uit.tkorg.pr.constant.PaperRecommenerConstant;
-import uit.tkorg.pr.datapreparation.ComputeAuthorFV;
-import uit.tkorg.pr.datapreparation.ComputePaperFV;
+import uit.tkorg.pr.constant.PRConstant;
+import uit.tkorg.pr.datapreparation.cbf.ComputeAuthorFV;
+import uit.tkorg.pr.datapreparation.cbf.ComputePaperFV;
 import uit.tkorg.pr.evaluation.Evaluator;
-import uit.tkorg.pr.method.cbf.ContentBasedRecommender;
+import uit.tkorg.pr.method.cbf.CBFRecommender;
 import uit.tkorg.pr.dataimport.model.Author;
 import uit.tkorg.pr.dataimport.model.Paper;
 import uit.tkorg.pr.utility.general.Serializer;
@@ -61,7 +61,7 @@ public class PaperRecommender {
                     if ((param != null) && !(param.isEmpty())) {
                         Dataset1Folder = param;
                     } else {
-                        Dataset1Folder = PaperRecommenerConstant.DATASETFOLDER;
+                        Dataset1Folder = PRConstant.FOLDER_NUS_DATASET1;
                     }
                     papers = NUSDataset1.buildListOfPapers(Dataset1Folder);
                     response[0] = "Success.";
@@ -71,7 +71,7 @@ public class PaperRecommender {
                     if ((param != null) && !(param.isEmpty())) {
                         Dataset1Folder = param;
                     } else {
-                        Dataset1Folder = PaperRecommenerConstant.DATASETFOLDER;
+                        Dataset1Folder = PRConstant.FOLDER_NUS_DATASET1;
                     }
                     authors = NUSDataset1.buildListOfAuthors(Dataset1Folder);
                     response[0] = "Success.";
@@ -81,7 +81,7 @@ public class PaperRecommender {
                     if ((param != null) && !(param.isEmpty())) {
                         SaveDataFolder = param;
                     } else {
-                        SaveDataFolder = PaperRecommenerConstant.SAVEDATAFOLDER;
+                        SaveDataFolder = PRConstant.SAVEDATAFOLDER;
                     }
                     Serializer.saveObjectToFile(papers, SaveDataFolder + "\\Papers.dat");
                     response[0] = "Success.";
@@ -91,7 +91,7 @@ public class PaperRecommender {
                     if ((param != null) && !(param.isEmpty())) {
                         SaveDataFolder = param;
                     } else {
-                        SaveDataFolder = PaperRecommenerConstant.SAVEDATAFOLDER;
+                        SaveDataFolder = PRConstant.SAVEDATAFOLDER;
                     }
                     Serializer.saveObjectToFile(authors, SaveDataFolder + "\\Authors.dat");
                     response[0] = "Success.";
@@ -101,7 +101,7 @@ public class PaperRecommender {
                     if ((param != null) && !(param.isEmpty())) {
                         SaveDataFolder = param;
                     } else {
-                        SaveDataFolder = PaperRecommenerConstant.SAVEDATAFOLDER;
+                        SaveDataFolder = PRConstant.SAVEDATAFOLDER;
                     }
                     papers = (HashMap<String, Paper>) Serializer.loadObjectFromFile(SaveDataFolder + "\\Papers.dat");
                     response[0] = "Success.";
@@ -111,7 +111,7 @@ public class PaperRecommender {
                     if ((param != null) && !(param.isEmpty())) {
                         SaveDataFolder = param;
                     } else {
-                        SaveDataFolder = PaperRecommenerConstant.SAVEDATAFOLDER;
+                        SaveDataFolder = PRConstant.SAVEDATAFOLDER;
                     }
                     authors = (HashMap<String, Author>) Serializer.loadObjectFromFile(SaveDataFolder + "\\Authors.dat");
                     response[0] = "Success.";
@@ -143,7 +143,7 @@ public class PaperRecommender {
                     response[0] = "Success.";
                     break;
                 case "Recommend":
-                    authors = ContentBasedRecommender.buildAllRecommendationLists(authors, papers);
+                    authors = CBFRecommender.buildAllRecommendationLists(authors, papers);
                     response[0] = "Success.";
                     break;
                 case "NDCG5":

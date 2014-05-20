@@ -4,6 +4,8 @@
  */
 package uit.tkorg.pr.utility.general;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -70,5 +72,45 @@ public class GeneralUtility {
         }
         
         return d;
+    }
+
+    /**
+     * Check String is Numeric or String
+     *
+     * @param strNum
+     * @return
+     */
+    public static boolean isNum(String strNum) {
+        boolean ret = true;
+        try {
+
+            Double.parseDouble(strNum);
+
+        } catch (NumberFormatException e) {
+            ret = false;
+        }
+        return ret;
+    }
+    
+    /**
+     *
+     * @param dir
+     * @return list file
+     */
+    public static List<String> getPathFile(File dir) throws Exception {
+        File[] files = dir.listFiles();
+        List listfile = new ArrayList<String>();
+        String name = null;
+        for (File file : files) {
+            if (file.isDirectory()) {
+                getPathFile(file);
+            } else if (file.isFile()) {
+                name = file.getName().toString();
+            }
+            if ("*.txt".equals(name)) {
+                listfile.add(file.getAbsolutePath());
+            }
+        }
+        return listfile;
     }
 }

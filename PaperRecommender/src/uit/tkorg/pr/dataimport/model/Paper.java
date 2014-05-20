@@ -24,11 +24,12 @@ import java.util.List;
 public class Paper implements Serializable {
     private String paperId;
     private String title;
+    private String paperAbstract;
     private int year;
     private String paperType;
     private HashMapVector content;
-    private List citation;
-    private List reference;
+    private List citation; // cited by those papers.
+    private List reference; // citing those papers.
     private HashMapVector featureVector;
 
     /**
@@ -155,5 +156,19 @@ public class Paper implements Serializable {
      */
     public void setFeatureVector(HashMapVector featureVector) {
         this.featureVector = featureVector;
+    }
+
+    /**
+     * @return the paperAbstract
+     */
+    public String getPaperAbstract() {
+        return paperAbstract;
+    }
+
+    /**
+     * @param paperAbstract the paperAbstract to set
+     */
+    public void setPaperAbstract(String paperAbstract) {
+        this.paperAbstract = paperAbstract;
     }
 }
