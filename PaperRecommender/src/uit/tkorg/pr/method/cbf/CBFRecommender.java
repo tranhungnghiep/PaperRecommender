@@ -10,8 +10,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import uit.tkorg.pr.dataimport.model.Author;
 import uit.tkorg.pr.dataimport.model.Paper;
-import uit.tkorg.pr.utility.general.GeneralUtility;
-import uit.tkorg.pr.utility.general.Weighting;
+import uit.tkorg.pr.utility.GeneralUtility;
+import uit.tkorg.pr.utility.Weighting;
 
 /**
  * This class handles logic for recommending papers to each author.

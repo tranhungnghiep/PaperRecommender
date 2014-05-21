@@ -14,9 +14,9 @@ import java.util.*;
 import uit.tkorg.pr.constant.PRConstant;
 import uit.tkorg.pr.dataimport.model.Author;
 import uit.tkorg.pr.dataimport.model.Paper;
-import uit.tkorg.pr.utility.general.IOUtility;
-import uit.tkorg.pr.utility.general.GeneralUtility;
-import uit.tkorg.pr.utility.general.NumericUtility;
+import uit.tkorg.pr.utility.IOUtility;
+import uit.tkorg.pr.utility.GeneralUtility;
+import uit.tkorg.pr.utility.NumericUtility;
 
 /**
  *

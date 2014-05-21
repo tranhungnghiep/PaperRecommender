@@ -14,6 +14,8 @@ import java.util.*;
 import uit.tkorg.pr.constant.PRConstant;
 import uit.tkorg.pr.dataimport.model.Author;
 import uit.tkorg.pr.dataimport.model.Paper;
+import uit.tkorg.pr.utility.IOUtility;
+import uit.tkorg.pr.utility.NumericUtility;
 
 /**
  *
@@ -46,13 +48,19 @@ public class MASDataset1 {
         
         try (BufferedReader br = new BufferedReader(new FileReader(fileNamePaper))) {
             String line;
-            line = br.readLine(); // Skip first line with header content.
             while ((line = br.readLine()) != null) {
-                String[] str = line.split("\",\"");
-                String paperId = str[0].replace("\"", " ").trim();
-                String title = str[1].trim();
-                String paperAbstract = str[2].trim();
-                int year = Integer.parseInt(str[3].replace("\"", " ").trim());
+                if ((line == null) || (line.equals(""))) {
+                    break;
+                }
+                String[] str = line.split("|||");
+                String paperId = IOUtility.getAcceptedFieldValue(str[0]);
+                String title = IOUtility.getAcceptedFieldValue(str[1]);
+                String paperAbstract = IOUtility.getAcceptedFieldValue(str[2]);
+                String strYear = IOUtility.getAcceptedFieldValue(str[3]);
+                int year = 0;
+                if (NumericUtility.isNum(strYear)) {
+                    year = Integer.parseInt(strYear);
+                }
                 
                 Paper paper = new Paper();
                 paper.setPaperId(paperId);
@@ -86,9 +94,12 @@ public class MASDataset1 {
             line = br.readLine(); // Skip first line with header content.
             
             while ((line = br.readLine()) != null) {
-                String[] str = line.split("\",\"");
-                String paperId1 = str[0].replace("\"", " ").trim();
-                String paperId2 = str[1].replace("\"", " ").trim();
+                if ((line == null) || (line.equals(""))) {
+                    break;
+                }
+                String[] str = line.split("|||");
+                String paperId1 = IOUtility.getAcceptedFieldValue(str[0]);
+                String paperId2 = IOUtility.getAcceptedFieldValue(str[1]);
                 
                 papers.get(paperId1).getReference().add(paperId2); // reference is mutable.
                 papers.get(paperId2).getCitation().add(paperId1);
@@ -136,20 +147,19 @@ public class MASDataset1 {
             line = br.readLine(); // Skip first line with header content.
             
             while ((line = br.readLine()) != null) {
-                String[] str = line.split("\",\"");
-                String authorId = str[0].replace("\"", " ").trim();
-                String paperId = str[1].replace("\"", " ").trim();
+                if ((line == null) || (line.equals(""))) {
+                    break;
+                }
+                String[] str = line.split("|||");
+                String authorId = IOUtility.getAcceptedFieldValue(str[0]);
+                String paperId = IOUtility.getAcceptedFieldValue(str[1]);
                 
-                if (authors.containsKey(authorId)) {
-                    authors.get(authorId).getPaper().add(paperId); // mutable.
-                } else {
+                if (!authors.containsKey(authorId)) {
                     Author author = new Author();
-                    List paper = new ArrayList();
-                    paper.add(paperId);
                     author.setAuthorId(authorId);
-                    author.setPaper(paper);
                     authors.put(authorId, author);
                 }
+                authors.get(authorId).getPaper().add(paperId); // mutable.
             }
         } catch (IOException e) {
             System.out.println(e.getMessage());
@@ -172,9 +182,12 @@ public class MASDataset1 {
             line = br.readLine(); // Skip first line with header content.
             
             while ((line = br.readLine()) != null) {
-                String[] str = line.split("\",\"");
-                String authorId = str[0].replace("\"", " ").trim();
-                String authorName = str[1].replace("\"", " ").trim();
+                if ((line == null) || (line.equals(""))) {
+                    break;
+                }
+                String[] str = line.split("|||");
+                String authorId = IOUtility.getAcceptedFieldValue(str[0]);
+                String authorName = IOUtility.getAcceptedFieldValue(str[1]);
 
                 Author tempAuthor = new Author();
                 tempAuthor.setAuthorId(authorId);
@@ -212,20 +225,19 @@ public class MASDataset1 {
             line = br.readLine(); // Skip first line with header content.
             
             while ((line = br.readLine()) != null) {
-                String[] str = line.split("\",\"");
-                String authorId = str[0].replace("\"", " ").trim();
-                String paperId = str[1].replace("\"", " ").trim();
+                if ((line == null) || (line.equals(""))) {
+                    break;
+                }
+                String[] str = line.split("|||");
+                String authorId = IOUtility.getAcceptedFieldValue(str[0]);
+                String paperId = IOUtility.getAcceptedFieldValue(str[1]);
                 
-                if (authors.containsKey(authorId)) {
-                    authors.get(authorId).getGroundTruth().add(paperId); // mutable.
-                } else {
+                if (!authors.containsKey(authorId)) {
                     Author author = new Author();
-                    List groundTruth = new ArrayList();
-                    groundTruth.add(paperId);
                     author.setAuthorId(authorId);
-                    author.setPaper(groundTruth);
                     authors.put(authorId, author);
                 }
+                authors.get(authorId).getGroundTruth().add(paperId); // mutable.
             }
         } catch (IOException e) {
             System.out.println(e.getMessage());

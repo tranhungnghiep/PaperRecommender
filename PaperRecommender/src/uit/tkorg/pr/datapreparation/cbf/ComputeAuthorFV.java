@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import uit.tkorg.pr.dataimport.model.Author;
 import uit.tkorg.pr.dataimport.model.Paper;
-import uit.tkorg.pr.utility.general.Weighting;
+import uit.tkorg.pr.utility.Weighting;
 
 /**
  * This class handles all logics for author object. 

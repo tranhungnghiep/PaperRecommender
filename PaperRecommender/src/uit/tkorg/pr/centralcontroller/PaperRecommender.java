@@ -12,7 +12,7 @@ import uit.tkorg.pr.method.cbf.CBFRecommender;
 import uit.tkorg.pr.dataimport.model.Author;
 import uit.tkorg.pr.dataimport.model.Paper;
 import uit.tkorg.pr.dataimport.NUSDataset1;
-import uit.tkorg.pr.utility.general.IOUtility;
+import uit.tkorg.pr.utility.IOUtility;
 
 
 /**

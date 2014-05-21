@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package uit.tkorg.pr.utility.general;
+package uit.tkorg.pr.utility;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -74,5 +74,14 @@ public class IOUtility {
             }
         }
         return listfile;
+    }
+    
+    public static String getAcceptedFieldValue(String fieldValue) throws Exception {
+        String value = fieldValue.trim();
+        if (value.equalsIgnoreCase("\\N")) {
+            return null;
+        } else {
+            return value;
+        }
     }
 }

@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package uit.tkorg.pr.utility.general;
+package uit.tkorg.pr.utility;
 
 import java.io.File;
 import java.util.ArrayList;
