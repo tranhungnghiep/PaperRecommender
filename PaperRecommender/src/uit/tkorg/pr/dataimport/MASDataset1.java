@@ -91,7 +91,6 @@ public class MASDataset1 {
 
         try (BufferedReader br = new BufferedReader(new FileReader(fileNameCitation))) {
             String line;
-            line = br.readLine(); // Skip first line with header content.
             
             while ((line = br.readLine()) != null) {
                 if ((line == null) || (line.equals(""))) {
@@ -144,7 +143,6 @@ public class MASDataset1 {
 
         try (BufferedReader br = new BufferedReader(new FileReader(fileNameAuthorship))) {
             String line;
-            line = br.readLine(); // Skip first line with header content.
             
             while ((line = br.readLine()) != null) {
                 if ((line == null) || (line.equals(""))) {
@@ -179,7 +177,6 @@ public class MASDataset1 {
         
         try (BufferedReader br = new BufferedReader(new FileReader(fileNameRecommendingAuthors))) {
             String line;
-            line = br.readLine(); // Skip first line with header content.
             
             while ((line = br.readLine()) != null) {
                 if ((line == null) || (line.equals(""))) {
@@ -222,7 +219,6 @@ public class MASDataset1 {
 
         try (BufferedReader br = new BufferedReader(new FileReader(fileNameGroundTruth))) {
             String line;
-            line = br.readLine(); // Skip first line with header content.
             
             while ((line = br.readLine()) != null) {
                 if ((line == null) || (line.equals(""))) {
