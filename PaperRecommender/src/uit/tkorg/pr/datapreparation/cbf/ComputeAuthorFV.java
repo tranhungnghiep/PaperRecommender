@@ -32,15 +32,10 @@ public class ComputeAuthorFV {
      *
      * @param weightingScheme 0: linear; 1: cosine; 2: rpy
      */
-    public static HashMap<String, Author> computeAllAuthorsFV(HashMap<String, Author> authorsInput, int weightingScheme) throws Exception {
-        // Reuse authorsInput, not constructing new hash map.
-        HashMap<String, Author> authors = authorsInput;
-        
-        for (String key : authorsInput.keySet()) {
-            authors.get(key).setFeatureVector(computeAuthorFV(authorsInput, key, weightingScheme));
+    public static void computeAllAuthorsFV(HashMap<String, Author> authors, int weightingScheme) throws Exception {
+        for (String key : authors.keySet()) {
+            authors.get(key).setFeatureVector(computeAuthorFV(authors, key, weightingScheme));
         }
-        
-        return authors;
     }
 
     /**
@@ -51,26 +46,26 @@ public class ComputeAuthorFV {
      * @param weightingScheme 0: linear; 1: cosine; 2: rpy
      * @return list represents feature vector.
      */
-    private static HashMapVector computeAuthorFV(HashMap<String, Author> authorsInput, String authorId, int weightingScheme) throws Exception {
+    private static HashMapVector computeAuthorFV(HashMap<String, Author> authors, String authorId, int weightingScheme) throws Exception {
         HashMapVector featureVector;
         
         if (weightingScheme == 0) {
             if (authorId.contains("y")) {
-                featureVector = computeJuniorFeatureVectorWithLinear(authorsInput, authorId);
+                featureVector = computeJuniorFVLinear(authors, authorId);
             } else {
-                featureVector = computeSeniorFeatureVectorWithLinear(authorsInput, authorId);
+                featureVector = computeSeniorFVLinear(authors, authorId);
             }
         } else if (weightingScheme == 1) {
             if (authorId.contains("y")) {
-                featureVector = computeJuniorFeatureVectorWithCosine(authorsInput, authorId);
+                featureVector = computeJuniorFVCosine(authors, authorId);
             } else {
-                featureVector = computeSeniorFeatureVectorWithCosine(authorsInput, authorId);
+                featureVector = computeSeniorFVCosine(authors, authorId);
             }
         } else {
             if (authorId.contains("y")) {
-                featureVector = computeJuniorFeatureVectorWithRPY(authorsInput, authorId);
+                featureVector = computeJuniorFVRPY(authors, authorId);
             } else {
-                featureVector = computeSeniorFeatureVectorWithRPY(authorsInput, authorId);
+                featureVector = computeSeniorFVRPY(authors, authorId);
             }
         }
         
@@ -83,17 +78,17 @@ public class ComputeAuthorFV {
      * @param authorId
      * @return featureVector
      */
-    private static HashMapVector computeJuniorFeatureVectorWithLinear(HashMap<String, Author> authorsInput, String authorId) throws Exception {
+    private static HashMapVector computeJuniorFVLinear(HashMap<String, Author> authors, String authorId) throws Exception {
         HashMapVector featureVector = new HashMapVector();
         
-        Author author = authorsInput.get(authorId);//get author has Id equally authorId in ListofPapers
+        Author author = authors.get(authorId);//get author has Id equally authorId in ListofPapers
         Paper authorPaper;
         authorPaper = (Paper) author.getPaper().get(0);//get paper of junior researchers
         
         featureVector.add(authorPaper.getContent());
         
         List<Paper> reference = authorPaper.getReference();//get list of reference papers of author's paper 
-        featureVector.add(sumFeatureVectorWithLinear(reference));//add featureVector with featureVector of reference papers of author's paper 
+        featureVector.add(sumFVLinear(reference));//add featureVector with featureVector of reference papers of author's paper 
         
         return featureVector;
     }
@@ -104,17 +99,17 @@ public class ComputeAuthorFV {
      * @param authorId
      * @return featureVector
      */
-    private static HashMapVector computeJuniorFeatureVectorWithCosine(HashMap<String, Author> authorsInput, String authorId) throws Exception {
+    private static HashMapVector computeJuniorFVCosine(HashMap<String, Author> authors, String authorId) throws Exception {
         HashMapVector featureVector = new HashMapVector();
         
-        Author author = authorsInput.get(authorId);//get author has Id equally authorId in ListofPapers
+        Author author = authors.get(authorId);//get author has Id equally authorId in ListofPapers
         Paper authorPaper;
         authorPaper = (Paper) author.getPaper().get(0);//get paper of junior researchers 
         
         featureVector.add(authorPaper.getContent());
         
         List<Paper> reference = authorPaper.getReference();//get list of reference papers of author's paper 
-        featureVector.add(sumFeatureVectorWithCosine(authorPaper, reference));//add featureVector with featureVector of reference papers of author's paper 
+        featureVector.add(sumFVCosine(authorPaper, reference));//add featureVector with featureVector of reference papers of author's paper 
         
         return featureVector;
     }
@@ -125,17 +120,17 @@ public class ComputeAuthorFV {
      * @param authorId
      * @return featureVector
      */
-    private static HashMapVector computeJuniorFeatureVectorWithRPY(HashMap<String, Author> authorsInput, String authorId) throws Exception {
+    private static HashMapVector computeJuniorFVRPY(HashMap<String, Author> authors, String authorId) throws Exception {
         HashMapVector featureVector = new HashMapVector();
         
-        Author author = authorsInput.get(authorId);//get author has Id equally authorId in ListofPapers
+        Author author = authors.get(authorId);//get author has Id equally authorId in ListofPapers
         Paper authorPaper;
         authorPaper = (Paper) author.getPaper().get(0);//get paper of junior researchers
         
         featureVector.add(authorPaper.getContent());
         
         List<Paper> reference = authorPaper.getReference();//get list of reference papers of author's paper
-        featureVector.add(sumFeatureVectorWithRPY(authorPaper, reference));//add featureVector with featureVector of reference papers of author's paper
+        featureVector.add(sumFVRPY(authorPaper, reference));//add featureVector with featureVector of reference papers of author's paper
         
         return featureVector;
     }
@@ -147,10 +142,10 @@ public class ComputeAuthorFV {
      * @param authorId
      * @return featureVector
      */
-    private static HashMapVector computeSeniorFeatureVectorWithLinear(HashMap<String, Author> authorsInput, String authorId) throws Exception {
+    private static HashMapVector computeSeniorFVLinear(HashMap<String, Author> authors, String authorId) throws Exception {
         HashMapVector featureVector = new HashMapVector();
         
-        Author author = authorsInput.get(authorId);//get author has Id equally authorId in ListofPapers
+        Author author = authors.get(authorId);//get author has Id equally authorId in ListofPapers
         List<Paper> authorPapers;
         authorPapers = author.getPaper();//get list of papers of senior researchers 
         
@@ -161,10 +156,10 @@ public class ComputeAuthorFV {
             currentPaperFV.add(paper.getContent());
             
             List<Paper> citation = paper.getCitation();//get list of citation papers of author's paper 
-            currentPaperFV.add(sumFeatureVectorWithLinear(citation));//add featureVector with featureVector of citation papers of author's paper 
+            currentPaperFV.add(sumFVLinear(citation));//add featureVector with featureVector of citation papers of author's paper 
             
             List<Paper> reference = paper.getReference();//get list of reference papers of author's paper 
-            currentPaperFV.add(sumFeatureVectorWithLinear(reference));//add featureVector with featureVector of reference papers of author's paper 
+            currentPaperFV.add(sumFVLinear(reference));//add featureVector with featureVector of reference papers of author's paper 
 
             // Add up all papers of the author directly, no forgetting factor
             featureVector.add(currentPaperFV);
@@ -179,10 +174,10 @@ public class ComputeAuthorFV {
      * @param authorId
      * @return featureVector
      */
-    private static HashMapVector computeSeniorFeatureVectorWithCosine(HashMap<String, Author> authorsInput, String authorId) throws Exception {
+    private static HashMapVector computeSeniorFVCosine(HashMap<String, Author> authors, String authorId) throws Exception {
         HashMapVector featureVector = new HashMapVector();
 
-        Author author = authorsInput.get(authorId);//get author has Id equally authorId in ListofPapers
+        Author author = authors.get(authorId);//get author has Id equally authorId in ListofPapers
         List<Paper> authorPapers;
         authorPapers = author.getPaper();//get list of papers of senior researchers 
         
@@ -193,10 +188,10 @@ public class ComputeAuthorFV {
             currentPaperFV.add(paper.getContent());
             
             List<Paper> citation = paper.getCitation();//get list of citation papers of author's paper 
-            currentPaperFV.add(sumFeatureVectorWithCosine(paper, citation));//add featureVector with featureVector of citation papers of author's paper 
+            currentPaperFV.add(sumFVCosine(paper, citation));//add featureVector with featureVector of citation papers of author's paper 
             
             List<Paper> reference = paper.getReference();//get list of reference papers of author's paper 
-            currentPaperFV.add(sumFeatureVectorWithCosine(paper, reference));//add featureVector with featureVector of reference papers of author's paper 
+            currentPaperFV.add(sumFVCosine(paper, reference));//add featureVector with featureVector of reference papers of author's paper 
             
             // Add up all papers of the author directly, no forgetting factor
             featureVector.add(currentPaperFV);
@@ -211,10 +206,10 @@ public class ComputeAuthorFV {
      * @param authorId
      * @return featureVector
      */
-    private static HashMapVector computeSeniorFeatureVectorWithRPY(HashMap<String, Author> authorsInput, String authorId) throws Exception {
+    private static HashMapVector computeSeniorFVRPY(HashMap<String, Author> authors, String authorId) throws Exception {
         HashMapVector featureVector = new HashMapVector();
 
-        Author author = authorsInput.get(authorId);//get author has Id equally authorId in ListofPapers
+        Author author = authors.get(authorId);//get author has Id equally authorId in ListofPapers
         List<Paper> authorPapers;
         authorPapers = author.getPaper();//get list of papers of senior researchers 
         
@@ -225,10 +220,10 @@ public class ComputeAuthorFV {
             currentPaperFV.add(paper.getContent());
             
             List<Paper> citation = paper.getCitation();//get list of citation papers of author's paper 
-            currentPaperFV.add(sumFeatureVectorWithRPY(paper, citation));//add featureVector with featureVector of citation papers of author's paper 
+            currentPaperFV.add(sumFVRPY(paper, citation));//add featureVector with featureVector of citation papers of author's paper 
             
             List<Paper> reference = paper.getReference();//get list of reference papers of author's paper 
-            currentPaperFV.add(sumFeatureVectorWithRPY(paper, reference));//add featureVector with featureVector of reference papers of author's paper 
+            currentPaperFV.add(sumFVRPY(paper, reference));//add featureVector with featureVector of reference papers of author's paper 
             
             // Add up all papers of the author directly, no forgetting factor
             featureVector.add(currentPaperFV);
@@ -244,7 +239,7 @@ public class ComputeAuthorFV {
      * @param papers
      * @return featureVector
      */
-    private static HashMapVector sumFeatureVectorWithLinear(List<Paper> papers) throws Exception {
+    private static HashMapVector sumFVLinear(List<Paper> papers) throws Exception {
         HashMapVector featureVector = new HashMapVector();
         
         for (Paper paper : papers) {
@@ -262,7 +257,7 @@ public class ComputeAuthorFV {
      * @param papers
      * @return featureVector
      */
-    private static HashMapVector sumFeatureVectorWithCosine(Paper cpaper, List<Paper> papers) throws Exception {
+    private static HashMapVector sumFVCosine(Paper cpaper, List<Paper> papers) throws Exception {
         HashMapVector featureVector = new HashMapVector();
         
         for (Paper paper : papers) {
@@ -281,7 +276,7 @@ public class ComputeAuthorFV {
      * @param papers
      * @return featureVector
      */
-    private static HashMapVector sumFeatureVectorWithRPY(Paper cpaper, List<Paper> papers) throws Exception {
+    private static HashMapVector sumFVRPY(Paper cpaper, List<Paper> papers) throws Exception {
         HashMapVector featureVector = new HashMapVector();
         
         for (Paper paper : papers) {

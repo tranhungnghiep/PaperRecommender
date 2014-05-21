@@ -11,8 +11,8 @@ import uit.tkorg.pr.evaluation.Evaluator;
 import uit.tkorg.pr.method.cbf.CBFRecommender;
 import uit.tkorg.pr.dataimport.model.Author;
 import uit.tkorg.pr.dataimport.model.Paper;
-import uit.tkorg.pr.utility.general.Serializer;
 import uit.tkorg.pr.dataimport.NUSDataset1;
+import uit.tkorg.pr.utility.general.IOUtility;
 
 
 /**
@@ -83,7 +83,7 @@ public class PaperRecommender {
                     } else {
                         SaveDataFolder = PRConstant.SAVEDATAFOLDER;
                     }
-                    Serializer.saveObjectToFile(papers, SaveDataFolder + "\\Papers.dat");
+                    IOUtility.saveObjectToFile(papers, SaveDataFolder + "\\Papers.dat");
                     response[0] = "Success.";
                     break;
                 case "Save author":
@@ -93,7 +93,7 @@ public class PaperRecommender {
                     } else {
                         SaveDataFolder = PRConstant.SAVEDATAFOLDER;
                     }
-                    Serializer.saveObjectToFile(authors, SaveDataFolder + "\\Authors.dat");
+                    IOUtility.saveObjectToFile(authors, SaveDataFolder + "\\Authors.dat");
                     response[0] = "Success.";
                     break;
                 case "Load paper":
@@ -103,7 +103,7 @@ public class PaperRecommender {
                     } else {
                         SaveDataFolder = PRConstant.SAVEDATAFOLDER;
                     }
-                    papers = (HashMap<String, Paper>) Serializer.loadObjectFromFile(SaveDataFolder + "\\Papers.dat");
+                    papers = (HashMap<String, Paper>) IOUtility.loadObjectFromFile(SaveDataFolder + "\\Papers.dat");
                     response[0] = "Success.";
                     break;
                 case "Load author":
@@ -113,7 +113,7 @@ public class PaperRecommender {
                     } else {
                         SaveDataFolder = PRConstant.SAVEDATAFOLDER;
                     }
-                    authors = (HashMap<String, Author>) Serializer.loadObjectFromFile(SaveDataFolder + "\\Authors.dat");
+                    authors = (HashMap<String, Author>) IOUtility.loadObjectFromFile(SaveDataFolder + "\\Authors.dat");
                     response[0] = "Success.";
                     break;
                     
@@ -131,15 +131,15 @@ public class PaperRecommender {
                     response[0] = "Success.";
                     break;
                 case "Author FV linear":
-                    authors = ComputeAuthorFV.computeAllAuthorsFV(authors, 0);
+                    ComputeAuthorFV.computeAllAuthorsFV(authors, 0);
                     response[0] = "Success.";
                     break;
                 case "Author FV cosine":
-                    authors = ComputeAuthorFV.computeAllAuthorsFV(authors, 1);
+                    ComputeAuthorFV.computeAllAuthorsFV(authors, 1);
                     response[0] = "Success.";
                     break;
                 case "Author FV RPY":
-                    authors = ComputeAuthorFV.computeAllAuthorsFV(authors, 2);
+                    ComputeAuthorFV.computeAllAuthorsFV(authors, 2);
                     response[0] = "Success.";
                     break;
                 case "Recommend":

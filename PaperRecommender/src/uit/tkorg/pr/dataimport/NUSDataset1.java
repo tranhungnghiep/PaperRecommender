@@ -14,7 +14,7 @@ import java.util.*;
 import uit.tkorg.pr.constant.PRConstant;
 import uit.tkorg.pr.dataimport.model.Author;
 import uit.tkorg.pr.dataimport.model.Paper;
-import uit.tkorg.pr.utility.general.FileUtility;
+import uit.tkorg.pr.utility.general.IOUtility;
 import uit.tkorg.pr.utility.general.GeneralUtility;
 import uit.tkorg.pr.utility.general.NumericUtility;
 
@@ -41,7 +41,7 @@ public class NUSDataset1 {
      */
     public static List readAllKeywords() throws Exception {
         List allKeywords = new ArrayList();
-        List<String> ffile = FileUtility.getPathFile(new File(PRConstant.FOLDER_NUS_DATASET1));
+        List<String> ffile = IOUtility.getPathFile(new File(PRConstant.FOLDER_NUS_DATASET1));
         for (int i = 0; i < ffile.size(); i++) {
             FileReader file = new FileReader(ffile.get(i));
             BufferedReader textReader = new BufferedReader(file);

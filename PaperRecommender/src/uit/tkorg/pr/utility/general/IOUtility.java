@@ -4,21 +4,29 @@
  */
 package uit.tkorg.pr.utility.general;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 /**
  *
  * @author THNghiep
- * Support class for serializing and deserializing.
  */
-public class Serializer {
+public class IOUtility {
 
     // Prevent instantiation.
-    private Serializer() {}
+    private IOUtility() {}
 
     /**
      * Serialize.
@@ -44,5 +52,27 @@ public class Serializer {
             o = in.readObject();
         }
         return o;
+    }
+    
+    /**
+     *
+     * @param dir
+     * @return list file
+     */
+    public static List<String> getPathFile(File dir) throws Exception {
+        File[] files = dir.listFiles();
+        List listfile = new ArrayList<String>();
+        String name = null;
+        for (File file : files) {
+            if (file.isDirectory()) {
+                getPathFile(file);
+            } else if (file.isFile()) {
+                name = file.getName().toString();
+            }
+            if ("*.txt".equals(name)) {
+                listfile.add(file.getAbsolutePath());
+            }
+        }
+        return listfile;
     }
 }
