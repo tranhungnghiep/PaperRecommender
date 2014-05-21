@@ -52,7 +52,7 @@ public class MASDataset1 {
                 if ((line == null) || (line.equals(""))) {
                     break;
                 }
-                String[] str = line.split("|||");
+                String[] str = line.split("\\|\\|\\|");
                 String paperId = IOUtility.getAcceptedFieldValue(str[0]);
                 String title = IOUtility.getAcceptedFieldValue(str[1]);
                 String paperAbstract = IOUtility.getAcceptedFieldValue(str[2]);
@@ -96,7 +96,7 @@ public class MASDataset1 {
                 if ((line == null) || (line.equals(""))) {
                     break;
                 }
-                String[] str = line.split("|||");
+                String[] str = line.split("\\|\\|\\|");
                 String paperId1 = IOUtility.getAcceptedFieldValue(str[0]);
                 String paperId2 = IOUtility.getAcceptedFieldValue(str[1]);
                 
@@ -152,7 +152,7 @@ public class MASDataset1 {
                 if ((line == null) || (line.equals(""))) {
                     break;
                 }
-                String[] str = line.split("|||");
+                String[] str = line.split("\\|\\|\\|");
                 String authorId = IOUtility.getAcceptedFieldValue(str[0]);
                 String paperId = IOUtility.getAcceptedFieldValue(str[1]);
                 
@@ -186,7 +186,7 @@ public class MASDataset1 {
                 if ((line == null) || (line.equals(""))) {
                     break;
                 }
-                String[] str = line.split("|||");
+                String[] str = line.split("\\|\\|\\|");
                 String authorId = IOUtility.getAcceptedFieldValue(str[0]);
                 String authorName = IOUtility.getAcceptedFieldValue(str[1]);
 
@@ -229,7 +229,7 @@ public class MASDataset1 {
                 if ((line == null) || (line.equals(""))) {
                     break;
                 }
-                String[] str = line.split("|||");
+                String[] str = line.split("\\|\\|\\|");
                 String authorId = IOUtility.getAcceptedFieldValue(str[0]);
                 String paperId = IOUtility.getAcceptedFieldValue(str[1]);
                 
