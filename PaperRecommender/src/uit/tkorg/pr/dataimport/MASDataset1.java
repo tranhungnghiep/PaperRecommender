@@ -100,8 +100,12 @@ public class MASDataset1 {
                 String paperId1 = IOUtility.getAcceptedFieldValue(str[0]);
                 String paperId2 = IOUtility.getAcceptedFieldValue(str[1]);
                 
-                papers.get(paperId1).getReference().add(paperId2); // reference is mutable.
-                papers.get(paperId2).getCitation().add(paperId1);
+                if (papers.containsKey(paperId1)) {
+                    papers.get(paperId1).getReference().add(paperId2); // reference is mutable.
+                }
+                if (papers.containsKey(paperId2)) {
+                    papers.get(paperId2).getCitation().add(paperId1);
+                }
             }
         } catch (IOException e) {
             System.out.println(e.getMessage());
@@ -189,6 +193,7 @@ public class MASDataset1 {
                 Author tempAuthor = new Author();
                 tempAuthor.setAuthorId(authorId);
                 tempAuthor.setAuthorName(authorName);
+                
                 authors.put(authorId, tempAuthor);
             }
             
