@@ -58,7 +58,7 @@ public class MASDataset1 {
                 String paperAbstract = IOUtility.getAcceptedFieldValue(str[2]);
                 String strYear = IOUtility.getAcceptedFieldValue(str[3]);
                 int year = 0;
-                if (NumericUtility.isNum(strYear)) {
+                if ((strYear != null) && (NumericUtility.isNum(strYear))) {
                     year = Integer.parseInt(strYear);
                 }
                 
