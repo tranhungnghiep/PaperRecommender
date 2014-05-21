@@ -253,12 +253,12 @@ public class MASDataset1 {
      */
     public static void main(String[] args) throws Exception {
         HashMap<String, Paper> papers = readPaperList(PRConstant.FOLDER_MAS_DATASET1 
-                + "Paper_Before_2006.csv", PRConstant.FOLDER_MAS_DATASET1 
-                + "Paper_Cite_Paper_Before_2006.csv");
+                + "[Training] Paper_Before_2006.csv", PRConstant.FOLDER_MAS_DATASET1 
+                + "[Training] Paper_Cite_Paper_Before_2006.csv");
         HashMap<String, Author> authors = readAuthorList(PRConstant.FOLDER_MAS_DATASET1 
-                + "Author_Write_Paper_Before_2006.csv");
+                + "[Training] Author_Paper_Before_2006.csv");
         HashMap<String, Author> groundTruth = readRecommendingAuthorList(PRConstant.FOLDER_MAS_DATASET1 
-                + "1000Authors.csv", PRConstant.FOLDER_MAS_DATASET1 
-                + "Ground_Truth_2006_2008.csv");
+                + "[Training] 1000Authors.csv", PRConstant.FOLDER_MAS_DATASET1 
+                + "[Validation] Ground_Truth_2006_2008.csv");
     }
 }
