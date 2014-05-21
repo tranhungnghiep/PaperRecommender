@@ -6,6 +6,7 @@ package uit.tkorg.pr.dataimport.model;
 
 import ir.vsr.HashMapVector;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -38,11 +39,12 @@ public class Paper implements Serializable {
     public Paper() {
         this.paperId = null;
         this.title = null;
+        this.paperAbstract = null;
         this.year = 0;
         this.paperType = null;
         this.content = null;
-        this.citation = null;
-        this.reference = null;
+        this.citation = new ArrayList();
+        this.reference = new ArrayList();
         this.featureVector = null;
     }
 

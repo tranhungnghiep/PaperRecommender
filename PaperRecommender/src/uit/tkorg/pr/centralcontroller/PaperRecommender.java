@@ -119,27 +119,27 @@ public class PaperRecommender {
                     
                 // Dataset 1: data preparation.
                 case "Paper FV linear":
-                    papers = ComputePaperFV.computeAllPapersFeatureVector(papers, 0);
+                    ComputePaperFV.computeAllPapersFV(papers, 3, 0);
                     response[0] = "Success.";
                     break;
                 case "Paper FV cosine":
-                    papers = ComputePaperFV.computeAllPapersFeatureVector(papers, 1);
+                    ComputePaperFV.computeAllPapersFV(papers, 3, 1);
                     response[0] = "Success.";
                     break;
                 case "Paper FV RPY":
-                    papers = ComputePaperFV.computeAllPapersFeatureVector(papers, 2);
+                    ComputePaperFV.computeAllPapersFV(papers, 3, 2);
                     response[0] = "Success.";
                     break;
                 case "Author FV linear":
-                    authors = ComputeAuthorFV.computeAllAuthorsFeatureVector(authors, 0);
+                    authors = ComputeAuthorFV.computeAllAuthorsFV(authors, 0);
                     response[0] = "Success.";
                     break;
                 case "Author FV cosine":
-                    authors = ComputeAuthorFV.computeAllAuthorsFeatureVector(authors, 1);
+                    authors = ComputeAuthorFV.computeAllAuthorsFV(authors, 1);
                     response[0] = "Success.";
                     break;
                 case "Author FV RPY":
-                    authors = ComputeAuthorFV.computeAllAuthorsFeatureVector(authors, 2);
+                    authors = ComputeAuthorFV.computeAllAuthorsFV(authors, 2);
                     response[0] = "Success.";
                     break;
                 case "Recommend":

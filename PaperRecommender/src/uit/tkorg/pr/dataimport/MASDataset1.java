@@ -49,15 +49,17 @@ public class MASDataset1 {
                 String paperId = str[0].replace("\"", " ").trim();
                 String title = str[1].trim();
                 String paperAbstract = str[2].trim();
-                int year = Integer.getInteger(str[3].replace("\"", " ").trim());
+                int year = Integer.parseInt(str[3].replace("\"", " ").trim());
                 
                 Paper paper = new Paper();
                 paper.setPaperId(paperId);
                 paper.setTitle(title);
                 paper.setPaperAbstract(paperAbstract);
                 paper.setYear(year);
+                
                 papers.put(paperId, paper);
             }
+            
             readCitationRelationship(fileNamePaperCitePaper, papers);
             
         } catch (IOException e) {
@@ -130,6 +132,33 @@ public class MASDataset1 {
         }
     }
 
+    public static HashMap<String, Author> readRecommendingAuthorList(String fileNameRecommendingAuthors, String fileNameGroundTruth) throws Exception {
+        HashMap<String, Author> authors = new HashMap<>();
+        
+        try (BufferedReader br = new BufferedReader(new FileReader(fileNameRecommendingAuthors))) {
+            String line;
+            line = br.readLine(); // Skip first line with header content.
+            
+            while ((line = br.readLine()) != null) {
+                String[] str = line.split("\",\"");
+                String authorId = str[0].replace("\"", " ").trim();
+                String authorName = str[1].replace("\"", " ").trim();
+
+                Author tempAuthor = new Author();
+                tempAuthor.setAuthorId(authorId);
+                tempAuthor.setAuthorName(authorName);
+                authors.put(authorId, tempAuthor);
+            }
+            
+            readGroundTruth(fileNameGroundTruth, authors);
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+            throw e;
+        }
+        
+        return authors;
+    }
+    
     /**
      * This method find list paper ground truth of Author
      *
@@ -138,9 +167,7 @@ public class MASDataset1 {
      * @throws FileNotFoundException
      * @throws IOException
      */
-    public static HashMap<String, List> readGroundTruth(String fileNameGroundTruth) throws Exception {
-        HashMap<String, List> groundTruth = new HashMap<>();
-        
+    private static void readGroundTruth(String fileNameGroundTruth, HashMap<String, Author> authors) throws Exception {
         try (BufferedReader br = new BufferedReader(new FileReader(fileNameGroundTruth))) {
             String line;
             line = br.readLine(); // Skip first line with header content.
@@ -150,20 +177,21 @@ public class MASDataset1 {
                 String authorId = str[0].replace("\"", " ").trim();
                 String paperId = str[1].replace("\"", " ").trim();
                 
-                if (groundTruth.containsKey(authorId)) {
-                    groundTruth.get(authorId).add(paperId); // mutable.
+                if (authors.containsKey(authorId)) {
+                    authors.get(authorId).getGroundTruth().add(paperId); // mutable.
                 } else {
-                    List paper = new ArrayList();
-                    paper.add(paperId);
-                    groundTruth.put(authorId, paper);
+                    Author author = new Author();
+                    List groundTruth = new ArrayList();
+                    groundTruth.add(paperId);
+                    author.setAuthorId(authorId);
+                    author.setPaper(groundTruth);
+                    authors.put(authorId, author);
                 }
             }
         } catch (IOException e) {
             System.out.println(e.getMessage());
             throw e;
         }
-        
-        return groundTruth;
     }
     
     /**
@@ -175,10 +203,11 @@ public class MASDataset1 {
     public static void main(String[] args) throws Exception {
         HashMap<String, Paper> papers = readPaperList(PRConstant.FOLDER_MAS_DATASET1 
                 + "Paper_Before_2006.csv", PRConstant.FOLDER_MAS_DATASET1 
-                + "Paper_Before_2006.csv");
+                + "Paper_Cite_Paper_Before_2006.csv");
         HashMap<String, Author> authors = readAuthorList(PRConstant.FOLDER_MAS_DATASET1 
                 + "Author_Write_Paper_Before_2006.csv");
-        HashMap<String, List> groundTruth = readGroundTruth(PRConstant.FOLDER_MAS_DATASET1 
+        HashMap<String, Author> groundTruth = readRecommendingAuthorList(PRConstant.FOLDER_MAS_DATASET1 
+                + "1000Authors.csv", PRConstant.FOLDER_MAS_DATASET1 
                 + "Ground_Truth_2006_2008.csv");
     }
 }

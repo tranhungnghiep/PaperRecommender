@@ -28,7 +28,7 @@ public class Weighting {
         
         cosine = v1.cosineTo(v2);
         
-        cosine = GeneralUtility.standardizeSimilarityValue(cosine);
+        cosine = NumericUtility.standardizeSimilarityValue(cosine);
 
         return cosine;
     }

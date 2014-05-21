@@ -6,6 +6,7 @@ package uit.tkorg.pr.dataimport.model;
 
 import ir.vsr.HashMapVector;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -17,6 +18,7 @@ import java.util.List;
  */
 public class Author implements Serializable {
     private String authorId;
+    private String authorName;
     private String authorType;
     private List paper;
     private HashMapVector featureVector;
@@ -31,11 +33,12 @@ public class Author implements Serializable {
      */
     public Author() {
         this.authorId = null;
+        this.authorName = null;
         this.authorType = null;
-        this.groundTruth = null;
-        this.paper = null;
+        this.paper = new ArrayList();
         this.featureVector = null;
-        this.Recommendation = null;
+        this.Recommendation = new ArrayList();
+        this.groundTruth = new ArrayList();
         this.ndcg5 = 0;
         this.ndcg10 = 0;
         this.rr = 0;
@@ -165,5 +168,19 @@ public class Author implements Serializable {
      */
     public void setRr(double rr) {
         this.rr = rr;
+    }
+
+    /**
+     * @return the authorName
+     */
+    public String getAuthorName() {
+        return authorName;
+    }
+
+    /**
+     * @param authorName the authorName to set
+     */
+    public void setAuthorName(String authorName) {
+        this.authorName = authorName;
     }
 }

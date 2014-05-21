@@ -32,12 +32,12 @@ public class ComputeAuthorFV {
      *
      * @param weightingScheme 0: linear; 1: cosine; 2: rpy
      */
-    public static HashMap<String, Author> computeAllAuthorsFeatureVector(HashMap<String, Author> authorsInput, int weightingScheme) throws Exception {
+    public static HashMap<String, Author> computeAllAuthorsFV(HashMap<String, Author> authorsInput, int weightingScheme) throws Exception {
         // Reuse authorsInput, not constructing new hash map.
         HashMap<String, Author> authors = authorsInput;
         
         for (String key : authorsInput.keySet()) {
-            authors.get(key).setFeatureVector(computeAuthorFeatureVector(authorsInput, key, weightingScheme));
+            authors.get(key).setFeatureVector(computeAuthorFV(authorsInput, key, weightingScheme));
         }
         
         return authors;
@@ -51,7 +51,7 @@ public class ComputeAuthorFV {
      * @param weightingScheme 0: linear; 1: cosine; 2: rpy
      * @return list represents feature vector.
      */
-    private static HashMapVector computeAuthorFeatureVector(HashMap<String, Author> authorsInput, String authorId, int weightingScheme) throws Exception {
+    private static HashMapVector computeAuthorFV(HashMap<String, Author> authorsInput, String authorId, int weightingScheme) throws Exception {
         HashMapVector featureVector;
         
         if (weightingScheme == 0) {
