@@ -15,7 +15,6 @@ import uit.tkorg.pr.constant.PRConstant;
 import uit.tkorg.pr.dataimport.model.Author;
 import uit.tkorg.pr.dataimport.model.Paper;
 import uit.tkorg.utility.IOUtility;
-import uit.tkorg.utility.GeneralUtility;
 import uit.tkorg.utility.NumericUtility;
 
 /**

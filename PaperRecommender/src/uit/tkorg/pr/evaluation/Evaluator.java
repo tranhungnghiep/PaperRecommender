@@ -6,8 +6,8 @@ package uit.tkorg.pr.evaluation;
 
 import java.util.HashMap;
 import uit.tkorg.pr.dataimport.model.Author;
-import uit.tkorg.pr.utility.evaluation.NDCG;
-import uit.tkorg.pr.utility.evaluation.ReciprocalRank;
+import uit.tkorg.utility.evaluation.NDCG;
+import uit.tkorg.utility.evaluation.ReciprocalRank;
 
 /**
  * This class handles all logics for evaluation of recommendation results.

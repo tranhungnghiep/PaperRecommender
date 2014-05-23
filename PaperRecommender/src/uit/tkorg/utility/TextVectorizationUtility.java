@@ -10,7 +10,7 @@ import ir.vsr.HashMapVector;
  *
  * @author THNghiep
  */
-public class TextUtility {
+public class TextVectorizationUtility {
     public static HashMapVector computeTFIDF() throws Exception {
         return null;
     }

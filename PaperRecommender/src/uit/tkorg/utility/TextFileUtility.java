@@ -157,4 +157,14 @@ public class TextFileUtility {
             e.printStackTrace();
         }
     }
+    
+    public static void main(String args[]) {
+        try {
+            splitTextFile("C:\\CRS-Experiment\\MAS\\Content\\LDA\\Stemming\\CRS-InputParallelLDA.txt");
+            System.out.printf("DONE");
+        }
+        catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
 }

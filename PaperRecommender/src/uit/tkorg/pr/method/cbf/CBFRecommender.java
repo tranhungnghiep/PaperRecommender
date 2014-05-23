@@ -10,8 +10,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import uit.tkorg.pr.dataimport.model.Author;
 import uit.tkorg.pr.dataimport.model.Paper;
-import uit.tkorg.utility.GeneralUtility;
-import uit.tkorg.utility.Weighting;
+import uit.tkorg.utility.HashMapUtility;
+import uit.tkorg.utility.WeightingUtility;
 
 /**
  * This class handles logic for recommending papers to each author.
@@ -62,12 +62,12 @@ public class CBFRecommender {
         
         // Compute similarities between current author and all papers.
         for (String key : papers.keySet()) {
-            Double similarity = new Double(Weighting.computeCosine(author.getFeatureVector(), papers.get(key).getFeatureVector()));
+            Double similarity = new Double(WeightingUtility.computeCosine(author.getFeatureVector(), papers.get(key).getFeatureVector()));
             paperSimilarity.put(key, similarity);
         }
         
         // Sort papers descending based on similarity.
-        paperSimilarity = GeneralUtility.sortHashMap(paperSimilarity);
+        paperSimilarity = HashMapUtility.getSortedMapDescending(paperSimilarity);
         
         // Take top ten papers.
         int counter = 0;

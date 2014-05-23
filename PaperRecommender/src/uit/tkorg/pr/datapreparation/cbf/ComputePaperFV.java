@@ -8,8 +8,8 @@ import ir.vsr.HashMapVector;
 import java.util.HashMap;
 import java.util.List;
 import uit.tkorg.pr.dataimport.model.Paper;
-import uit.tkorg.utility.TextUtility;
-import uit.tkorg.utility.Weighting;
+import uit.tkorg.utility.TextVectorizationUtility;
+import uit.tkorg.utility.WeightingUtility;
 
 /**
  *
@@ -26,7 +26,7 @@ public class ComputePaperFV {
 
     public static void computeAllPapersContent(HashMap<String, Paper> papers) throws Exception {
         for (String key : papers.keySet()) {
-            papers.get(key).setContent(TextUtility.computeTFIDF());
+            papers.get(key).setContent(TextVectorizationUtility.computeTFIDF());
         }
     }
 
@@ -128,7 +128,7 @@ public class ComputePaperFV {
         
         for (String combiningPaperId : combiningPaperIds) {
             if (papers.containsKey(combiningPaperId)) {
-                double cosine = Weighting.computeCosine(paper.getContent(), papers.get(combiningPaperId).getContent());
+                double cosine = WeightingUtility.computeCosine(paper.getContent(), papers.get(combiningPaperId).getContent());
                 featureVector.addScaled(papers.get(combiningPaperId).getContent(), cosine);
             }
         }
@@ -149,7 +149,7 @@ public class ComputePaperFV {
         
         for (String combiningPaperId : combiningPaperIds) {
             if (papers.containsKey(combiningPaperId)) {
-                double rpy = Weighting.computeRPY(paper.getYear(), papers.get(combiningPaperId).getYear());
+                double rpy = WeightingUtility.computeRPY(paper.getYear(), papers.get(combiningPaperId).getYear());
                 featureVector.addScaled(papers.get(combiningPaperId).getContent(), rpy);
             }
         }

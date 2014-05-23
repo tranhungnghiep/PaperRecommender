@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import uit.tkorg.pr.dataimport.model.Author;
 import uit.tkorg.pr.dataimport.model.Paper;
-import uit.tkorg.utility.Weighting;
+import uit.tkorg.utility.WeightingUtility;
 
 /**
  * This class handles all logics for author object. 
@@ -261,7 +261,7 @@ public class ComputeAuthorFV {
         HashMapVector featureVector = new HashMapVector();
         
         for (Paper paper : papers) {
-            double cosine = Weighting.computeCosine(cpaper.getContent(), paper.getContent());
+            double cosine = WeightingUtility.computeCosine(cpaper.getContent(), paper.getContent());
             featureVector.addScaled(paper.getContent(), cosine);
         }
         
@@ -280,7 +280,7 @@ public class ComputeAuthorFV {
         HashMapVector featureVector = new HashMapVector();
         
         for (Paper paper : papers) {
-            double rpy = Weighting.computeRPY(cpaper.getYear(), paper.getYear());
+            double rpy = WeightingUtility.computeRPY(cpaper.getYear(), paper.getYear());
             featureVector.addScaled(paper.getContent(), rpy);
         }
         
