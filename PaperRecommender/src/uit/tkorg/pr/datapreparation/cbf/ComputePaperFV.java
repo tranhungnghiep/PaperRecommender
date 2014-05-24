@@ -8,7 +8,7 @@ import ir.vsr.HashMapVector;
 import java.util.HashMap;
 import java.util.List;
 import uit.tkorg.pr.dataimport.model.Paper;
-import uit.tkorg.utility.TextVectorizationUtility;
+import uit.tkorg.utility.textvectorization.TextVectorizationByMahoutTerminalUtility;
 import uit.tkorg.utility.WeightingUtility;
 
 /**
@@ -26,7 +26,7 @@ public class ComputePaperFV {
 
     public static void computeAllPapersContent(HashMap<String, Paper> papers) throws Exception {
         for (String key : papers.keySet()) {
-            papers.get(key).setContent(TextVectorizationUtility.computeTFIDF());
+//            papers.get(key).setContent(TextVectorizationByMahoutTerminalUtility.computeTFIDF());
         }
     }
 
