@@ -46,7 +46,7 @@ public class PaperRecommender {
      * @param param 
      * @return response: result of request after processing.
      */    
-    public String[] centralController(String request, String param) {
+    public String[] guiRequestHandler(String request, String param) {
         String[] response = new String[2];
         
         String Dataset1Folder;

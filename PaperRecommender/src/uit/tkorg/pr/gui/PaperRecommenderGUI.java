@@ -415,28 +415,28 @@ public class PaperRecommenderGUI extends javax.swing.JFrame {
     private void jButtonReadPaperActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonReadPaperActionPerformed
         // TODO add your handling code here:
         jTextFieldStatus.setText("Reading papers... ");
-        response = paperRecommender.centralController("Read paper", jTextFieldDataset.getText());
+        response = paperRecommender.guiRequestHandler("Read paper", jTextFieldDataset.getText());
         jTextFieldStatus.setText(jTextFieldStatus.getText() + response[0]);
     }//GEN-LAST:event_jButtonReadPaperActionPerformed
 
     private void jButtonSavePaperActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSavePaperActionPerformed
         // TODO add your handling code here:
         jTextFieldStatus.setText("Saving papers... ");
-        response = paperRecommender.centralController("Save paper", jTextFieldSaveData.getText());
+        response = paperRecommender.guiRequestHandler("Save paper", jTextFieldSaveData.getText());
         jTextFieldStatus.setText(jTextFieldStatus.getText() + response[0]);
     }//GEN-LAST:event_jButtonSavePaperActionPerformed
 
     private void jButtonComputePaperFVLinearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonComputePaperFVLinearActionPerformed
         // TODO add your handling code here:
         jTextFieldStatus.setText("Computing paper feature vector with linear weight... ");
-        response = paperRecommender.centralController("Paper FV linear", null);
+        response = paperRecommender.guiRequestHandler("Paper FV linear", null);
         jTextFieldStatus.setText(jTextFieldStatus.getText() + response[0]);
     }//GEN-LAST:event_jButtonComputePaperFVLinearActionPerformed
 
     private void jButtonComputePaperFVCosineActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonComputePaperFVCosineActionPerformed
         // TODO add your handling code here:
         jTextFieldStatus.setText("Computing paper feature vector with cosine weight... ");
-        response = paperRecommender.centralController("Paper FV cosine", null);
+        response = paperRecommender.guiRequestHandler("Paper FV cosine", null);
         jTextFieldStatus.setText(jTextFieldStatus.getText() + response[0]);
     }//GEN-LAST:event_jButtonComputePaperFVCosineActionPerformed
 
@@ -445,22 +445,22 @@ public class PaperRecommenderGUI extends javax.swing.JFrame {
         
         // Recommend (content-based):
         jTextFieldStatus.setText("Generating recommendation list for all authors... ");
-        response = paperRecommender.centralController("Recommend", null);
+        response = paperRecommender.guiRequestHandler("Recommend", null);
         jTextFieldStatus.setText(jTextFieldStatus.getText() + response[0]);
 
         // Evaluate:
         jTextFieldStatus.setText("Computing NDCG@5... ");
-        response = paperRecommender.centralController("NDCG5", null);
+        response = paperRecommender.guiRequestHandler("NDCG5", null);
         jTextFieldNDCG5.setText(response[1]);
         jTextFieldStatus.setText(jTextFieldStatus.getText() + response[0]);
 
         jTextFieldStatus.setText("Computing NDCG@10... ");
-        response = paperRecommender.centralController("NDCG10", null);
+        response = paperRecommender.guiRequestHandler("NDCG10", null);
         jTextFieldNDCG10.setText(response[1]);
         jTextFieldStatus.setText(jTextFieldStatus.getText() + response[0]);
 
         jTextFieldStatus.setText("Computing MRR... ");
-        response = paperRecommender.centralController("MRR", null);
+        response = paperRecommender.guiRequestHandler("MRR", null);
         jTextFieldMRR.setText(response[1]);
         jTextFieldStatus.setText(jTextFieldStatus.getText() + response[0]);
     }//GEN-LAST:event_jButtonRecommendAllAuthorActionPerformed
@@ -468,56 +468,56 @@ public class PaperRecommenderGUI extends javax.swing.JFrame {
     private void jButtonLoadPaperActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonLoadPaperActionPerformed
         // TODO add your handling code here:
         jTextFieldStatus.setText("Loading papers... ");
-        response = paperRecommender.centralController("Load paper", jTextFieldSaveData.getText());
+        response = paperRecommender.guiRequestHandler("Load paper", jTextFieldSaveData.getText());
         jTextFieldStatus.setText(jTextFieldStatus.getText() + response[0]);
     }//GEN-LAST:event_jButtonLoadPaperActionPerformed
 
     private void jButtonReadAuthorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonReadAuthorActionPerformed
         // TODO add your handling code here:
         jTextFieldStatus.setText("Reading authors... ");
-        response = paperRecommender.centralController("Read author", jTextFieldDataset.getText());
+        response = paperRecommender.guiRequestHandler("Read author", jTextFieldDataset.getText());
         jTextFieldStatus.setText(jTextFieldStatus.getText() + response[0]);
     }//GEN-LAST:event_jButtonReadAuthorActionPerformed
 
     private void jButtonSaveAuthorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSaveAuthorActionPerformed
         // TODO add your handling code here:
         jTextFieldStatus.setText("Saving authors... ");
-        response = paperRecommender.centralController("Save author", jTextFieldSaveData.getText());
+        response = paperRecommender.guiRequestHandler("Save author", jTextFieldSaveData.getText());
         jTextFieldStatus.setText(jTextFieldStatus.getText() + response[0]);
     }//GEN-LAST:event_jButtonSaveAuthorActionPerformed
 
     private void jButtonLoadAuthorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonLoadAuthorActionPerformed
         // TODO add your handling code here:
         jTextFieldStatus.setText("Loading authors... ");
-        response = paperRecommender.centralController("Load author", jTextFieldSaveData.getText());
+        response = paperRecommender.guiRequestHandler("Load author", jTextFieldSaveData.getText());
         jTextFieldStatus.setText(jTextFieldStatus.getText() + response[0]);
     }//GEN-LAST:event_jButtonLoadAuthorActionPerformed
 
     private void jButtonComputePaperFVRPYActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonComputePaperFVRPYActionPerformed
         // TODO add your handling code here:
         jTextFieldStatus.setText("Computing paper feature vector with RPY weight... ");
-        response = paperRecommender.centralController("Paper FV RPY", null);
+        response = paperRecommender.guiRequestHandler("Paper FV RPY", null);
         jTextFieldStatus.setText(jTextFieldStatus.getText() + response[0]);
     }//GEN-LAST:event_jButtonComputePaperFVRPYActionPerformed
 
     private void jButtonComputeAuthorFVLinearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonComputeAuthorFVLinearActionPerformed
         // TODO add your handling code here:
         jTextFieldStatus.setText("Computing author feature vector with linear weight... ");
-        response = paperRecommender.centralController("Author FV linear", null);
+        response = paperRecommender.guiRequestHandler("Author FV linear", null);
         jTextFieldStatus.setText(jTextFieldStatus.getText() + response[0]);
     }//GEN-LAST:event_jButtonComputeAuthorFVLinearActionPerformed
 
     private void jButtonComputeAuthorFVCosineActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonComputeAuthorFVCosineActionPerformed
         // TODO add your handling code here:
         jTextFieldStatus.setText("Computing author feature vector with cosine weight... ");
-        response = paperRecommender.centralController("Author FV cosine", null);
+        response = paperRecommender.guiRequestHandler("Author FV cosine", null);
         jTextFieldStatus.setText(jTextFieldStatus.getText() + response[0]);
     }//GEN-LAST:event_jButtonComputeAuthorFVCosineActionPerformed
 
     private void jButtonComputeAuthorFVRPYActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonComputeAuthorFVRPYActionPerformed
         // TODO add your handling code here:
         jTextFieldStatus.setText("Computing author feature vector with RPY weight... ");
-        response = paperRecommender.centralController("Author FV RPY", null);
+        response = paperRecommender.guiRequestHandler("Author FV RPY", null);
         jTextFieldStatus.setText(jTextFieldStatus.getText() + response[0]);
     }//GEN-LAST:event_jButtonComputeAuthorFVRPYActionPerformed
 
