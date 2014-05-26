@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package uit.tkorg.utility;
+package uit.tkorg.utility.general;
 
 import ir.vsr.HashMapVector;
 

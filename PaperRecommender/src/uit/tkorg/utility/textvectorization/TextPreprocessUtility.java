@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package uit.tkorg.utility;
+package uit.tkorg.utility.textvectorization;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -10,8 +10,13 @@ import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.regex.Pattern;
+import org.apache.commons.io.FileUtils;
+import uit.tkorg.pr.constant.PRConstant;
+import uit.tkorg.utility.general.TextFileUtility;
 import weka.core.Stopwords;
 import weka.core.stemmers.IteratedLovinsStemmer;
 import weka.core.tokenizers.WordTokenizer;
@@ -25,22 +30,19 @@ public class TextPreprocessUtility {
     /**
      * Remove stop-words and do stemming, and then out to TXT file
      *
-     * @param pathDir
+     * @param fileInput
      * @param fileName
      */
-    private void process(String pathDir, String fileName, String pathStemmingResult, boolean isStem) {
-        System.out.println(fileName);
+    private void process(String fileInput, String fileOutput, boolean isStem) {
+        System.out.println(fileInput);
 
-        String fileContent = null;
         ArrayList<String> processedWordList = null;
         StringBuffer strBuffer = new StringBuffer();
         try {
-            FileInputStream fis = new FileInputStream(pathDir + "\\" + fileName);
+            FileInputStream fis = new FileInputStream(fileInput);
             Reader reader = new InputStreamReader(fis, "UTF8");
             BufferedReader bufferReader = new BufferedReader(reader);
-            bufferReader.readLine(); // skip the header file
             String line = null;
-            int lineCount = 0;
             if (isStem == true) {
                 while ((line = bufferReader.readLine()) != null) {
                     processedWordList = removeStopWordAndStemming(line);
@@ -48,7 +50,6 @@ public class TextPreprocessUtility {
                         strBuffer.append(word + " ");
                     }
                     strBuffer.append("\n");
-                    lineCount++;
                 }
             }
             else {
@@ -58,14 +59,11 @@ public class TextPreprocessUtility {
                         strBuffer.append(word + " ");
                     }
                     strBuffer.append("\n");
-                    lineCount++;
                 }
             }
 
-
-            strBuffer = strBuffer.insert(0, lineCount + "\n");
-            TextFileUtility.writeTextFile(pathStemmingResult + "\\OutStem_"
-                    + fileName + ".dat", strBuffer.toString());
+            FileUtils.writeStringToFile(new File(fileOutput), strBuffer.toString(), "UTF8", false);
+//            TextFileUtility.writeTextFile(fileOutput, strBuffer.toString());
 
             bufferReader.close();
         } catch (Exception e) {
@@ -73,33 +71,45 @@ public class TextPreprocessUtility {
         }
     }
 
-    public void parallelProcess(String rootPath, final String pathDir, String subFolderName, final boolean isStem) {
+    /**
+     * 
+     * @param rootPathInput
+     * @param rootPathOutput
+     * @param overwrite
+     * @param isStem
+     * @throws Exception 
+     */
+    public void parallelProcess(String rootPathInput, String rootPathOutput, boolean overwrite, final boolean isStem) throws Exception {
         Runtime runtime = Runtime.getRuntime();
         int numOfProcessors = runtime.availableProcessors();
         ExecutorService executor = Executors.newFixedThreadPool(numOfProcessors - 1);
 
-        (new File(rootPath + "\\" + "OutStem")).mkdir();
-        (new File(rootPath + "\\" + "OutStem" + "\\" + subFolderName)).mkdir();
-        final String pathStemmingResult = rootPath + "\\" + "OutStem" + "\\" + subFolderName;
 
-        File mainFolder = new File(pathDir);
-        System.out.println(mainFolder.getAbsolutePath());
-        File[] fList = mainFolder.listFiles();
-        for (int i = 0; i < fList.length; i++) {
-            if (fList[i].isFile()) {
-                final String fileName = fList[i].getName();
-                executor.submit(new Runnable() {
-                    @Override
-                    public void run() {
-                        process(pathDir, fileName, pathStemmingResult, isStem);
-                    }
-                });
-            }
+        File output = new File(rootPathOutput);
+        if (!output.exists()) {
+            output.mkdirs();
+        } else if (overwrite) {
+            FileUtils.deleteQuietly(output);
+            output.mkdirs();
+        } else {
+            throw new Exception("The output folder is already existing.");
+        }
+        
+        List<String> listFiles = TextFileUtility.getPathFile(new File(rootPathInput));
+        
+        for (int i = 0; i < listFiles.size(); i++) {
+            final String fileInput = listFiles.get(i);
+            final String fileOutput = fileInput.replace(rootPathInput, rootPathOutput);
+            executor.submit(new Runnable() {
+                @Override
+                public void run() {
+                    process(fileInput, fileOutput, isStem);
+                }
+            });
         }
 
         executor.shutdown();
-        while (!executor.isTerminated()) {
-        }
+        while (!executor.isTerminated()) {}
     }
 
     public ArrayList<String> removeStopWord(String str) throws Exception {
@@ -144,5 +154,9 @@ public class TextPreprocessUtility {
             ex.printStackTrace();
         }
         return result;
+    }
+    
+    public static void main(String[] args) throws Exception {
+        new TextPreprocessUtility().parallelProcess(PRConstant.FOLDER_MAS_DATASET1 + "Test Compute TFIDF\\text", PRConstant.FOLDER_MAS_DATASET1 + "Test Compute TFIDF\\Removed stopword and stemming text", true, true);
     }
 }

@@ -12,10 +12,10 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
 import uit.tkorg.pr.constant.PRConstant;
-import uit.tkorg.pr.dataimport.model.Author;
-import uit.tkorg.pr.dataimport.model.Paper;
-import uit.tkorg.utility.IOUtility;
-import uit.tkorg.utility.NumericUtility;
+import uit.tkorg.pr.model.Author;
+import uit.tkorg.pr.model.Paper;
+import uit.tkorg.utility.general.BinaryFileUtility;
+import uit.tkorg.utility.general.NumericUtility;
 
 /**
  *
@@ -53,10 +53,10 @@ public class MASDataset1 {
                     break;
                 }
                 String[] str = line.split("\\|\\|\\|");
-                String paperId = IOUtility.getAcceptedFieldValue(str[0]);
-                String title = IOUtility.getAcceptedFieldValue(str[1]);
-                String paperAbstract = IOUtility.getAcceptedFieldValue(str[2]);
-                String strYear = IOUtility.getAcceptedFieldValue(str[3]);
+                String paperId = getAcceptedFieldValue(str[0]);
+                String title = getAcceptedFieldValue(str[1]);
+                String paperAbstract = getAcceptedFieldValue(str[2]);
+                String strYear = getAcceptedFieldValue(str[3]);
                 int year = 0;
                 if ((strYear != null) && (NumericUtility.isNum(strYear))) {
                     year = Integer.parseInt(strYear);
@@ -97,8 +97,8 @@ public class MASDataset1 {
                     break;
                 }
                 String[] str = line.split("\\|\\|\\|");
-                String paperId1 = IOUtility.getAcceptedFieldValue(str[0]);
-                String paperId2 = IOUtility.getAcceptedFieldValue(str[1]);
+                String paperId1 = getAcceptedFieldValue(str[0]);
+                String paperId2 = getAcceptedFieldValue(str[1]);
                 
                 if (papers.containsKey(paperId1)) {
                     papers.get(paperId1).getReference().add(paperId2); // reference is mutable.
@@ -153,8 +153,8 @@ public class MASDataset1 {
                     break;
                 }
                 String[] str = line.split("\\|\\|\\|");
-                String authorId = IOUtility.getAcceptedFieldValue(str[0]);
-                String paperId = IOUtility.getAcceptedFieldValue(str[1]);
+                String authorId = getAcceptedFieldValue(str[0]);
+                String paperId = getAcceptedFieldValue(str[1]);
                 
                 if (!authors.containsKey(authorId)) {
                     Author author = new Author();
@@ -187,8 +187,8 @@ public class MASDataset1 {
                     break;
                 }
                 String[] str = line.split("\\|\\|\\|");
-                String authorId = IOUtility.getAcceptedFieldValue(str[0]);
-                String authorName = IOUtility.getAcceptedFieldValue(str[1]);
+                String authorId = getAcceptedFieldValue(str[0]);
+                String authorName = getAcceptedFieldValue(str[1]);
 
                 Author tempAuthor = new Author();
                 tempAuthor.setAuthorId(authorId);
@@ -230,8 +230,8 @@ public class MASDataset1 {
                     break;
                 }
                 String[] str = line.split("\\|\\|\\|");
-                String authorId = IOUtility.getAcceptedFieldValue(str[0]);
-                String paperId = IOUtility.getAcceptedFieldValue(str[1]);
+                String authorId = getAcceptedFieldValue(str[0]);
+                String paperId = getAcceptedFieldValue(str[1]);
                 
                 if (!authors.containsKey(authorId)) {
                     Author author = new Author();
@@ -248,6 +248,15 @@ public class MASDataset1 {
         long estimatedTime = System.nanoTime() - startTime;
         System.out.println("Reading ground truth elapsed time: " + estimatedTime / 1000000000 + " seconds");
         System.out.println("End reading ground truth.");
+    }
+
+    public static String getAcceptedFieldValue(String fieldValue) throws Exception {
+        String value = fieldValue.trim();
+        if (value.equalsIgnoreCase("\\N")) {
+            return null;
+        } else {
+            return value;
+        }
     }
     
     /**

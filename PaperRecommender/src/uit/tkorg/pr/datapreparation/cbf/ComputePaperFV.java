@@ -7,9 +7,9 @@ package uit.tkorg.pr.datapreparation.cbf;
 import ir.vsr.HashMapVector;
 import java.util.HashMap;
 import java.util.List;
-import uit.tkorg.pr.dataimport.model.Paper;
+import uit.tkorg.pr.model.Paper;
 import uit.tkorg.utility.textvectorization.TextVectorizationByMahoutTerminalUtility;
-import uit.tkorg.utility.WeightingUtility;
+import uit.tkorg.utility.general.WeightingUtility;
 
 /**
  *

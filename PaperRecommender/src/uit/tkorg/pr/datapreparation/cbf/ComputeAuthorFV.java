@@ -7,9 +7,9 @@ package uit.tkorg.pr.datapreparation.cbf;
 import ir.vsr.HashMapVector;
 import java.util.HashMap;
 import java.util.List;
-import uit.tkorg.pr.dataimport.model.Author;
-import uit.tkorg.pr.dataimport.model.Paper;
-import uit.tkorg.utility.WeightingUtility;
+import uit.tkorg.pr.model.Author;
+import uit.tkorg.pr.model.Paper;
+import uit.tkorg.utility.general.WeightingUtility;
 
 /**
  * This class handles all logics for author object. 

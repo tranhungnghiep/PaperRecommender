@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package uit.tkorg.utility;
+package uit.tkorg.utility.general;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -15,7 +15,9 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -158,6 +160,33 @@ public class TextFileUtility {
         }
     }
     
+    /**
+     *
+     * @param dir: directory containing txt and dat files.
+     * @return list of full path of txt and dat files in the directory including subdirectory.
+     */
+    public static List<String> getPathFile(File dir) throws Exception {
+        File[] files = dir.listFiles();
+        List<String> listFiles = new ArrayList<>();
+        for (File file : files) {
+            if (file.isFile()) {
+                String name = file.getName();
+                if (name.endsWith(".txt") || name.endsWith(".dat")) {
+                    listFiles.add(file.getAbsolutePath());
+                }
+            } else {
+                listFiles.addAll(getPathFile(file));
+            }
+        }
+        return listFiles;
+    }
+
+    public static void checkAndCreateParentDirs(String filePath) throws Exception {
+        File f = new File(filePath);
+        if (!(f.getParentFile().exists())) {
+            f.getParentFile().mkdirs();
+        }
+    }
     public static void main(String args[]) {
         try {
             splitTextFile("C:\\CRS-Experiment\\MAS\\Content\\LDA\\Stemming\\CRS-InputParallelLDA.txt");

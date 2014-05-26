@@ -5,7 +5,7 @@
 package uit.tkorg.pr.evaluation;
 
 import java.util.HashMap;
-import uit.tkorg.pr.dataimport.model.Author;
+import uit.tkorg.pr.model.Author;
 import uit.tkorg.utility.evaluation.NDCG;
 import uit.tkorg.utility.evaluation.ReciprocalRank;
 

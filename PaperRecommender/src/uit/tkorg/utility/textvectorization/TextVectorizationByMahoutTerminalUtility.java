@@ -39,10 +39,11 @@ public class TextVectorizationByMahoutTerminalUtility {
      * @param textDir
      * @param sequenceDir
      * @return
-     * @throws Exception Using mahout terminal driver.
+     * @throws Exception 
+     * Using mahout terminal driver.
      */
     public static int textToSequenceFiles(String textDir, String sequenceDir) throws Exception {
-        String[] params = {"-i", textDir, "-o", sequenceDir, "-ow", "-xm", "sequential"};
+        String[] params = {"-i", textDir, "-o", sequenceDir, "-ow", "-xm", "sequential", "-chunk", "12000"};
         int status = new SequenceFilesFromDirectory().run(params);
         return status;
     }
@@ -51,41 +52,44 @@ public class TextVectorizationByMahoutTerminalUtility {
      * @param sequenceDir
      * @param vectorDir
      * @return
-     * @throws Exception Explain option: -wt tfidf --> Use the tfidf weighting
-     * method. -ng 2 --> Use an n-gram size of 2 to generate both unigrams and
-     * bigrams. -ml 50 --> Use a log-likelihood ratio (LLR) value of 50 to keep
-     * only very significant bigrams. -ow --> overwrite.
+     * @throws Exception
      */
     public static int sequenceToVectorFiles(String sequenceDir, String vectorDir) throws Exception {
-        String[] params = {"-i", sequenceDir, "-o", vectorDir, "-ow", "-wt", "tfidf"/*, "-ml", "50"*/, "-ng", "2"};
+        String[] params = {"-i", sequenceDir, "-o", vectorDir, "-ow", "-wt", "tfidf", "-s", "1", "-md", "1", "-x", "100", "-xs", "-1", "-ng", "2", "-ml", "50", "-chunk", "12000", "-n", "0"};
         int status = new SparseVectorsFromSequenceFiles().run(params);
         return status;
     }
 
-    private static HashMap<String, HashMapVector> readMahoutVectorFiles(String vectorDir) throws Exception {
-        HashMap<String, HashMapVector> vectorizedDocuments = new HashMap<>();
+    private static HashMap<Integer, String> readMahoutDictionaryFiles(String vectorDir) throws Exception {
+        HashMap<Integer, String> dictMap = new HashMap();
 
         Configuration conf = new Configuration();
         SequenceFile.Reader reader = new SequenceFile.Reader(FileSystem.get(conf), new Path(vectorDir + "\\dictionary.file-0"), conf);
         Text term = new Text();
         IntWritable dictKey = new IntWritable();
-        HashMap dictMap = new HashMap();
 
         // Note: sequence file mapping from term to its key code.
         // our map will map from key code to term.
         while (reader.next(term, dictKey)) {
-            dictMap.put(Integer.parseInt(dictKey.toString()), term.toString());
+            dictMap.put(Integer.valueOf(dictKey.toString()), term.toString());
         }
         reader.close();
 
-        reader = new SequenceFile.Reader(FileSystem.get(conf), new Path(vectorDir + "\\tfidf-vectors\\part-r-00000"), conf);
+        return dictMap;
+    }
+
+    private static HashMap<String, HashMapVector> readMahoutVectorFiles(String vectorDir) throws Exception {
+        HashMap<String, HashMapVector> vectorizedDocuments = new HashMap<>();
+        
+        Configuration conf = new Configuration();
+        SequenceFile.Reader reader = new SequenceFile.Reader(FileSystem.get(conf), new Path(vectorDir + "\\tfidf-vectors\\part-r-00000"), conf);
         Text key = new Text(); // document id.
         VectorWritable value = new VectorWritable(); // document content.
         while (reader.next(key, value)) {
             Vector vector = value.get();
             String documentId = key.toString();
             HashMapVector vectorContent = new HashMapVector();
-            Iterator<Vector.Element> iter = vector.all().iterator();
+            Iterator<Vector.Element> iter = vector.nonZeroes().iterator();
             while (iter.hasNext()) {
                 Vector.Element element = iter.next();
                 vectorContent.increment(String.valueOf(element.index()), element.get());
@@ -99,7 +103,8 @@ public class TextVectorizationByMahoutTerminalUtility {
 
     public static void main(String[] args) throws Exception {
         // Prepare input documents in text folder, each document in a .txt file, file name is document id.
-        textVectorizeFiles(PRConstant.FOLDER_MAS_DATASET1 + "Test Compute TFIDF\\text", PRConstant.FOLDER_MAS_DATASET1 + "Test Compute TFIDF\\sequence", PRConstant.FOLDER_MAS_DATASET1 + "Test Compute TFIDF\\vector");
+        textVectorizeFiles(PRConstant.FOLDER_MAS_DATASET1 + "Test Compute TFIDF\\Removed stopword and stemming text", PRConstant.FOLDER_MAS_DATASET1 + "Test Compute TFIDF\\sequence", PRConstant.FOLDER_MAS_DATASET1 + "Test Compute TFIDF\\vector");
+        HashMap<Integer, String> dictionary = readMahoutDictionaryFiles(PRConstant.FOLDER_MAS_DATASET1 + "Test Compute TFIDF\\vector");
         HashMap<String, HashMapVector> vectorizedDocuments = readMahoutVectorFiles(PRConstant.FOLDER_MAS_DATASET1 + "Test Compute TFIDF\\vector");
     }
 }

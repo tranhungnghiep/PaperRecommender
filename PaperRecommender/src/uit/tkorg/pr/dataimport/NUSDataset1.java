@@ -12,10 +12,11 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
 import uit.tkorg.pr.constant.PRConstant;
-import uit.tkorg.pr.dataimport.model.Author;
-import uit.tkorg.pr.dataimport.model.Paper;
-import uit.tkorg.utility.IOUtility;
-import uit.tkorg.utility.NumericUtility;
+import uit.tkorg.pr.model.Author;
+import uit.tkorg.pr.model.Paper;
+import uit.tkorg.utility.general.BinaryFileUtility;
+import uit.tkorg.utility.general.NumericUtility;
+import uit.tkorg.utility.general.TextFileUtility;
 
 /**
  *
@@ -40,7 +41,7 @@ public class NUSDataset1 {
      */
     public static List readAllKeywords() throws Exception {
         List allKeywords = new ArrayList();
-        List<String> ffile = IOUtility.getPathFile(new File(PRConstant.FOLDER_NUS_DATASET1));
+        List<String> ffile = TextFileUtility.getPathFile(new File(PRConstant.FOLDER_NUS_DATASET1));
         for (int i = 0; i < ffile.size(); i++) {
             FileReader file = new FileReader(ffile.get(i));
             BufferedReader textReader = new BufferedReader(file);

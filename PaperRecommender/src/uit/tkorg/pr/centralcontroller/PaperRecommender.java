@@ -9,10 +9,10 @@ import uit.tkorg.pr.datapreparation.cbf.ComputeAuthorFV;
 import uit.tkorg.pr.datapreparation.cbf.ComputePaperFV;
 import uit.tkorg.pr.evaluation.Evaluator;
 import uit.tkorg.pr.method.cbf.CBFRecommender;
-import uit.tkorg.pr.dataimport.model.Author;
-import uit.tkorg.pr.dataimport.model.Paper;
+import uit.tkorg.pr.model.Author;
+import uit.tkorg.pr.model.Paper;
 import uit.tkorg.pr.dataimport.NUSDataset1;
-import uit.tkorg.utility.IOUtility;
+import uit.tkorg.utility.general.BinaryFileUtility;
 
 
 /**
@@ -83,7 +83,7 @@ public class PaperRecommender {
                     } else {
                         SaveDataFolder = PRConstant.SAVEDATAFOLDER;
                     }
-                    IOUtility.saveObjectToFile(papers, SaveDataFolder + "\\Papers.dat");
+                    BinaryFileUtility.saveObjectToFile(papers, SaveDataFolder + "\\Papers.dat");
                     response[0] = "Success.";
                     break;
                 case "Save author":
@@ -93,7 +93,7 @@ public class PaperRecommender {
                     } else {
                         SaveDataFolder = PRConstant.SAVEDATAFOLDER;
                     }
-                    IOUtility.saveObjectToFile(authors, SaveDataFolder + "\\Authors.dat");
+                    BinaryFileUtility.saveObjectToFile(authors, SaveDataFolder + "\\Authors.dat");
                     response[0] = "Success.";
                     break;
                 case "Load paper":
@@ -103,7 +103,7 @@ public class PaperRecommender {
                     } else {
                         SaveDataFolder = PRConstant.SAVEDATAFOLDER;
                     }
-                    papers = (HashMap<String, Paper>) IOUtility.loadObjectFromFile(SaveDataFolder + "\\Papers.dat");
+                    papers = (HashMap<String, Paper>) BinaryFileUtility.loadObjectFromFile(SaveDataFolder + "\\Papers.dat");
                     response[0] = "Success.";
                     break;
                 case "Load author":
@@ -113,7 +113,7 @@ public class PaperRecommender {
                     } else {
                         SaveDataFolder = PRConstant.SAVEDATAFOLDER;
                     }
-                    authors = (HashMap<String, Author>) IOUtility.loadObjectFromFile(SaveDataFolder + "\\Authors.dat");
+                    authors = (HashMap<String, Author>) BinaryFileUtility.loadObjectFromFile(SaveDataFolder + "\\Authors.dat");
                     response[0] = "Success.";
                     break;
                     
