@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package uit.tkorg.pr.method.cf.memorybased;
+package uit.tkorg.pr.method.cf;
 
 import java.io.BufferedWriter;
 import java.io.File;

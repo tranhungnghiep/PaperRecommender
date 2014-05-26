@@ -3,27 +3,28 @@
  * and open the template in the editor.
  */
 package uit.tkorg.pr.centralcontroller;
+
+import java.io.IOException;
 import java.util.HashMap;
+import org.apache.mahout.cf.taste.common.TasteException;
 import uit.tkorg.pr.constant.PRConstant;
+import uit.tkorg.pr.dataimport.NUSDataset1;
 import uit.tkorg.pr.datapreparation.cbf.ComputeAuthorFV;
 import uit.tkorg.pr.datapreparation.cbf.ComputePaperFV;
 import uit.tkorg.pr.evaluation.Evaluator;
 import uit.tkorg.pr.method.cbf.CBFRecommender;
+import uit.tkorg.pr.method.cf.KNNCF;
 import uit.tkorg.pr.model.Author;
 import uit.tkorg.pr.model.Paper;
-import uit.tkorg.pr.dataimport.NUSDataset1;
 import uit.tkorg.utility.general.BinaryFileUtility;
-
 
 /**
  *
- * @author THNghiep
- * Central controller.
- * Main entry class used for testing.
- * Also control all traffic from gui.
+ * @author THNghiep Central controller. Main entry class used for testing. Also
+ * control all traffic from gui.
  */
 public class PaperRecommender {
-    
+
     // Key of this hash map is paper id.
     // Value of this hash map is the relevant paper object.
     private HashMap<String, Author> authors;
@@ -34,27 +35,29 @@ public class PaperRecommender {
 
     /**
      * This method is used as a entry point for testing.
+     *
      * @param args the command line arguments
      */
-    public static void main(String[] args) { 
-        
+    public static void main(String[] args) {
+
     }
-    
+
     /**
      * This method handles all request from gui.
+     *
      * @param request
-     * @param param 
+     * @param param
      * @return response: result of request after processing.
-     */    
+     */
     public String[] guiRequestHandler(String request, String param) {
         String[] response = new String[2];
-        
+
         String Dataset1Folder;
         String SaveDataFolder;
-        
+
         try {
             switch (request) {
-                
+
                 // Dataset 1: data import.
                 case "Read paper":
                     // Read param to get dataset 1 folder.
@@ -116,7 +119,7 @@ public class PaperRecommender {
                     authors = (HashMap<String, Author>) BinaryFileUtility.loadObjectFromFile(SaveDataFolder + "\\Authors.dat");
                     response[0] = "Success.";
                     break;
-                    
+
                 // Dataset 1: data preparation.
                 case "Paper FV linear":
                     ComputePaperFV.computeAllPapersFV(papers, 3, 0);
@@ -158,7 +161,7 @@ public class PaperRecommender {
                     response[1] = String.valueOf(Evaluator.MRR(authors));
                     response[0] = "Success.";
                     break;
-                default: 
+                default:
                     response[0] = "Unknown.";
             }
         } catch (Exception e) {
@@ -167,7 +170,7 @@ public class PaperRecommender {
             response[0] = "Fail.";
             return response;
         }
-        
+
         return response;
     }
 }
