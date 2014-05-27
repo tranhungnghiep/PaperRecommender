@@ -15,6 +15,7 @@ import uit.tkorg.pr.constant.PRConstant;
 import uit.tkorg.pr.dataimex.MASDataset1;
 import uit.tkorg.pr.dataimex.MahoutFile;
 import uit.tkorg.pr.dataimex.NUSDataset1;
+import uit.tkorg.pr.dataimex.PRGeneralFile;
 import uit.tkorg.pr.datapreparation.cbf.ComputeAuthorFV;
 import uit.tkorg.pr.datapreparation.cbf.ComputePaperFV;
 import uit.tkorg.pr.evaluation.Evaluator;
@@ -58,28 +59,10 @@ public class PaperRecommender {
         }
     }
     
-    public static void writePaperAbstractToTextFile(HashMap<String, Paper> papers, String textDir) throws Exception {
-        Set<String> paperIdSet = papers.keySet();
-        List<String> paperIdList = new ArrayList<>(paperIdSet);
-        Collections.sort(paperIdList);
-        
-        String subFolder = null;
-        int i = 0;
-        for (String key : paperIdList) {
-            if (i % 1000 == 0) {
-                subFolder = "Papers " + String.valueOf(i + 1) + " - " + String.valueOf(i + 1000);
-            }
-            String fileName = textDir + "\\" + subFolder + "\\" + key + ".txt";
-            FileUtils.writeStringToFile(new File(fileName), papers.get(key).getPaperAbstract(), "UTF8", false);
-            papers.get(key).setPaperAbstract(null);
-            i++;
-        }
-    }
-    
     public static void recommendationFlowController(String fileNamePaper, String fileNamePaperCitePaper, String textDir, String textPreprocessedDir, String sequenceDir, String vectorDir) throws Exception {
         HashMap<String, Paper> papers = MASDataset1.readPaperList(fileNamePaper, fileNamePaperCitePaper);
         // write abstract to text file
-        writePaperAbstractToTextFile(papers, textDir);
+        PRGeneralFile.writePaperAbstractToTextFile(papers, textDir);
         // preprocess text
         TextPreprocessUtility.parallelProcess(textDir, textPreprocessedDir, true, true);
         // tf-idf
