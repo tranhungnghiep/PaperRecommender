@@ -60,16 +60,45 @@ public class PaperRecommender {
     }
     
     public static void recommendationFlowController(String fileNamePaper, String fileNamePaperCitePaper, String textDir, String textPreprocessedDir, String sequenceDir, String vectorDir) throws Exception {
+        System.out.println("Begin reading paper list...");
+        long startTime = System.nanoTime();
         HashMap<String, Paper> papers = MASDataset1.readPaperList(fileNamePaper, fileNamePaperCitePaper);
+        long estimatedTime = System.nanoTime() - startTime;
+        System.out.println("Reading paper list elapsed time: " + estimatedTime / 1000000000 + " seconds");
+        System.out.println("End reading paper list.");
+        
         // write abstract to text file
+        System.out.println("Begin writing abstract to file...");
+        startTime = System.nanoTime();
         PRGeneralFile.writePaperAbstractToTextFile(papers, textDir);
+        estimatedTime = System.nanoTime() - startTime;
+        System.out.println("Writing abstract to fileelapsed time: " + estimatedTime / 1000000000 + " seconds");
+        System.out.println("End writing abstract to file.");
+        
         // preprocess text
+        System.out.println("Begin removing stopword and stemming...");
+        startTime = System.nanoTime();
         TextPreprocessUtility.parallelProcess(textDir, textPreprocessedDir, true, true);
+        estimatedTime = System.nanoTime() - startTime;
+        System.out.println("Removing stopword and stemmingelapsed time: " + estimatedTime / 1000000000 + " seconds");
+        System.out.println("End removing stopword and stemming.");
+        
         // tf-idf
+        System.out.println("Begin vectorizing...");
+        startTime = System.nanoTime();
         TextVectorizationByMahoutTerminalUtility.textVectorizeFiles(textPreprocessedDir, sequenceDir, vectorDir);
+        estimatedTime = System.nanoTime() - startTime;
+        System.out.println("Vectorizing elapsed time: " + estimatedTime / 1000000000 + " seconds");
+        System.out.println("End vectorizing.");
+        
         // read tf-idf
+        System.out.println("Begin reading vector...");
+        startTime = System.nanoTime();
         HashMap<Integer, String> dictMap = MahoutFile.readMahoutDictionaryFiles(vectorDir);
         HashMap<String, HashMapVector> vectorizedDocuments = MahoutFile.readMahoutVectorFiles(vectorDir);
+        estimatedTime = System.nanoTime() - startTime;
+        System.out.println("Reading vector elapsed time: " + estimatedTime / 1000000000 + " seconds");
+        System.out.println("End reading vector.");
     }
 
     /**

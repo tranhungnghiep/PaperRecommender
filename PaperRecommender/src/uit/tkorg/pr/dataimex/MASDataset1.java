@@ -41,8 +41,8 @@ public class MASDataset1 {
      * @throws java.io.IOException
      */
     public static HashMap<String, Paper> readPaperList(String fileNamePaper, String fileNamePaperCitePaper) throws Exception {
-        System.out.println("Begin reading paper list...");
-        long startTime = System.nanoTime();
+//        System.out.println("Begin reading paper list...");
+//        long startTime = System.nanoTime();
 
         HashMap<String, Paper> papers = new HashMap();
         
@@ -78,16 +78,16 @@ public class MASDataset1 {
             throw e;
         }
         
-        long estimatedTime = System.nanoTime() - startTime;
-        System.out.println("Reading paper list elapsed time: " + estimatedTime / 1000000000 + " seconds");
-        System.out.println("End reading paper list.");
+//        long estimatedTime = System.nanoTime() - startTime;
+//        System.out.println("Reading paper list elapsed time: " + estimatedTime / 1000000000 + " seconds");
+//        System.out.println("End reading paper list.");
         
         return papers;
     }
     
     private static void readCitationRelationship(String fileNameCitation, HashMap<String, Paper> papers) throws Exception {
-        System.out.println("Begin reading citation relationship...");
-        long startTime = System.nanoTime();
+//        System.out.println("Begin reading citation relationship...");
+//        long startTime = System.nanoTime();
 
         try (BufferedReader br = new BufferedReader(new FileReader(fileNameCitation))) {
             String line;
@@ -112,9 +112,9 @@ public class MASDataset1 {
             throw e;
         }
         
-        long estimatedTime = System.nanoTime() - startTime;
-        System.out.println("Reading citation relationship elapsed time: " + estimatedTime / 1000000000 + " seconds");
-        System.out.println("End reading citation relationship.");
+//        long estimatedTime = System.nanoTime() - startTime;
+//        System.out.println("Reading citation relationship elapsed time: " + estimatedTime / 1000000000 + " seconds");
+//        System.out.println("End reading citation relationship.");
     }
 
     /**
@@ -128,22 +128,22 @@ public class MASDataset1 {
      * @throws java.io.IOException
      */
     public static HashMap<String, Author> readAuthorList(String fileNameAuthorship) throws Exception {
-        System.out.println("Begin reading author list...");
-        long startTime = System.nanoTime();
+//        System.out.println("Begin reading author list...");
+//        long startTime = System.nanoTime();
 
         HashMap<String, Author> authors = new HashMap();
         readAuthorship(fileNameAuthorship, authors);
         
-        long estimatedTime = System.nanoTime() - startTime;
-        System.out.println("Reading author list elapsed time: " + estimatedTime / 1000000000 + " seconds");
-        System.out.println("End reading author list.");
+//        long estimatedTime = System.nanoTime() - startTime;
+//        System.out.println("Reading author list elapsed time: " + estimatedTime / 1000000000 + " seconds");
+//        System.out.println("End reading author list.");
 
         return authors;
     }
     
     private static void readAuthorship(String fileNameAuthorship, HashMap<String, Author> authors) throws Exception {
-        System.out.println("Begin reading authorship...");
-        long startTime = System.nanoTime();
+//        System.out.println("Begin reading authorship...");
+//        long startTime = System.nanoTime();
 
         try (BufferedReader br = new BufferedReader(new FileReader(fileNameAuthorship))) {
             String line;
@@ -168,14 +168,14 @@ public class MASDataset1 {
             throw e;
         }
         
-        long estimatedTime = System.nanoTime() - startTime;
-        System.out.println("Reading authorship elapsed time: " + estimatedTime / 1000000000 + " seconds");
-        System.out.println("End reading author list.");
+//        long estimatedTime = System.nanoTime() - startTime;
+//        System.out.println("Reading authorship elapsed time: " + estimatedTime / 1000000000 + " seconds");
+//        System.out.println("End reading author list.");
     }
 
     public static HashMap<String, Author> readRecommendingAuthorList(String fileNameRecommendingAuthors, String fileNameGroundTruth) throws Exception {
-        System.out.println("Begin reading recommending author list...");
-        long startTime = System.nanoTime();
+//        System.out.println("Begin reading recommending author list...");
+//        long startTime = System.nanoTime();
 
         HashMap<String, Author> authors = new HashMap<>();
         
@@ -203,9 +203,9 @@ public class MASDataset1 {
             throw e;
         }
         
-        long estimatedTime = System.nanoTime() - startTime;
-        System.out.println("Reading recommending author list elapsed time: " + estimatedTime / 1000000000 + " seconds");
-        System.out.println("End reading recommending author list.");
+//        long estimatedTime = System.nanoTime() - startTime;
+//        System.out.println("Reading recommending author list elapsed time: " + estimatedTime / 1000000000 + " seconds");
+//        System.out.println("End reading recommending author list.");
         
         return authors;
     }
@@ -219,8 +219,8 @@ public class MASDataset1 {
      * @throws IOException
      */
     private static void readGroundTruth(String fileNameGroundTruth, HashMap<String, Author> authors) throws Exception {
-        System.out.println("Begin reading ground truth...");
-        long startTime = System.nanoTime();
+//        System.out.println("Begin reading ground truth...");
+//        long startTime = System.nanoTime();
 
         try (BufferedReader br = new BufferedReader(new FileReader(fileNameGroundTruth))) {
             String line;
@@ -245,9 +245,9 @@ public class MASDataset1 {
             throw e;
         }
         
-        long estimatedTime = System.nanoTime() - startTime;
-        System.out.println("Reading ground truth elapsed time: " + estimatedTime / 1000000000 + " seconds");
-        System.out.println("End reading ground truth.");
+//        long estimatedTime = System.nanoTime() - startTime;
+//        System.out.println("Reading ground truth elapsed time: " + estimatedTime / 1000000000 + " seconds");
+//        System.out.println("End reading ground truth.");
     }
 
     public static String getAcceptedFieldValue(String fieldValue) throws Exception {
