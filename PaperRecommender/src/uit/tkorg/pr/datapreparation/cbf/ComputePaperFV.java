@@ -7,6 +7,8 @@ package uit.tkorg.pr.datapreparation.cbf;
 import ir.vsr.HashMapVector;
 import java.util.HashMap;
 import java.util.List;
+import uit.tkorg.pr.constant.PRConstant;
+import uit.tkorg.pr.dataimex.MahoutFile;
 import uit.tkorg.pr.model.Paper;
 import uit.tkorg.utility.textvectorization.TextVectorizationByMahoutTerminalUtility;
 import uit.tkorg.utility.general.WeightingUtility;
@@ -21,12 +23,11 @@ import uit.tkorg.utility.general.WeightingUtility;
 public class ComputePaperFV {
 
     // Prevent instantiation.
-    private ComputePaperFV() {
-    }
+    private ComputePaperFV() {}
 
-    public static void computeAllPapersContent(HashMap<String, Paper> papers) throws Exception {
+    public static void setAllPapersContent(HashMap<String, Paper> papers, HashMap<String, HashMapVector> vectorizedDocuments) throws Exception {
         for (String key : papers.keySet()) {
-//            papers.get(key).setContent(TextVectorizationByMahoutTerminalUtility.computeTFIDF());
+            papers.get(key).setContent(vectorizedDocuments.get(key));
         }
     }
 

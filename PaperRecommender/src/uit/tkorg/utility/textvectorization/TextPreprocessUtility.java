@@ -33,7 +33,7 @@ public class TextPreprocessUtility {
      * @param fileInput
      * @param fileName
      */
-    private void process(String fileInput, String fileOutput, boolean isStem) {
+    private static void process(String fileInput, String fileOutput, boolean isStem) {
         System.out.println(fileInput);
 
         ArrayList<String> processedWordList = null;
@@ -79,7 +79,7 @@ public class TextPreprocessUtility {
      * @param isStem
      * @throws Exception 
      */
-    public void parallelProcess(String rootPathInput, String rootPathOutput, boolean overwrite, final boolean isStem) throws Exception {
+    public static void parallelProcess(String rootPathInput, String rootPathOutput, boolean overwrite, final boolean isStem) throws Exception {
         Runtime runtime = Runtime.getRuntime();
         int numOfProcessors = runtime.availableProcessors();
         ExecutorService executor = Executors.newFixedThreadPool(numOfProcessors - 1);
@@ -112,7 +112,7 @@ public class TextPreprocessUtility {
         while (!executor.isTerminated()) {}
     }
 
-    public ArrayList<String> removeStopWord(String str) throws Exception {
+    public static ArrayList<String> removeStopWord(String str) throws Exception {
         ArrayList<String> result = new ArrayList<String>();
         WordTokenizer wordTokenizer = new WordTokenizer();
         String delimiters = " \r\t\n.,;:\'\"()?!-><#$\\%&*+/@^_=[]{}|`~0123456789·‘’“”\\«ª©¯¬£¢§™•ϵϕ­ ´";
@@ -133,7 +133,7 @@ public class TextPreprocessUtility {
         return result;
     }
 
-    public ArrayList<String> removeStopWordAndStemming(String str) {
+    public static ArrayList<String> removeStopWordAndStemming(String str) {
         ArrayList<String> result = new ArrayList<String>();
         WordTokenizer wordTokenizer = new WordTokenizer();
         IteratedLovinsStemmer stemmerLovin = new IteratedLovinsStemmer();

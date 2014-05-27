@@ -3,20 +3,27 @@
  * and open the template in the editor.
  */
 package uit.tkorg.pr.centralcontroller;
-
-import java.io.IOException;
+import ir.vsr.HashMapVector;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
-import org.apache.mahout.cf.taste.common.TasteException;
+import java.util.List;
+import java.util.Set;
+import org.apache.commons.io.FileUtils;
 import uit.tkorg.pr.constant.PRConstant;
-import uit.tkorg.pr.dataimport.NUSDataset1;
+import uit.tkorg.pr.dataimex.MASDataset1;
+import uit.tkorg.pr.dataimex.MahoutFile;
+import uit.tkorg.pr.dataimex.NUSDataset1;
 import uit.tkorg.pr.datapreparation.cbf.ComputeAuthorFV;
 import uit.tkorg.pr.datapreparation.cbf.ComputePaperFV;
 import uit.tkorg.pr.evaluation.Evaluator;
 import uit.tkorg.pr.method.cbf.CBFRecommender;
-import uit.tkorg.pr.method.cf.KNNCF;
 import uit.tkorg.pr.model.Author;
 import uit.tkorg.pr.model.Paper;
 import uit.tkorg.utility.general.BinaryFileUtility;
+import uit.tkorg.utility.textvectorization.TextPreprocessUtility;
+import uit.tkorg.utility.textvectorization.TextVectorizationByMahoutTerminalUtility;
 
 /**
  *
@@ -38,8 +45,48 @@ public class PaperRecommender {
      *
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
-
+    public static void main(String[] args) { 
+        try {
+            recommendationFlowController(PRConstant.FOLDER_MAS_DATASET1 + "[Training] Paper_Before_2006.csv", 
+                    PRConstant.FOLDER_MAS_DATASET1 + "[Training] Paper_Cite_Paper_Before_2006.csv", 
+                    PRConstant.FOLDER_MAS_DATASET1 + "Test Compute TFIDF\\text", 
+                    PRConstant.FOLDER_MAS_DATASET1 + "Test Compute TFIDF\\Removed stopword and stemming text", 
+                    PRConstant.FOLDER_MAS_DATASET1 + "Test Compute TFIDF\\sequence", 
+                    PRConstant.FOLDER_MAS_DATASET1 + "Test Compute TFIDF\\vector");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public static void writePaperAbstractToTextFile(HashMap<String, Paper> papers, String textDir) throws Exception {
+        Set<String> paperIdSet = papers.keySet();
+        List<String> paperIdList = new ArrayList<>(paperIdSet);
+        Collections.sort(paperIdList);
+        
+        String subFolder = null;
+        int i = 0;
+        for (String key : paperIdList) {
+            if (i % 1000 == 0) {
+                subFolder = "Papers " + String.valueOf(i + 1) + " - " + String.valueOf(i + 1000);
+            }
+            String fileName = textDir + "\\" + subFolder + "\\" + key + ".txt";
+            FileUtils.writeStringToFile(new File(fileName), papers.get(key).getPaperAbstract(), "UTF8", false);
+            papers.get(key).setPaperAbstract(null);
+            i++;
+        }
+    }
+    
+    public static void recommendationFlowController(String fileNamePaper, String fileNamePaperCitePaper, String textDir, String textPreprocessedDir, String sequenceDir, String vectorDir) throws Exception {
+        HashMap<String, Paper> papers = MASDataset1.readPaperList(fileNamePaper, fileNamePaperCitePaper);
+        // write abstract to text file
+        writePaperAbstractToTextFile(papers, textDir);
+        // preprocess text
+        TextPreprocessUtility.parallelProcess(textDir, textPreprocessedDir, true, true);
+        // tf-idf
+        TextVectorizationByMahoutTerminalUtility.textVectorizeFiles(textPreprocessedDir, sequenceDir, vectorDir);
+        // read tf-idf
+        HashMap<Integer, String> dictMap = MahoutFile.readMahoutDictionaryFiles(vectorDir);
+        HashMap<String, HashMapVector> vectorizedDocuments = MahoutFile.readMahoutVectorFiles(vectorDir);
     }
 
     /**
