@@ -33,7 +33,7 @@ public class TextVectorizationByMahoutTerminalUtility {
      * Using mahout terminal driver.
      */
     public static int textToSequenceFiles(String textDir, String sequenceDir) throws Exception {
-        String[] params = {"-i", textDir, "-o", sequenceDir, "-ow", "-xm", "sequential", "-chunk", "12000"};
+        String[] params = {"-i", textDir, "-o", sequenceDir, "-ow", "-xm", "sequential", "-chunk", "8000"};
         int status = new SequenceFilesFromDirectory().run(params);
         return status;
     }
@@ -45,7 +45,7 @@ public class TextVectorizationByMahoutTerminalUtility {
      * @throws Exception
      */
     public static int sequenceToVectorFiles(String sequenceDir, String vectorDir) throws Exception {
-        String[] params = {"-i", sequenceDir, "-o", vectorDir, "-ow", "-wt", "tfidf", "-s", "1", "-md", "1", "-x", "100", "-xs", "-1", "-ng", "2", "-ml", "50", "-chunk", "12000", "-n", "0"};
+        String[] params = {"-i", sequenceDir, "-o", vectorDir, "-ow", "-wt", "tfidf", "-s", "1", "-md", "1", "-x", "100", "-xs", "3.0", "-ng", "2", "-ml", "50", "-chunk", "8000", "-n", "0"};
         int status = new SparseVectorsFromSequenceFiles().run(params);
         return status;
     }
