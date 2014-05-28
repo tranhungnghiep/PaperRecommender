@@ -45,7 +45,7 @@ public class TextVectorizationByMahoutTerminalUtility {
      * @throws Exception
      */
     public static int sequenceToVectorFiles(String sequenceDir, String vectorDir) throws Exception {
-        String[] params = {"-i", sequenceDir, "-o", vectorDir, "-ow", "-wt", "tfidf", "-s", "1", "-md", "1", "-x", "100", "-xs", "3.0", "-ng", "2", "-ml", "50", "-chunk", "8000", "-n", "0"};
+        String[] params = {"-i", sequenceDir, "-o", vectorDir, "-ow", "-wt", "tfidf", "-s", "1", "-md", "1", "-x", "100", "-xs", "3.0", "-ng", "2", "-ml", "50", "-chunk", "8000", "-n", "2"};
         int status = new SparseVectorsFromSequenceFiles().run(params);
         return status;
     }
