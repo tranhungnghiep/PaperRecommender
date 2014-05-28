@@ -41,10 +41,10 @@ public class PaperRecommender {
         try {
             recommendationFlowController(PRConstant.FOLDER_MAS_DATASET1 + "[Training] Paper_Before_2006.csv", 
                     PRConstant.FOLDER_MAS_DATASET1 + "[Training] Paper_Cite_Paper_Before_2006.csv", 
-                    PRConstant.FOLDER_MAS_DATASET1 + "Test Compute TFIDF\\text", 
-                    PRConstant.FOLDER_MAS_DATASET1 + "Test Compute TFIDF\\Removed stopword and stemming text", 
-                    PRConstant.FOLDER_MAS_DATASET1 + "Test Compute TFIDF\\sequence", 
-                    PRConstant.FOLDER_MAS_DATASET1 + "Test Compute TFIDF\\vector");
+                    PRConstant.FOLDER_MAS_DATASET1 + "Text", 
+                    PRConstant.FOLDER_MAS_DATASET1 + "PreProcessedPaper", 
+                    PRConstant.FOLDER_MAS_DATASET1 + "Sequence", 
+                    PRConstant.FOLDER_MAS_DATASET1 + "Vector");
         } catch (Exception e) {
             e.printStackTrace();
         }
