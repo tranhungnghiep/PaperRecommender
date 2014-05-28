@@ -64,6 +64,7 @@ public class MahoutFile {
         while (reader.next(key, value)) {
             Vector vector = value.get();
             String documentId = key.toString();
+            documentId = documentId.substring(1, documentId.length() - 4);
             HashMapVector vectorContent = new HashMapVector();
             Iterator<Vector.Element> iter = vector.nonZeroes().iterator();
             while (iter.hasNext()) {
