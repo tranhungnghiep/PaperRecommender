@@ -5,12 +5,10 @@
 package uit.tkorg.pr.datapreparation.cbf;
 
 import ir.vsr.HashMapVector;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import uit.tkorg.pr.constant.PRConstant;
-import uit.tkorg.pr.dataimex.MahoutFile;
 import uit.tkorg.pr.model.Paper;
-import uit.tkorg.utility.textvectorization.TextVectorizationByMahoutTerminalUtility;
 import uit.tkorg.utility.general.WeightingUtility;
 
 /**
@@ -60,7 +58,7 @@ public class PaperFVComputation {
         
         // combining scheme
         if (combiningScheme == 0) {
-            return null;
+            combiningPapers = new ArrayList<>();
         } else if (combiningScheme == 1) {
             combiningPapers = papers.get(key).getReference();
         } else if (combiningScheme == 2) {

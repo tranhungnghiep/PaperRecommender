@@ -51,14 +51,12 @@ public class NumericUtility {
      * @return
      */
     public static boolean isNum(String strNum) {
-        boolean ret = true;
+        boolean result = true;
         try {
-
             Double.parseDouble(strNum);
-
         } catch (NumberFormatException e) {
-            ret = false;
+            result = false;
         }
-        return ret;
+        return result;
     }    
 }

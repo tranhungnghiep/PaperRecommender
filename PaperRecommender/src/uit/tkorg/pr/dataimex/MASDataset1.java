@@ -253,7 +253,7 @@ public class MASDataset1 {
     public static String getAcceptedFieldValue(String fieldValue) throws Exception {
         String value = fieldValue.trim();
         if (value.equalsIgnoreCase("\\N")) {
-            return null;
+            return "";
         } else {
             return value;
         }

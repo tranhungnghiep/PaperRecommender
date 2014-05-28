@@ -36,7 +36,7 @@ public class Author implements Serializable {
         this.authorName = null;
         this.authorType = null;
         this.paper = new ArrayList();
-        this.featureVector = null;
+        this.featureVector = new HashMapVector();
         this.Recommendation = new ArrayList();
         this.groundTruth = new ArrayList();
         this.ndcg5 = 0;

@@ -68,7 +68,7 @@ public class PaperRecommender {
         startTime = System.nanoTime();
         PRGeneralFile.writePaperAbstractToTextFile(papers, dirPapers);
         estimatedTime = System.nanoTime() - startTime;
-        System.out.println("Writing abstract to fileelapsed time: " + estimatedTime / 1000000000 + " seconds");
+        System.out.println("Writing abstract to file elapsed time: " + estimatedTime / 1000000000 + " seconds");
         System.out.println("End writing abstract to file.");
         
         // Step 3: Preprocessing content of all papers. Remove stop words and stemming
@@ -76,7 +76,7 @@ public class PaperRecommender {
         startTime = System.nanoTime();
         TextPreprocessUtility.parallelProcess(dirPapers, dirPreProcessedPaper, true, true);
         estimatedTime = System.nanoTime() - startTime;
-        System.out.println("Removing stopword and stemmingelapsed time: " + estimatedTime / 1000000000 + " seconds");
+        System.out.println("Removing stopword and stemming elapsed time: " + estimatedTime / 1000000000 + " seconds");
         System.out.println("End removing stopword and stemming.");
         
         // Step 4: tf-idf. Output of this process is vectors of papers stored in a Mahout's binary file 

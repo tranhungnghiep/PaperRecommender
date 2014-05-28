@@ -42,10 +42,10 @@ public class Paper implements Serializable {
         this.paperAbstract = null;
         this.year = 0;
         this.paperType = null;
-        this.tfidfVector = null;
+        this.tfidfVector = new HashMapVector();
         this.citation = new ArrayList();
         this.reference = new ArrayList();
-        this.featureVector = null;
+        this.featureVector = new HashMapVector();
     }
 
     /**

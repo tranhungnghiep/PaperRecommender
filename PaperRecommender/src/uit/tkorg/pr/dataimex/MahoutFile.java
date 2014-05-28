@@ -4,9 +4,12 @@
  */
 package uit.tkorg.pr.dataimex;
 
+import com.mysql.jdbc.StringUtils;
 import ir.vsr.HashMapVector;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
@@ -64,7 +67,13 @@ public class MahoutFile {
         while (reader.next(key, value)) {
             Vector vector = value.get();
             String documentId = key.toString();
-            documentId = documentId.substring(1, documentId.length() - 4);
+            documentId = documentId.substring(documentId.lastIndexOf("/") + 1, documentId.length() - 4);
+            // Other way: using regex.
+//            Pattern pattern = Pattern.compile(".*/(\\d+)\\.txt");
+//            Matcher matcher = pattern.matcher(documentId);
+//            if (matcher.find()) {
+//                documentId = matcher.group(1);
+//            }
             HashMapVector vectorContent = new HashMapVector();
             Iterator<Vector.Element> iter = vector.nonZeroes().iterator();
             while (iter.hasNext()) {
