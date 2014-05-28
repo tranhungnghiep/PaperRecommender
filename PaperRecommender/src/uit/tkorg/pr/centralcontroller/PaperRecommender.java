@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package uit.tkorg.pr.centralcontroller;
 import ir.vsr.HashMapVector;
 import java.io.File;
@@ -16,8 +12,8 @@ import uit.tkorg.pr.dataimex.MASDataset1;
 import uit.tkorg.pr.dataimex.MahoutFile;
 import uit.tkorg.pr.dataimex.NUSDataset1;
 import uit.tkorg.pr.dataimex.PRGeneralFile;
-import uit.tkorg.pr.datapreparation.cbf.ComputeAuthorFV;
-import uit.tkorg.pr.datapreparation.cbf.ComputePaperFV;
+import uit.tkorg.pr.datapreparation.cbf.AuthorFVComputation;
+import uit.tkorg.pr.datapreparation.cbf.PaperFVComputation;
 import uit.tkorg.pr.evaluation.Evaluator;
 import uit.tkorg.pr.method.cbf.CBFRecommender;
 import uit.tkorg.pr.model.Author;
@@ -41,11 +37,6 @@ public class PaperRecommender {
     // Value of this hash map is the relevant paper object.
     private HashMap<String, Paper> papers;
 
-    /**
-     * This method is used as a entry point for testing.
-     *
-     * @param args the command line arguments
-     */
     public static void main(String[] args) { 
         try {
             recommendationFlowController(PRConstant.FOLDER_MAS_DATASET1 + "[Training] Paper_Before_2006.csv", 
@@ -59,39 +50,46 @@ public class PaperRecommender {
         }
     }
     
-    public static void recommendationFlowController(String fileNamePaper, String fileNamePaperCitePaper, String textDir, String textPreprocessedDir, String sequenceDir, String vectorDir) throws Exception {
+    public static void recommendationFlowController(String fileNamePapers, String fileNamePaperCitePaper, String dirPapers, 
+            String dirPreProcessedPaper, String sequenceDir, String vectorDir) throws Exception {
+        // Step 1: 
+        // - Read content of papers from [Training] Paper_Before_2006.csv
+        // - Store metadata of all papers into HashMap<String, Paper> papers
         System.out.println("Begin reading paper list...");
         long startTime = System.nanoTime();
-        HashMap<String, Paper> papers = MASDataset1.readPaperList(fileNamePaper, fileNamePaperCitePaper);
+        HashMap<String, Paper> papers = MASDataset1.readPaperList(fileNamePapers, fileNamePaperCitePaper);
         long estimatedTime = System.nanoTime() - startTime;
         System.out.println("Reading paper list elapsed time: " + estimatedTime / 1000000000 + " seconds");
         System.out.println("End reading paper list.");
         
-        // write abstract to text file
+        // Step 2: 
+        // - Writting abstract of all papers to text files. One file for each paper in 'dirPapers' directory.
         System.out.println("Begin writing abstract to file...");
         startTime = System.nanoTime();
-        PRGeneralFile.writePaperAbstractToTextFile(papers, textDir);
+        PRGeneralFile.writePaperAbstractToTextFile(papers, dirPapers);
         estimatedTime = System.nanoTime() - startTime;
         System.out.println("Writing abstract to fileelapsed time: " + estimatedTime / 1000000000 + " seconds");
         System.out.println("End writing abstract to file.");
         
-        // preprocess text
+        // Step 3: Preprocessing content of all papers. Remove stop words and stemming
         System.out.println("Begin removing stopword and stemming...");
         startTime = System.nanoTime();
-        TextPreprocessUtility.parallelProcess(textDir, textPreprocessedDir, true, true);
+        TextPreprocessUtility.parallelProcess(dirPapers, dirPreProcessedPaper, true, true);
         estimatedTime = System.nanoTime() - startTime;
         System.out.println("Removing stopword and stemmingelapsed time: " + estimatedTime / 1000000000 + " seconds");
         System.out.println("End removing stopword and stemming.");
         
-        // tf-idf
+        // Step 4: tf-idf. Output of this process is vectors of papers stored in a Mahout's binary file 
         System.out.println("Begin vectorizing...");
         startTime = System.nanoTime();
-        TextVectorizationByMahoutTerminalUtility.textVectorizeFiles(textPreprocessedDir, sequenceDir, vectorDir);
+        TextVectorizationByMahoutTerminalUtility.textVectorizeFiles(dirPreProcessedPaper, sequenceDir, vectorDir);
         estimatedTime = System.nanoTime() - startTime;
         System.out.println("Vectorizing elapsed time: " + estimatedTime / 1000000000 + " seconds");
         System.out.println("End vectorizing.");
         
-        // read tf-idf
+        // Step 5: Read vectors of all papers store in 
+        // - HashMap<Integer, String> dictMap: Dictionary of the whole collection.
+        // - HashMap<String, HashMapVector> vectorizedDocuments: <PaperID, Vector TF*IDF of PaperID>
         System.out.println("Begin reading vector...");
         startTime = System.nanoTime();
         HashMap<Integer, String> dictMap = MahoutFile.readMahoutDictionaryFiles(vectorDir);
@@ -99,6 +97,15 @@ public class PaperRecommender {
         estimatedTime = System.nanoTime() - startTime;
         System.out.println("Reading vector elapsed time: " + estimatedTime / 1000000000 + " seconds");
         System.out.println("End reading vector.");
+        
+        // Step 6: put TFIDF vectors of all paper (vectorizedDocuments) 
+        // into HashMap<String, Paper> papers (model)
+        PaperFVComputation.setTFIDFVectorForAllPapers(papers, vectorizedDocuments);
+        
+        // Step 6: calculating feature vector for all papers and 
+        // put the result into HashMap<String, Paper> papers (model)
+        // (papers, 0, 0): baseline
+        PaperFVComputation.computeFeatureVectorForAllPapers(papers, 0, 0);
     }
 
     /**
@@ -181,27 +188,27 @@ public class PaperRecommender {
 
                 // Dataset 1: data preparation.
                 case "Paper FV linear":
-                    ComputePaperFV.computeAllPapersFV(papers, 3, 0);
+                    PaperFVComputation.computeFeatureVectorForAllPapers(papers, 3, 0);
                     response[0] = "Success.";
                     break;
                 case "Paper FV cosine":
-                    ComputePaperFV.computeAllPapersFV(papers, 3, 1);
+                    PaperFVComputation.computeFeatureVectorForAllPapers(papers, 3, 1);
                     response[0] = "Success.";
                     break;
                 case "Paper FV RPY":
-                    ComputePaperFV.computeAllPapersFV(papers, 3, 2);
+                    PaperFVComputation.computeFeatureVectorForAllPapers(papers, 3, 2);
                     response[0] = "Success.";
                     break;
                 case "Author FV linear":
-                    ComputeAuthorFV.computeAllAuthorsFV(authors, 0);
+                    AuthorFVComputation.computeAllAuthorsFV(authors, 0);
                     response[0] = "Success.";
                     break;
                 case "Author FV cosine":
-                    ComputeAuthorFV.computeAllAuthorsFV(authors, 1);
+                    AuthorFVComputation.computeAllAuthorsFV(authors, 1);
                     response[0] = "Success.";
                     break;
                 case "Author FV RPY":
-                    ComputeAuthorFV.computeAllAuthorsFV(authors, 2);
+                    AuthorFVComputation.computeAllAuthorsFV(authors, 2);
                     response[0] = "Success.";
                     break;
                 case "Recommend":
