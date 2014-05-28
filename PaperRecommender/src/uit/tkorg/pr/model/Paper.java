@@ -12,12 +12,12 @@ import java.util.List;
 /**
  *
  * @author THNghiep
- * This class represents a paper.
- * Data: 
- * paper id, title, year, paper type,
- * content in keywords' tf-idf list (ir's hashmapvector: cần xem kĩ lại class này, dùng như thế nào cho đúng),
- * and the full feature vector of the paper (hashmapvector computed by combining other paper with weighting scheme linear or cosine or rpy).
- * - if the paper is paper to recommend: list<String> of citation, reference (paper id).
+ This class represents a paper.
+ Data: 
+ paper id, title, year, paper type,
+ tfidfVector in keywords' tf-idf list (ir's hashmapvector: cần xem kĩ lại class này, dùng như thế nào cho đúng),
+ and the full feature vector of the paper (hashmapvector computed by combining other paper with weighting scheme linear or cosine or rpy).
+ - if the paper is paper to recommend: list<String> of citation, reference (paper id).
  * - if the paper is paper of author: List<Paper> of citation, reference (Paper object, this class).
  * - if the paper is citation or reference paper of author: no list of citation, reference.
  * Note: For a specific paper type, some data are absent.
@@ -28,7 +28,7 @@ public class Paper implements Serializable {
     private String paperAbstract;
     private int year;
     private String paperType;
-    private HashMapVector content;
+    private HashMapVector tfidfVector;
     private List citation; // cited by those papers.
     private List reference; // citing those papers.
     private HashMapVector featureVector;
@@ -42,7 +42,7 @@ public class Paper implements Serializable {
         this.paperAbstract = null;
         this.year = 0;
         this.paperType = null;
-        this.content = null;
+        this.tfidfVector = null;
         this.citation = new ArrayList();
         this.reference = new ArrayList();
         this.featureVector = null;
@@ -91,17 +91,17 @@ public class Paper implements Serializable {
     }
 
     /**
-     * @return the content
+     * @return the tfidfVector
      */
-    public HashMapVector getContent() {
-        return content;
+    public HashMapVector getTfidfVector() {
+        return tfidfVector;
     }
 
     /**
-     * @param content the content to set
+     * @param tfidfVector the tfidfVector to set
      */
-    public void setContent(HashMapVector content) {
-        this.content = content;
+    public void setTfidfVector(HashMapVector tfidfVector) {
+        this.tfidfVector = tfidfVector;
     }
 
     /**

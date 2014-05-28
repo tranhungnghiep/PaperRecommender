@@ -20,10 +20,10 @@ import uit.tkorg.utility.general.WeightingUtility;
  *
  * @author THNghiep
  */
-public class ComputeAuthorFV {
+public class AuthorFVComputation {
 
     // Prevent instantiation.
-    private ComputeAuthorFV() {
+    private AuthorFVComputation() {
     }
 
     /**
@@ -85,7 +85,7 @@ public class ComputeAuthorFV {
         Paper authorPaper;
         authorPaper = (Paper) author.getPaper().get(0);//get paper of junior researchers
         
-        featureVector.add(authorPaper.getContent());
+        featureVector.add(authorPaper.getTfidfVector());
         
         List<Paper> reference = authorPaper.getReference();//get list of reference papers of author's paper 
         featureVector.add(sumFVLinear(reference));//add featureVector with featureVector of reference papers of author's paper 
@@ -106,7 +106,7 @@ public class ComputeAuthorFV {
         Paper authorPaper;
         authorPaper = (Paper) author.getPaper().get(0);//get paper of junior researchers 
         
-        featureVector.add(authorPaper.getContent());
+        featureVector.add(authorPaper.getTfidfVector());
         
         List<Paper> reference = authorPaper.getReference();//get list of reference papers of author's paper 
         featureVector.add(sumFVCosine(authorPaper, reference));//add featureVector with featureVector of reference papers of author's paper 
@@ -127,7 +127,7 @@ public class ComputeAuthorFV {
         Paper authorPaper;
         authorPaper = (Paper) author.getPaper().get(0);//get paper of junior researchers
         
-        featureVector.add(authorPaper.getContent());
+        featureVector.add(authorPaper.getTfidfVector());
         
         List<Paper> reference = authorPaper.getReference();//get list of reference papers of author's paper
         featureVector.add(sumFVRPY(authorPaper, reference));//add featureVector with featureVector of reference papers of author's paper
@@ -153,7 +153,7 @@ public class ComputeAuthorFV {
             
             HashMapVector currentPaperFV = new HashMapVector();
             
-            currentPaperFV.add(paper.getContent());
+            currentPaperFV.add(paper.getTfidfVector());
             
             List<Paper> citation = paper.getCitation();//get list of citation papers of author's paper 
             currentPaperFV.add(sumFVLinear(citation));//add featureVector with featureVector of citation papers of author's paper 
@@ -185,7 +185,7 @@ public class ComputeAuthorFV {
             
             HashMapVector currentPaperFV = new HashMapVector();
             
-            currentPaperFV.add(paper.getContent());
+            currentPaperFV.add(paper.getTfidfVector());
             
             List<Paper> citation = paper.getCitation();//get list of citation papers of author's paper 
             currentPaperFV.add(sumFVCosine(paper, citation));//add featureVector with featureVector of citation papers of author's paper 
@@ -217,7 +217,7 @@ public class ComputeAuthorFV {
             
             HashMapVector currentPaperFV = new HashMapVector();
             
-            currentPaperFV.add(paper.getContent());
+            currentPaperFV.add(paper.getTfidfVector());
             
             List<Paper> citation = paper.getCitation();//get list of citation papers of author's paper 
             currentPaperFV.add(sumFVRPY(paper, citation));//add featureVector with featureVector of citation papers of author's paper 
@@ -243,7 +243,7 @@ public class ComputeAuthorFV {
         HashMapVector featureVector = new HashMapVector();
         
         for (Paper paper : papers) {
-            featureVector.add(paper.getContent());
+            featureVector.add(paper.getTfidfVector());
         }
         
         return featureVector;
@@ -261,8 +261,8 @@ public class ComputeAuthorFV {
         HashMapVector featureVector = new HashMapVector();
         
         for (Paper paper : papers) {
-            double cosine = WeightingUtility.computeCosine(cpaper.getContent(), paper.getContent());
-            featureVector.addScaled(paper.getContent(), cosine);
+            double cosine = WeightingUtility.computeCosine(cpaper.getTfidfVector(), paper.getTfidfVector());
+            featureVector.addScaled(paper.getTfidfVector(), cosine);
         }
         
         return featureVector;
@@ -281,7 +281,7 @@ public class ComputeAuthorFV {
         
         for (Paper paper : papers) {
             double rpy = WeightingUtility.computeRPY(cpaper.getYear(), paper.getYear());
-            featureVector.addScaled(paper.getContent(), rpy);
+            featureVector.addScaled(paper.getTfidfVector(), rpy);
         }
         
         return featureVector;

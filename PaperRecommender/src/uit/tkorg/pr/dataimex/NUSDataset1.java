@@ -88,7 +88,7 @@ public class NUSDataset1 {
             Paper paper = new Paper();
             paper.setPaperId(paperid);//set PaperId for paper
             paper.setYear(paperYear(paperid));//set Year for paper
-            paper.setContent(readFilePaper(file.getAbsoluteFile()));//set Content for paper
+            paper.setTfidfVector(readFilePaper(file.getAbsoluteFile()));//set Content for paper
             paper.setCitation(addCitation(paperid));//set Citation for paper
             paper.setReference(addReference(paperid));//set Reference for paper
             papers.put(paperid, paper);
@@ -226,7 +226,7 @@ public class NUSDataset1 {
             Paper paper = new Paper();
             paper.setPaperId(file.getName().replaceAll("_fv.txt|.txt", ""));
             paper.setPaperType("Citation");
-            paper.setContent(readFilePaper(new File(file.getAbsolutePath())));
+            paper.setTfidfVector(readFilePaper(new File(file.getAbsolutePath())));
             
             cites.add(paper);
         }
@@ -250,7 +250,7 @@ public class NUSDataset1 {
             Paper paper = new Paper();
             paper.setPaperId(file.getName().replaceAll("_fv.txt", ""));
             paper.setPaperType("Reference");
-            paper.setContent(readFilePaper(new File(file.getAbsolutePath())));
+            paper.setTfidfVector(readFilePaper(new File(file.getAbsolutePath())));
             
             refs.add(paper);
         }
@@ -282,7 +282,7 @@ public class NUSDataset1 {
 
             // ten duong dan den vector dac trung cua paper
             String pathVectorFv = dir.getAbsolutePath() + "\\" + authorId + "-1" + "_fv.txt";
-            paper.setContent(readFilePaper(new File(pathVectorFv)));// set content cho paper i
+            paper.setTfidfVector(readFilePaper(new File(pathVectorFv)));// set content cho paper i
             
             papers.add(paper);
 
@@ -303,7 +303,7 @@ public class NUSDataset1 {
                     paper.setReference(findRefOfPaper(new File(refPath))); // set List ref cua paper i
                     
                     String pathVectorFv = file.getAbsolutePath() + "\\" + file.getName() + "_fv.txt";
-                    paper.setContent(readFilePaper(new File(pathVectorFv)));// set content cho paper i
+                    paper.setTfidfVector(readFilePaper(new File(pathVectorFv)));// set content cho paper i
                     
                     papers.add(paper);
                 }

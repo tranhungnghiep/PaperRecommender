@@ -20,14 +20,14 @@ import uit.tkorg.utility.general.WeightingUtility;
  * Method: 
  * - Compute papers' full vector: its content itself or combining its refs and cits by linear, cosine, rpy.
  */
-public class ComputePaperFV {
+public class PaperFVComputation {
 
     // Prevent instantiation.
-    private ComputePaperFV() {}
+    private PaperFVComputation() {}
 
-    public static void setAllPapersContent(HashMap<String, Paper> papers, HashMap<String, HashMapVector> vectorizedDocuments) throws Exception {
+    public static void setTFIDFVectorForAllPapers(HashMap<String, Paper> papers, HashMap<String, HashMapVector> vectorizedDocuments) throws Exception {
         for (String key : papers.keySet()) {
-            papers.get(key).setContent(vectorizedDocuments.get(key));
+            papers.get(key).setTfidfVector(vectorizedDocuments.get(key));
         }
     }
 
@@ -35,10 +35,11 @@ public class ComputePaperFV {
      * This method computes and set value for all papers' full feature vector
      * (after combining citation and reference papers).
      *
-     * @param combiningScheme 0: itself, 1: ref only; 2: cite only; 3: ref and cite.
-     * @param weightingScheme 0: linear; 1: cosine; 2: rpy
+     * @param combiningScheme   0: itself content, 1: itself content + content of references; 
+     *                          2: itself content + content of citations; 3: itself content + content of references + content of citations.
+     * @param weightingScheme   0: linear; 1: cosine; 2: rpy
      */
-    public static void computeAllPapersFV(HashMap<String, Paper> papers, int combiningScheme, int weightingScheme) throws Exception {
+    public static void computeFeatureVectorForAllPapers(HashMap<String, Paper> papers, int combiningScheme, int weightingScheme) throws Exception {
         for (String key : papers.keySet()) {
             List<String> combiningPapers = getCombiningPapers(papers, key, combiningScheme);
             HashMapVector featureVector = computePaperFV(papers, key, combiningPapers, weightingScheme);
@@ -83,7 +84,7 @@ public class ComputePaperFV {
         HashMapVector featureVector = new HashMapVector();
 
         Paper paper = papers.get(key);//get paper has Id is paperId in ListofPapers
-        featureVector.add(paper.getContent());//assign HashMapVector featureVector equal HashMapVector paper
+        featureVector.add(paper.getTfidfVector());//assign HashMapVector featureVector equal HashMapVector paper
         
         // weighting scheme
         if (weightingScheme == 0) {
@@ -109,7 +110,7 @@ public class ComputePaperFV {
         
         for (String combiningPaperId : combiningPaperIds) {
             if (papers.containsKey(combiningPaperId)) {
-                featureVector.add(papers.get(combiningPaperId).getContent());
+                featureVector.add(papers.get(combiningPaperId).getTfidfVector());
             }
         }
         
@@ -129,8 +130,8 @@ public class ComputePaperFV {
         
         for (String combiningPaperId : combiningPaperIds) {
             if (papers.containsKey(combiningPaperId)) {
-                double cosine = WeightingUtility.computeCosine(paper.getContent(), papers.get(combiningPaperId).getContent());
-                featureVector.addScaled(papers.get(combiningPaperId).getContent(), cosine);
+                double cosine = WeightingUtility.computeCosine(paper.getTfidfVector(), papers.get(combiningPaperId).getTfidfVector());
+                featureVector.addScaled(papers.get(combiningPaperId).getTfidfVector(), cosine);
             }
         }
         
@@ -151,7 +152,7 @@ public class ComputePaperFV {
         for (String combiningPaperId : combiningPaperIds) {
             if (papers.containsKey(combiningPaperId)) {
                 double rpy = WeightingUtility.computeRPY(paper.getYear(), papers.get(combiningPaperId).getYear());
-                featureVector.addScaled(papers.get(combiningPaperId).getContent(), rpy);
+                featureVector.addScaled(papers.get(combiningPaperId).getTfidfVector(), rpy);
             }
         }
         
