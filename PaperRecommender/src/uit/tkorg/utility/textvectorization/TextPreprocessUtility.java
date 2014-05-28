@@ -34,7 +34,7 @@ public class TextPreprocessUtility {
      * @param fileName
      */
     private static void process(String fileInput, String fileOutput, boolean isStem) {
-        System.out.println(fileInput);
+//        System.out.println(fileInput);
 
         ArrayList<String> processedWordList = null;
         StringBuffer strBuffer = new StringBuffer();
