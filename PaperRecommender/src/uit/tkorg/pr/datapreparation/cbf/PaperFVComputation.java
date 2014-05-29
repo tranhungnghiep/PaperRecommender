@@ -5,9 +5,14 @@
 package uit.tkorg.pr.datapreparation.cbf;
 
 import ir.vsr.HashMapVector;
+import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
+import org.apache.commons.io.FileUtils;
 import uit.tkorg.pr.model.Paper;
 import uit.tkorg.utility.general.WeightingUtility;
 
@@ -22,6 +27,12 @@ public class PaperFVComputation {
 
     // Prevent instantiation.
     private PaperFVComputation() {}
+
+    public static void clearPaperAbstract(HashMap<String, Paper> papers) throws Exception {
+        for (String key : papers.keySet()) {
+            papers.get(key).setPaperAbstract(null);
+        }
+    }
 
     public static void setTFIDFVectorForAllPapers(HashMap<String, Paper> papers, HashMap<String, HashMapVector> vectorizedDocuments) throws Exception {
         for (String key : papers.keySet()) {

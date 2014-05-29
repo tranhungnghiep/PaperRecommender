@@ -41,7 +41,6 @@ public class PRGeneralFile {
             }
             String fileName = textDir + "\\" + subFolder + "\\" + key + ".txt";
             FileUtils.writeStringToFile(new File(fileName), papers.get(key).getPaperAbstract(), "UTF8", false);
-            papers.get(key).setPaperAbstract(null);
             i++;
         }
     }
