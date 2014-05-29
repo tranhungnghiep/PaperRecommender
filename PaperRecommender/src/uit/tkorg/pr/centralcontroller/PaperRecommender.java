@@ -29,14 +29,6 @@ import uit.tkorg.utility.textvectorization.TextVectorizationByMahoutTerminalUtil
  */
 public class PaperRecommender {
 
-    // Key of this hash map is paper id.
-    // Value of this hash map is the relevant paper object.
-    private HashMap<String, Author> authors;
-
-    // Key of this hash map is paper id.
-    // Value of this hash map is the relevant paper object.
-    private HashMap<String, Paper> papers;
-
     public static void main(String[] args) { 
         try {
             recommendationFlowController(PRConstant.FOLDER_MAS_DATASET1 + "[Training] Paper_Before_2006.csv", 
@@ -102,7 +94,7 @@ public class PaperRecommender {
         // into HashMap<String, Paper> papers (model)
         PaperFVComputation.setTFIDFVectorForAllPapers(papers, vectorizedDocuments);
         
-        // Step 6: calculating feature vector for all papers and 
+        // Step 7: calculating feature vector for all papers and 
         // put the result into HashMap<String, Paper> papers (model)
         // (papers, 0, 0): baseline
         PaperFVComputation.computeFeatureVectorForAllPapers(papers, 0, 0);
@@ -116,6 +108,10 @@ public class PaperRecommender {
      * @return response: result of request after processing.
      */
     public String[] guiRequestHandler(String request, String param) {
+
+        HashMap<String, Paper> papers = new HashMap<>();
+        HashMap<String, Author> authors = new HashMap<>();
+
         String[] response = new String[2];
 
         String Dataset1Folder;
