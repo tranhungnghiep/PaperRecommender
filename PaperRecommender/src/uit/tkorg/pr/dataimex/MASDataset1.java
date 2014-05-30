@@ -57,7 +57,7 @@ public class MASDataset1 {
                 String title = getAcceptedFieldValue(str[1]);
                 String paperAbstract = getAcceptedFieldValue(str[2]);
                 String strYear = getAcceptedFieldValue(str[3]);
-                int year = 0;
+                int year = -1;
                 if ((strYear != null) && (NumericUtility.isNum(strYear))) {
                     year = Integer.parseInt(strYear);
                 }

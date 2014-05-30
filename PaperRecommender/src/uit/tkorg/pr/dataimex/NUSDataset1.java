@@ -14,7 +14,6 @@ import java.util.*;
 import uit.tkorg.pr.constant.PRConstant;
 import uit.tkorg.pr.model.Author;
 import uit.tkorg.pr.model.Paper;
-import uit.tkorg.utility.general.BinaryFileUtility;
 import uit.tkorg.utility.general.NumericUtility;
 import uit.tkorg.utility.general.TextFileUtility;
 
@@ -104,7 +103,12 @@ public class NUSDataset1 {
      */
     private static int paperYear(String paperId) throws Exception {
         String year = paperId.substring(1, 3);
-        return Integer.parseInt("20" + year);
+        
+        if (NumericUtility.isNum(year)) {
+            return Integer.parseInt("20" + year);
+        } else {
+            return -1;
+        }
     }
 
     /**

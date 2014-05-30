@@ -5,6 +5,7 @@
 package uit.tkorg.pr.datapreparation.cbf;
 
 import ir.vsr.HashMapVector;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import uit.tkorg.pr.model.Author;
@@ -27,263 +28,129 @@ public class AuthorFVComputation {
     }
 
     /**
-     * This method computes and set value for all authors' full feature vector
-     * (after combining citation and reference papers).
-     *
-     * @param weightingScheme 0: linear; 1: cosine; 2: rpy
+     * This method computes and set value of full feature vector for all authors.
+     * Each author has attached paper objects list.
+     * 
+     * @param combiningScheme: like params in paper fv computation.
+     * @param weightingScheme: like params in paper fv computation.
+     * @param timeAwareScheme 0: unaware of author's publication time, 1: weighting author's publications by exp(- delta time).
+     * @param gamma: forgetting coefficient.
      */
-    public static void computeAllAuthorsFV(HashMap<String, Author> authors, int weightingScheme) throws Exception {
-        for (String key : authors.keySet()) {
-            authors.get(key).setFeatureVector(computeAuthorFV(authors, key, weightingScheme));
+    public static void computeFVForAllAuthorsWithAttachedPaperList(HashMap<String, Author> authors, int combiningScheme, int weightingScheme, int timeAwareScheme, double gamma) throws Exception {
+        HashMap<String, Paper> papers = getPapersFromAuthors(authors);
+        PaperFVComputation.computeFeatureVectorForAllPapers(papers, combiningScheme, weightingScheme);
+        
+        for (String authorId : authors.keySet()) {
+            authors.get(authorId).setFeatureVector(computeAuthorFV(authors, authorId, papers, timeAwareScheme, gamma));
         }
     }
 
     /**
-     * This method compute final feature vector by combining citation and
-     * reference.
-     *
-     * @param authorId
-     * @param weightingScheme 0: linear; 1: cosine; 2: rpy
-     * @return list represents feature vector.
+     * This method get all papers attached in hashmap authors recursively.
+     * 
+     * @param authors
+     * @return Hashmap of all papers attached in hashmap authors.
+     * @throws Exception 
      */
-    private static HashMapVector computeAuthorFV(HashMap<String, Author> authors, String authorId, int weightingScheme) throws Exception {
-        HashMapVector featureVector;
+    private static HashMap<String, Paper> getPapersFromAuthors(HashMap<String, Author> authors) throws Exception {
+        HashMap<String, Paper> allPapers = new HashMap<>();
         
-        if (weightingScheme == 0) {
-            if (authorId.contains("y")) {
-                featureVector = computeJuniorFVLinear(authors, authorId);
-            } else {
-                featureVector = computeSeniorFVLinear(authors, authorId);
+        for (String authorId : authors.keySet()) {
+            authors.get(authorId).setPaper(convertPaperListToPaperIdList(allPapers, authors.get(authorId).getPaper()));
+        }
+        
+        return allPapers;
+    }
+
+    /**
+     * This method is called recursively to convert a list of papers to list of 
+     * paper ids and save the paper object to the hashmap allPapers.
+     * 
+     * @param allPapers
+     * @param paperList
+     * @return List of string containing all paper ids corresponding to paperList.
+     * @throws Exception 
+     */
+    private static List<String> convertPaperListToPaperIdList(HashMap<String, Paper> allPapers, List<Paper> paperList) throws Exception {
+        List<String> paperIdList = new ArrayList<>();
+
+        for (Paper paper : paperList) {
+            paperIdList.add(paper.getPaperId());
+            if(!allPapers.containsKey(paper.getPaperId())) {
+                allPapers.put(paper.getPaperId(), paper); // Note: because of exploiting ref type parameter in recursion, need to put paper into allPapers right after checking for existence, before call recursion, to avoid re-put duplicating Paper.
+                if ((paper.getReference() != null) && (paper.getReference().size() > 0)) {
+                    paper.setReference(convertPaperListToPaperIdList(allPapers, paper.getReference()));
+                }
+                if ((paper.getCitation() != null) && (paper.getCitation().size() > 0)) {
+                    paper.setCitation(convertPaperListToPaperIdList(allPapers, paper.getCitation())); // Exploiting mutable object paper.
+                }
             }
-        } else if (weightingScheme == 1) {
-            if (authorId.contains("y")) {
-                featureVector = computeJuniorFVCosine(authors, authorId);
-            } else {
-                featureVector = computeSeniorFVCosine(authors, authorId);
+        }
+        
+        return paperIdList;
+    }
+
+    /**
+     * This method computes and set value of full feature vector for all authors. 
+     * Need to put in a hashmap containing all papers with FV computed.
+     * 
+     * @param combiningScheme: like params in paper fv computation.
+     * @param weightingScheme: like params in paper fv computation.
+     * @param timeAwareScheme 0: unaware of author's publication time, 1: weighting author's publications by exp(- delta time).
+     * @param currentYear: the current year used to compute delta time.
+     * @param gamma: forgetting coefficient.
+     */
+    public static void computeFVForAllAuthorsWithSeparatedPaperList(HashMap<String, Author> authors, HashMap<String, Paper> papers, int combiningScheme, int weightingScheme, boolean reComputingPaperFV, int timeAwareScheme, double gamma) throws Exception {
+        if (reComputingPaperFV) {
+            PaperFVComputation.computeFeatureVectorForAllPapers(papers, combiningScheme, weightingScheme);
+        }
+
+        for (String authorId : authors.keySet()) {
+            authors.get(authorId).setFeatureVector(computeAuthorFV(authors, authorId, papers, timeAwareScheme, gamma));
+        }
+    }
+
+    /**
+     * @return author feature vector.
+     */
+    public static HashMapVector computeAuthorFV(HashMap<String, Author> authors, String authorId, HashMap<String, Paper> papers, int timeAwareScheme, double gamma) throws Exception {
+        HashMapVector featureVector = new HashMapVector();
+        
+        Author author = authors.get(authorId);
+        
+        List<String> paperIds = author.getPaper();
+        
+        if (timeAwareScheme == 0) {
+            for (String paperId : paperIds) {
+                featureVector.add(papers.get(paperId).getFeatureVector());
             }
-        } else {
-            if (authorId.contains("y")) {
-                featureVector = computeJuniorFVRPY(authors, authorId);
-            } else {
-                featureVector = computeSeniorFVRPY(authors, authorId);
+        } else if (timeAwareScheme == 1) {
+            int latestPublicationYear = getLatestPublicationYear(papers, paperIds);
+            for (String paperId : paperIds) {
+                double ff = WeightingUtility.computeForgettingFactor(latestPublicationYear, papers.get(paperId).getYear(), gamma);
+                featureVector.addScaled(papers.get(paperId).getFeatureVector(), ff);
             }
         }
         
         return featureVector;
     }
-    //==================================================================================================================================================
-    /**
-     * This method compute Junior Feature Vector with linear weight
-     *
-     * @param authorId
-     * @return featureVector
-     */
-    private static HashMapVector computeJuniorFVLinear(HashMap<String, Author> authors, String authorId) throws Exception {
-        HashMapVector featureVector = new HashMapVector();
-        
-        Author author = authors.get(authorId);//get author has Id equally authorId in ListofPapers
-        Paper authorPaper;
-        authorPaper = (Paper) author.getPaper().get(0);//get paper of junior researchers
-        
-        featureVector.add(authorPaper.getTfidfVector());
-        
-        List<Paper> reference = authorPaper.getReference();//get list of reference papers of author's paper 
-        featureVector.add(sumFVLinear(reference));//add featureVector with featureVector of reference papers of author's paper 
-        
-        return featureVector;
-    }
 
     /**
-     * This method compute Junior Feature Vector with cosine weight
-     *
-     * @param authorId
-     * @return featureVector
-     */
-    private static HashMapVector computeJuniorFVCosine(HashMap<String, Author> authors, String authorId) throws Exception {
-        HashMapVector featureVector = new HashMapVector();
-        
-        Author author = authors.get(authorId);//get author has Id equally authorId in ListofPapers
-        Paper authorPaper;
-        authorPaper = (Paper) author.getPaper().get(0);//get paper of junior researchers 
-        
-        featureVector.add(authorPaper.getTfidfVector());
-        
-        List<Paper> reference = authorPaper.getReference();//get list of reference papers of author's paper 
-        featureVector.add(sumFVCosine(authorPaper, reference));//add featureVector with featureVector of reference papers of author's paper 
-        
-        return featureVector;
-    }
-
-    /**
-     * This method compute Junior Feature Vector with RPY weight
-     *
-     * @param authorId
-     * @return featureVector
-     */
-    private static HashMapVector computeJuniorFVRPY(HashMap<String, Author> authors, String authorId) throws Exception {
-        HashMapVector featureVector = new HashMapVector();
-        
-        Author author = authors.get(authorId);//get author has Id equally authorId in ListofPapers
-        Paper authorPaper;
-        authorPaper = (Paper) author.getPaper().get(0);//get paper of junior researchers
-        
-        featureVector.add(authorPaper.getTfidfVector());
-        
-        List<Paper> reference = authorPaper.getReference();//get list of reference papers of author's paper
-        featureVector.add(sumFVRPY(authorPaper, reference));//add featureVector with featureVector of reference papers of author's paper
-        
-        return featureVector;
-    }
-    //======================================================================================================================================================
-
-    /**
-     * This method compute Senior Feature Vector with linear weight
-     *
-     * @param authorId
-     * @return featureVector
-     */
-    private static HashMapVector computeSeniorFVLinear(HashMap<String, Author> authors, String authorId) throws Exception {
-        HashMapVector featureVector = new HashMapVector();
-        
-        Author author = authors.get(authorId);//get author has Id equally authorId in ListofPapers
-        List<Paper> authorPapers;
-        authorPapers = author.getPaper();//get list of papers of senior researchers 
-        
-        for (Paper paper : authorPapers) {
-            
-            HashMapVector currentPaperFV = new HashMapVector();
-            
-            currentPaperFV.add(paper.getTfidfVector());
-            
-            List<Paper> citation = paper.getCitation();//get list of citation papers of author's paper 
-            currentPaperFV.add(sumFVLinear(citation));//add featureVector with featureVector of citation papers of author's paper 
-            
-            List<Paper> reference = paper.getReference();//get list of reference papers of author's paper 
-            currentPaperFV.add(sumFVLinear(reference));//add featureVector with featureVector of reference papers of author's paper 
-
-            // Add up all papers of the author directly, no forgetting factor
-            featureVector.add(currentPaperFV);
-        }
-        
-        return featureVector;
-    }
-
-    /**
-     * This method compute Senior Feature Vector with cosine weight
-     *
-     * @param authorId
-     * @return featureVector
-     */
-    private static HashMapVector computeSeniorFVCosine(HashMap<String, Author> authors, String authorId) throws Exception {
-        HashMapVector featureVector = new HashMapVector();
-
-        Author author = authors.get(authorId);//get author has Id equally authorId in ListofPapers
-        List<Paper> authorPapers;
-        authorPapers = author.getPaper();//get list of papers of senior researchers 
-        
-        for (Paper paper : authorPapers) {
-            
-            HashMapVector currentPaperFV = new HashMapVector();
-            
-            currentPaperFV.add(paper.getTfidfVector());
-            
-            List<Paper> citation = paper.getCitation();//get list of citation papers of author's paper 
-            currentPaperFV.add(sumFVCosine(paper, citation));//add featureVector with featureVector of citation papers of author's paper 
-            
-            List<Paper> reference = paper.getReference();//get list of reference papers of author's paper 
-            currentPaperFV.add(sumFVCosine(paper, reference));//add featureVector with featureVector of reference papers of author's paper 
-            
-            // Add up all papers of the author directly, no forgetting factor
-            featureVector.add(currentPaperFV);
-        }
-        
-        return featureVector;
-    }
-
-    /**
-     * This method compute Senior Feature Vector with RPY weight
-     *
-     * @param authorId
-     * @return featureVector
-     */
-    private static HashMapVector computeSeniorFVRPY(HashMap<String, Author> authors, String authorId) throws Exception {
-        HashMapVector featureVector = new HashMapVector();
-
-        Author author = authors.get(authorId);//get author has Id equally authorId in ListofPapers
-        List<Paper> authorPapers;
-        authorPapers = author.getPaper();//get list of papers of senior researchers 
-        
-        for (Paper paper : authorPapers) {
-            
-            HashMapVector currentPaperFV = new HashMapVector();
-            
-            currentPaperFV.add(paper.getTfidfVector());
-            
-            List<Paper> citation = paper.getCitation();//get list of citation papers of author's paper 
-            currentPaperFV.add(sumFVRPY(paper, citation));//add featureVector with featureVector of citation papers of author's paper 
-            
-            List<Paper> reference = paper.getReference();//get list of reference papers of author's paper 
-            currentPaperFV.add(sumFVRPY(paper, reference));//add featureVector with featureVector of reference papers of author's paper 
-            
-            // Add up all papers of the author directly, no forgetting factor
-            featureVector.add(currentPaperFV);
-        }
-        
-        return featureVector;
-    }
-    //==================================================================================================================================================
-    /**
-     * This method compute sum of Papers(Citation or Reference Paper) with
-     * linear weight
-     *
+     * 
      * @param papers
-     * @return featureVector
+     * @param paperIds
+     * @return the latest publication year.
+     * @throws Exception 
      */
-    private static HashMapVector sumFVLinear(List<Paper> papers) throws Exception {
-        HashMapVector featureVector = new HashMapVector();
+    private static int getLatestPublicationYear(HashMap<String, Paper> papers, List<String> paperIds) throws Exception {
+        int latestPublicationYear = -1;
         
-        for (Paper paper : papers) {
-            featureVector.add(paper.getTfidfVector());
+        for (String paperId : paperIds) {
+            if (papers.get(paperId).getYear() > latestPublicationYear) {
+                latestPublicationYear = papers.get(paperId).getYear();
+            }
         }
         
-        return featureVector;
-    }
-
-    /**
-     * This method compute sum of Papers(Citation or Reference Paper) with
-     * cosine weight
-     *
-     * @param cpaper
-     * @param papers
-     * @return featureVector
-     */
-    private static HashMapVector sumFVCosine(Paper cpaper, List<Paper> papers) throws Exception {
-        HashMapVector featureVector = new HashMapVector();
-        
-        for (Paper paper : papers) {
-            double cosine = WeightingUtility.computeCosine(cpaper.getTfidfVector(), paper.getTfidfVector());
-            featureVector.addScaled(paper.getTfidfVector(), cosine);
-        }
-        
-        return featureVector;
-    }
-
-    /**
-     * This method compute sum of Papers(Citation or Reference Paper) with rpy
-     * weight
-     *
-     * @param cpaper
-     * @param papers
-     * @return featureVector
-     */
-    private static HashMapVector sumFVRPY(Paper cpaper, List<Paper> papers) throws Exception {
-        HashMapVector featureVector = new HashMapVector();
-        
-        for (Paper paper : papers) {
-            double rpy = WeightingUtility.computeRPY(cpaper.getYear(), paper.getYear());
-            featureVector.addScaled(paper.getTfidfVector(), rpy);
-        }
-        
-        return featureVector;
+        return latestPublicationYear;
     }
 }

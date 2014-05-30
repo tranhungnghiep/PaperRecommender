@@ -193,15 +193,15 @@ public class PaperRecommender {
                     response[0] = "Success.";
                     break;
                 case "Author FV linear":
-                    AuthorFVComputation.computeAllAuthorsFV(authors, 0);
+                    AuthorFVComputation.computeFVForAllAuthorsWithAttachedPaperList(authors, 3, 0, 0, 0);
                     response[0] = "Success.";
                     break;
                 case "Author FV cosine":
-                    AuthorFVComputation.computeAllAuthorsFV(authors, 1);
+                    AuthorFVComputation.computeFVForAllAuthorsWithAttachedPaperList(authors, 3, 1, 0, 0);
                     response[0] = "Success.";
                     break;
                 case "Author FV RPY":
-                    AuthorFVComputation.computeAllAuthorsFV(authors, 2);
+                    AuthorFVComputation.computeFVForAllAuthorsWithAttachedPaperList(authors, 3, 2, 0, 0);
                     response[0] = "Success.";
                     break;
                 case "Recommend":

@@ -34,21 +34,41 @@ public class WeightingUtility {
     }
 
     /**
-     * Compute RPY of two paper. RPY = 1/|y1-y2|.
+     * Compute RPY of two paper. RPY = 1/(|y1-y2| + c).
      *
-     * @param y1
-     * @param y2
+     * @param y1 publication year
+     * @param y2 publication year
+     * @param c a constant, e.g., 0.9
      * @return RPY
      */
-    public static double computeRPY(int y1, int y2) throws Exception {
+    public static double computeRPY(int y1, int y2, double c) throws Exception {
         double rpy;
-        if ((y1 == 0) || (y2 == 0)) {
-            rpy = 1;
-        } else if (y1 == y2) {
-            rpy = 10 / 9;
+        if ((y1 == -1) || (y2 == -1)) {
+            rpy = 0.5;
         } else {
-            rpy = 1 / Math.abs(y1 - y2);
+            rpy = 1 / (Math.abs(y1 - y2) + c);
         }
         return rpy;
+    }
+
+    /**
+     * This method compute the forgetting factor. 
+     * When y1 or y2 is invalid, return 0.5
+     * When y1 = y2, return 1
+     * 
+     * @param y1 latest publication time
+     * @param y2 considering publication time
+     * @param gamma forgetting coefficient.
+     * @return forgetting factor as exp(- delta time * gamma).
+     * @throws Exception 
+     */
+    public static double computeForgettingFactor(int y1, int y2, double gamma) throws Exception {
+        double ff;
+        if ((y1 == -1) || (y2 == -1)) {
+            ff = 0.5;
+        } else {
+            ff = 1 / Math.exp(gamma * Math.abs(y1 - y2));
+        }
+        return ff;
     }
 }

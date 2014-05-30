@@ -29,14 +29,14 @@ public class PaperFVComputation {
     private PaperFVComputation() {}
 
     public static void clearPaperAbstract(HashMap<String, Paper> papers) throws Exception {
-        for (String key : papers.keySet()) {
-            papers.get(key).setPaperAbstract(null);
+        for (String paperId : papers.keySet()) {
+            papers.get(paperId).setPaperAbstract(null);
         }
     }
 
     public static void setTFIDFVectorForAllPapers(HashMap<String, Paper> papers, HashMap<String, HashMapVector> vectorizedDocuments) throws Exception {
-        for (String key : papers.keySet()) {
-            papers.get(key).setTfidfVector(vectorizedDocuments.get(key));
+        for (String paperId : papers.keySet()) {
+            papers.get(paperId).setTfidfVector(vectorizedDocuments.get(paperId));
         }
     }
 
@@ -49,34 +49,34 @@ public class PaperFVComputation {
      * @param weightingScheme   0: linear; 1: cosine; 2: rpy
      */
     public static void computeFeatureVectorForAllPapers(HashMap<String, Paper> papers, int combiningScheme, int weightingScheme) throws Exception {
-        for (String key : papers.keySet()) {
-            List<String> combiningPapers = getCombiningPapers(papers, key, combiningScheme);
-            HashMapVector featureVector = computePaperFV(papers, key, combiningPapers, weightingScheme);
-            papers.get(key).setFeatureVector(featureVector);
+        for (String paperId : papers.keySet()) {
+            List<String> combiningPapers = getCombiningPapers(papers, paperId, combiningScheme);
+            HashMapVector featureVector = computePaperFV(papers, paperId, combiningPapers, weightingScheme);
+            papers.get(paperId).setFeatureVector(featureVector);
         }
     }
 
     /**
      * 
      * @param papers
-     * @param key
+     * @param paperId
      * @param combiningScheme
      * @return List of papers which are used to combine with current paper.
      * @throws Exception 
      */
-    private static List<String> getCombiningPapers(HashMap<String, Paper> papers, String key, int combiningScheme) throws Exception {
+    private static List<String> getCombiningPapers(HashMap<String, Paper> papers, String paperId, int combiningScheme) throws Exception {
         List<String> combiningPapers = null;
         
         // combining scheme
         if (combiningScheme == 0) {
             combiningPapers = new ArrayList<>();
         } else if (combiningScheme == 1) {
-            combiningPapers = papers.get(key).getReference();
+            combiningPapers = papers.get(paperId).getReference();
         } else if (combiningScheme == 2) {
-            combiningPapers = papers.get(key).getCitation();
+            combiningPapers = papers.get(paperId).getCitation();
         } else if (combiningScheme == 3) {
-            combiningPapers = papers.get(key).getReference();
-            combiningPapers.addAll(papers.get(key).getCitation());
+            combiningPapers = papers.get(paperId).getReference();
+            combiningPapers.addAll(papers.get(paperId).getCitation());
         }
         
         return combiningPapers;
@@ -86,13 +86,13 @@ public class PaperFVComputation {
      * This method compute final feature vector by combining citation and
      * reference.
      *
-     * @param key
+     * @param paperId
      * @return list represents feature vector.
      */
-    public static HashMapVector computePaperFV(HashMap<String, Paper> papers, String key, List<String> combiningPapers, int weightingScheme) throws Exception {
+    public static HashMapVector computePaperFV(HashMap<String, Paper> papers, String paperId, List<String> combiningPapers, int weightingScheme) throws Exception {
         HashMapVector featureVector = new HashMapVector();
 
-        Paper paper = papers.get(key);//get paper has Id is paperId in ListofPapers
+        Paper paper = papers.get(paperId);//get paper has Id is paperId in ListofPapers
         featureVector.add(paper.getTfidfVector());//assign HashMapVector featureVector equal HashMapVector paper
         
         // weighting scheme
@@ -160,7 +160,7 @@ public class PaperFVComputation {
         
         for (String combiningPaperId : combiningPaperIds) {
             if (papers.containsKey(combiningPaperId)) {
-                double rpy = WeightingUtility.computeRPY(paper.getYear(), papers.get(combiningPaperId).getYear());
+                double rpy = WeightingUtility.computeRPY(paper.getYear(), papers.get(combiningPaperId).getYear(), 0.9);
                 featureVector.addScaled(papers.get(combiningPaperId).getTfidfVector(), rpy);
             }
         }
