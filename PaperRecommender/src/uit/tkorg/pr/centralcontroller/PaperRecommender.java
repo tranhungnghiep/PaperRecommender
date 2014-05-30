@@ -28,6 +28,9 @@ public class PaperRecommender {
         try {
             recommendationFlowController(PRConstant.FOLDER_MAS_DATASET1 + "[Training] Paper_Before_2006.csv", 
                     PRConstant.FOLDER_MAS_DATASET1 + "[Training] Paper_Cite_Paper_Before_2006.csv", 
+                    PRConstant.FOLDER_MAS_DATASET1 + "[Training] 1000Authors.csv", 
+                    PRConstant.FOLDER_MAS_DATASET1 + "[Validation] Ground_Truth_2006_2008.csv", 
+                    PRConstant.FOLDER_MAS_DATASET1 + "[Training] Author_Paper_Before_2006.csv",
                     PRConstant.FOLDER_MAS_DATASET1 + "Text", 
                     PRConstant.FOLDER_MAS_DATASET1 + "PreProcessedPaper", 
                     PRConstant.FOLDER_MAS_DATASET1 + "Sequence", 
@@ -37,7 +40,9 @@ public class PaperRecommender {
         }
     }
     
-    public static void recommendationFlowController(String fileNamePapers, String fileNamePaperCitePaper, String dirPapers, 
+    public static void recommendationFlowController(String fileNamePapers, 
+            String fileNamePaperCitePaper, String fileNameAuthorTestSet, 
+            String fileNameGroundTruth, String fileNameAuthorship, String dirPapers, 
             String dirPreProcessedPaper, String sequenceDir, String vectorDir) throws Exception {
         // Step 1: 
         // - Read content of papers from [Training] Paper_Before_2006.csv
@@ -95,6 +100,20 @@ public class PaperRecommender {
         // put the result into HashMap<String, Paper> papers (model)
         // (papers, 0, 0): baseline
         PaperFVComputation.computeFeatureVectorForAllPapers(papers, 0, 0);
+        
+        // Step 8: read list 1000 authors.
+        HashMap<String, Author> authorTestSet = MASDataset1.readAuthorListTestSet(fileNameAuthorTestSet, fileNameGroundTruth, fileNameAuthorship);
+
+        // Step 9: compute feature vector for those all 1000 authors.
+        AuthorFVComputation.computeFVForAllAuthorsWithSeparatedPaperList(authorTestSet, papers, 0, 0, false, 0, 0);
+
+        // Step 10: generate recommended papers list.
+        CBFRecommender.generateRecommendationForAllAuthors(authorTestSet, papers, 0, 10);
+        
+        // Step 11: compute evaluation index: ndcg, mrr.
+        double ndcg5 = Evaluator.NDCG(authorTestSet, 5);
+        double ndcg10 = Evaluator.NDCG(authorTestSet, 10);
+        double mrr = Evaluator.MRR(authorTestSet);
     }
 
     /**
@@ -205,7 +224,7 @@ public class PaperRecommender {
                     response[0] = "Success.";
                     break;
                 case "Recommend":
-                    authors = CBFRecommender.buildAllRecommendationLists(authors, papers);
+                    CBFRecommender.generateRecommendationForAllAuthors(authors, papers, 0, 10);
                     response[0] = "Success.";
                     break;
                 case "NDCG5":

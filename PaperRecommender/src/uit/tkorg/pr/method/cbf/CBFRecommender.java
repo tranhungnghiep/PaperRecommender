@@ -17,7 +17,7 @@ import uit.tkorg.utility.general.WeightingUtility;
  * This class handles logic for recommending papers to each author.
  * Data: list of authors used as a universal recommendation list.
  * Method: 
- * - buildAllRecommendationLists: 
+ * - generateRecommendationForAllAuthors: 
  * + input: list of authors, list of papers.
  * + output: list of authors with recommendation list included, also includes all data of the input list of authors.
  * This output could be used as universal recommendation list, upto the input list of authors.
@@ -30,55 +30,60 @@ public class CBFRecommender {
     }
 
     /**
-     * This method runs recommendation business.
-     * @param authorsInput
-     * @param papers
+     * This method runs content based recommendation business for all authors.
+     * 
+     * @param authors: all authors.
+     * @param papers: all papers.
+     * @param similarityScheme 0: cosine
+     * @param n: top n item to recommend.
+     * 
      * - For each author:
      * + Compute similarity with all papers.
      * + Sort list of papers, based on similarity.
-     * + Take top ten papers with highest similarity for the recommendation list.
+     * + Take top n papers with highest similarity for the recommendation list.
      * + Save recommendation list into current author.
-     * - Finish all authors, finish the hashmap of authors with all input data plus recommendation list.
      */
-    public static HashMap<String, Author> buildAllRecommendationLists(HashMap<String, Author> authorsInput, HashMap<String, Paper> papers) throws Exception {
-        HashMap<String, Author> authors = authorsInput;
-        List<String> recommendationPapers;
-        for (String key : authorsInput.keySet()) {
-            recommendationPapers = buildRecommdationList(authors.get(key), papers);
-            authors.get(key).setRecommendation(recommendationPapers);
+    public static void generateRecommendationForAllAuthors(HashMap<String, Author> authors, HashMap<String, Paper> papers, int similarityScheme, int n) throws Exception {
+        for (String authorId : authors.keySet()) {
+            authors.get(authorId).setRecommendation(generateRecommdation(authors.get(authorId), papers, similarityScheme, n));
         }
-        return authors;
     }
 
     /**
-     * This method build list of 10 papers to recommend to an author.
+     * This method build list of top n papers to recommend to an author.
+     * 
      * @param author: current author
      * @param papers: hashmap of all papers to recommend.
+     * @param similarityScheme 0: cosine
+     * @param n: top n item to recommend.
+     * 
      * @return recommendationPapers
      */
-    private static List<String> buildRecommdationList(Author author, HashMap<String, Paper> papers) throws Exception {
-        List<String> recommendationPapers = new ArrayList();
-        LinkedHashMap<String, Double> paperSimilarity = new LinkedHashMap();
+    private static List<String> generateRecommdation(Author author, HashMap<String, Paper> papers, int similarityScheme, int n) throws Exception {
+        List<String> recommendedPapers = new ArrayList<>();
+        HashMap<String, Double> paperSimilarity = new HashMap();
         
         // Compute similarities between current author and all papers.
-        for (String key : papers.keySet()) {
-            Double similarity = new Double(WeightingUtility.computeCosine(author.getFeatureVector(), papers.get(key).getFeatureVector()));
-            paperSimilarity.put(key, similarity);
+        if (similarityScheme == 0) {
+            for (String key : papers.keySet()) {
+                Double similarity = new Double(WeightingUtility.computeCosine(author.getFeatureVector(), papers.get(key).getFeatureVector()));
+                paperSimilarity.put(key, similarity);
+            }
         }
         
         // Sort papers descending based on similarity.
-        paperSimilarity = HashMapUtility.getSortedMapDescending(paperSimilarity);
+        LinkedHashMap<String, Double> sortedPaperSimilarity = HashMapUtility.getSortedMapDescending(paperSimilarity);
         
-        // Take top ten papers.
+        // Take top n papers.
         int counter = 0;
-        for (String paperId : paperSimilarity.keySet()) {
-            recommendationPapers.add(paperId);
+        for (String paperId : sortedPaperSimilarity.keySet()) {
+            recommendedPapers.add(paperId);
             counter++;
-            if (counter >= 10) {
+            if (counter >= n) {
                 break;
             }
         }
         
-        return recommendationPapers;
+        return recommendedPapers;
     }
 }

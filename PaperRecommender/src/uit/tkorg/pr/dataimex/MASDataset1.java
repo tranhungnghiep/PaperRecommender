@@ -132,7 +132,7 @@ public class MASDataset1 {
 //        long startTime = System.nanoTime();
 
         HashMap<String, Author> authors = new HashMap();
-        readAuthorship(fileNameAuthorship, authors);
+        readAuthorship(fileNameAuthorship, authors, true);
         
 //        long estimatedTime = System.nanoTime() - startTime;
 //        System.out.println("Reading author list elapsed time: " + estimatedTime / 1000000000 + " seconds");
@@ -141,7 +141,15 @@ public class MASDataset1 {
         return authors;
     }
     
-    private static void readAuthorship(String fileNameAuthorship, HashMap<String, Author> authors) throws Exception {
+    /**
+     * Read authorship information for a given author list.
+     * 
+     * @param fileNameAuthorship
+     * @param authors: the author list to add author list.
+     * @param autoAddAuthor: auto add author when missing in the authors list.
+     * @throws Exception 
+     */
+    private static void readAuthorship(String fileNameAuthorship, HashMap<String, Author> authors, boolean autoAddAuthor) throws Exception {
 //        System.out.println("Begin reading authorship...");
 //        long startTime = System.nanoTime();
 
@@ -156,12 +164,14 @@ public class MASDataset1 {
                 String authorId = getAcceptedFieldValue(str[0]);
                 String paperId = getAcceptedFieldValue(str[1]);
                 
-                if (!authors.containsKey(authorId)) {
+                if (authors.containsKey(authorId)) {
+                    authors.get(authorId).getPaper().add(paperId); // mutable.
+                } else if (autoAddAuthor) {
                     Author author = new Author();
                     author.setAuthorId(authorId);
                     authors.put(authorId, author);
+                    authors.get(authorId).getPaper().add(paperId); // mutable.
                 }
-                authors.get(authorId).getPaper().add(paperId); // mutable.
             }
         } catch (IOException e) {
             System.out.println(e.getMessage());
@@ -173,13 +183,22 @@ public class MASDataset1 {
 //        System.out.println("End reading author list.");
     }
 
-    public static HashMap<String, Author> readRecommendingAuthorList(String fileNameRecommendingAuthors, String fileNameGroundTruth) throws Exception {
+    /**
+     * This method reads list 1000 authors for test set.
+     * The return authors does not contain authorship info.
+     * 
+     * @param fileNameAuthorTestSet
+     * @param fileNameGroundTruth
+     * @return
+     * @throws Exception 
+     */
+    public static HashMap<String, Author> readAuthorListTestSet(String fileNameAuthorTestSet, String fileNameGroundTruth, String fileNameAuthorship) throws Exception {
 //        System.out.println("Begin reading recommending author list...");
 //        long startTime = System.nanoTime();
 
         HashMap<String, Author> authors = new HashMap<>();
         
-        try (BufferedReader br = new BufferedReader(new FileReader(fileNameRecommendingAuthors))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(fileNameAuthorTestSet))) {
             String line;
             
             while ((line = br.readLine()) != null) {
@@ -197,7 +216,9 @@ public class MASDataset1 {
                 authors.put(authorId, tempAuthor);
             }
             
-            readGroundTruth(fileNameGroundTruth, authors);
+            readGroundTruth(fileNameGroundTruth, authors, false);
+            readAuthorship(fileNameAuthorship, authors, false);
+            
         } catch (IOException e) {
             System.out.println(e.getMessage());
             throw e;
@@ -212,13 +233,13 @@ public class MASDataset1 {
     
     /**
      * This method find list paper ground truth of Author
-     *
-     * @param dir
-     * @return a string is groundTruth of author
-     * @throws FileNotFoundException
-     * @throws IOException
+     * 
+     * @param fileNameGroundTruth
+     * @param authors
+     * @param autoAddAuthor: auto add author when missing in the authors list.
+     * @throws Exception 
      */
-    private static void readGroundTruth(String fileNameGroundTruth, HashMap<String, Author> authors) throws Exception {
+    private static void readGroundTruth(String fileNameGroundTruth, HashMap<String, Author> authors, boolean autoAddAuthor) throws Exception {
 //        System.out.println("Begin reading ground truth...");
 //        long startTime = System.nanoTime();
 
@@ -233,12 +254,14 @@ public class MASDataset1 {
                 String authorId = getAcceptedFieldValue(str[0]);
                 String paperId = getAcceptedFieldValue(str[1]);
                 
-                if (!authors.containsKey(authorId)) {
+                if (authors.containsKey(authorId)) {
+                    authors.get(authorId).getGroundTruth().add(paperId); // mutable.
+                } else if (autoAddAuthor) {
                     Author author = new Author();
                     author.setAuthorId(authorId);
                     authors.put(authorId, author);
+                    authors.get(authorId).getGroundTruth().add(paperId); // mutable.
                 }
-                authors.get(authorId).getGroundTruth().add(paperId); // mutable.
             }
         } catch (IOException e) {
             System.out.println(e.getMessage());
@@ -250,7 +273,7 @@ public class MASDataset1 {
 //        System.out.println("End reading ground truth.");
     }
 
-    public static String getAcceptedFieldValue(String fieldValue) throws Exception {
+    private static String getAcceptedFieldValue(String fieldValue) throws Exception {
         String value = fieldValue.trim();
         if (value.equalsIgnoreCase("\\N")) {
             return "";
@@ -271,8 +294,9 @@ public class MASDataset1 {
                 + "[Training] Paper_Cite_Paper_Before_2006.csv");
         HashMap<String, Author> authors = readAuthorList(PRConstant.FOLDER_MAS_DATASET1 
                 + "[Training] Author_Paper_Before_2006.csv");
-        HashMap<String, Author> groundTruth = readRecommendingAuthorList(PRConstant.FOLDER_MAS_DATASET1 
+        HashMap<String, Author> authorsTestSet = readAuthorListTestSet(PRConstant.FOLDER_MAS_DATASET1 
                 + "[Training] 1000Authors.csv", PRConstant.FOLDER_MAS_DATASET1 
-                + "[Validation] Ground_Truth_2006_2008.csv");
+                + "[Validation] Ground_Truth_2006_2008.csv", PRConstant.FOLDER_MAS_DATASET1 
+                + "[Training] Author_Paper_Before_2006.csv");
     }
 }

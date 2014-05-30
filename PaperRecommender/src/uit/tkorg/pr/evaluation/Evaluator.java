@@ -35,30 +35,30 @@ public class Evaluator {
      * @param n
      * @return ndcg
      */
-    public static double NDCG(HashMap<String, Author> authorsInput, int n) throws Exception {
+    public static double NDCG(HashMap<String, Author> authors, int n) throws Exception {
         double ndcg = 0;
         
         double currentNDCG = 0;
         if (n == 5) {
-            for (String key : authorsInput.keySet()) {
-                currentNDCG = NDCG.computeNDCG(authorsInput.get(key).getRecommendation(), authorsInput.get(key).getGroundTruth(), n);
-                authorsInput.get(key).setNdcg5(currentNDCG);
+            for (String authorId : authors.keySet()) {
+                currentNDCG = NDCG.computeNDCG(authors.get(authorId).getRecommendation(), authors.get(authorId).getGroundTruth(), n);
+                authors.get(authorId).setNdcg5(currentNDCG);
                 ndcg += currentNDCG;
             }
         } else if (n == 10) {
-            for (String key : authorsInput.keySet()) {
-                currentNDCG = NDCG.computeNDCG(authorsInput.get(key).getRecommendation(), authorsInput.get(key).getGroundTruth(), n);
-                authorsInput.get(key).setNdcg10(currentNDCG);
+            for (String authorId : authors.keySet()) {
+                currentNDCG = NDCG.computeNDCG(authors.get(authorId).getRecommendation(), authors.get(authorId).getGroundTruth(), n);
+                authors.get(authorId).setNdcg10(currentNDCG);
                 ndcg += currentNDCG;
             }
             
         } else {
-            for (String key : authorsInput.keySet()) {
-                ndcg += NDCG.computeNDCG(authorsInput.get(key).getRecommendation(), authorsInput.get(key).getGroundTruth(), n);
+            for (String authorId : authors.keySet()) {
+                ndcg += NDCG.computeNDCG(authors.get(authorId).getRecommendation(), authors.get(authorId).getGroundTruth(), n);
             }
         }
         // Compute average.
-        ndcg = ndcg / authorsInput.size();
+        ndcg = ndcg / authors.size();
         
         return ndcg;
     }
@@ -70,16 +70,16 @@ public class Evaluator {
      * @param authors
      * @return 
      */
-    public static double MRR(HashMap<String, Author> authorsInput) throws Exception {
+    public static double MRR(HashMap<String, Author> authors) throws Exception {
         double mrr = 0;
 
         double currentRR = 0;
-        for (String key : authorsInput.keySet()) {
-            currentRR = ReciprocalRank.computeRR(authorsInput.get(key).getRecommendation(), authorsInput.get(key).getGroundTruth());
-            authorsInput.get(key).setRr(currentRR);
+        for (String authorId : authors.keySet()) {
+            currentRR = ReciprocalRank.computeRR(authors.get(authorId).getRecommendation(), authors.get(authorId).getGroundTruth());
+            authors.get(authorId).setRr(currentRR);
             mrr += currentRR;
         }
-        mrr = mrr / authorsInput.size();
+        mrr = mrr / authors.size();
 
         return mrr;
     }
