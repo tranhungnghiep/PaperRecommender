@@ -55,7 +55,7 @@ public class PaperRecommender {
         System.out.println("End reading paper list.");
         
         // Step 2: 
-        // - Writting abstract of all papers to text files. One file for each paper in 'dirPapers' directory.
+        // - Writing abstract of all papers to text files. One file for each paper in 'dirPapers' directory.
         // - Clear abstract of all papers.
         System.out.println("Begin writing abstract to file...");
         startTime = System.nanoTime();
