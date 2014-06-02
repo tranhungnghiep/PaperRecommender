@@ -94,27 +94,56 @@ public class PaperRecommender {
         
         // Step 6: put TFIDF vectors of all paper (vectorizedDocuments) 
         // into HashMap<String, Paper> papers (model)
+        System.out.println("Begin setting tf-idf to papers...");
+        startTime = System.nanoTime();
         PaperFVComputation.setTFIDFVectorForAllPapers(papers, vectorizedDocuments);
+        estimatedTime = System.nanoTime() - startTime;
+        System.out.println("Setting tf-idf to papers elapsed time: " + estimatedTime / 1000000000 + " seconds");
+        System.out.println("End setting tf-idf to papers.");
         
         // Step 7: calculating feature vector for all papers and 
         // put the result into HashMap<String, Paper> papers (model)
         // (papers, 0, 0): baseline
+        System.out.println("Begin computing FV for all papers...");
+        startTime = System.nanoTime();
         PaperFVComputation.computeFeatureVectorForAllPapers(papers, 0, 0);
+        estimatedTime = System.nanoTime() - startTime;
+        System.out.println("Computing FV for all papers elapsed time: " + estimatedTime / 1000000000 + " seconds");
+        System.out.println("End computing FV for all papers.");
         
         // Step 8: read list 1000 authors.
-        HashMap<String, Author> authorTestSet = MASDataset1.readAuthorListTestSet(fileNameAuthorTestSet, 
-                fileNameGroundTruth, fileNameAuthorship);
+        System.out.println("Begin reading author test set...");
+        startTime = System.nanoTime();
+        HashMap<String, Author> authorTestSet = MASDataset1.readAuthorListTestSet(fileNameAuthorTestSet, fileNameGroundTruth, fileNameAuthorship);
+        estimatedTime = System.nanoTime() - startTime;
+        System.out.println("Reading author test set elapsed time: " + estimatedTime / 1000000000 + " seconds");
+        System.out.println("End reading author test set.");
 
         // Step 9: compute feature vector for those all 1000 authors.
+        System.out.println("Begin computing authors FV...");
+        startTime = System.nanoTime();
         AuthorFVComputation.computeFVForAllAuthors(authorTestSet, papers, 0, 0);
+        estimatedTime = System.nanoTime() - startTime;
+        System.out.println("Computing authors FV elapsed time: " + estimatedTime / 1000000000 + " seconds");
+        System.out.println("End computing authors FV.");
 
         // Step 10: generate recommended papers list.
+        System.out.println("Begin CBF Recommending...");
+        startTime = System.nanoTime();
         CBFRecommender.generateRecommendationForAllAuthors(authorTestSet, papers, 0, 10);
+        estimatedTime = System.nanoTime() - startTime;
+        System.out.println("CBF Recommending elapsed time: " + estimatedTime / 1000000000 + " seconds");
+        System.out.println("End CBF Recommending.");
         
         // Step 11: compute evaluation index: ndcg, mrr.
+        System.out.println("Begin evaluating...");
+        startTime = System.nanoTime();
         double ndcg5 = Evaluator.NDCG(authorTestSet, 5);
         double ndcg10 = Evaluator.NDCG(authorTestSet, 10);
         double mrr = Evaluator.MRR(authorTestSet);
+        estimatedTime = System.nanoTime() - startTime;
+        System.out.println("Evaluating elapsed time: " + estimatedTime / 1000000000 + " seconds");
+        System.out.println("End evaluating.");
     }
 
     /**

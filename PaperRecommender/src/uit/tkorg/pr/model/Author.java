@@ -104,6 +104,9 @@ public class Author implements Serializable {
      * @return the featureVector
      */
     public HashMapVector getFeatureVector() {
+        if (featureVector == null) {
+            return new HashMapVector();
+        }
         return featureVector;
     }
 

@@ -94,6 +94,9 @@ public class Paper implements Serializable {
      * @return the tfidfVector
      */
     public HashMapVector getTfidfVector() {
+        if (tfidfVector == null) {
+            return new HashMapVector();
+        }
         return tfidfVector;
     }
 
@@ -150,6 +153,9 @@ public class Paper implements Serializable {
      * @return the featureVector
      */
     public HashMapVector getFeatureVector() {
+        if (featureVector == null) {
+            return new HashMapVector();
+        }
         return featureVector;
     }
 
