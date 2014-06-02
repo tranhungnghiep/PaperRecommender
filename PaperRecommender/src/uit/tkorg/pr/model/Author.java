@@ -23,7 +23,7 @@ public class Author implements Serializable {
     private List paper;
     private HashMapVector featureVector;
     private List groundTruth; // List string.
-    private List Recommendation; // List string.
+    private List RecommendationList; // List string.
     private double ndcg5;
     private double ndcg10;
     private double rr;
@@ -37,7 +37,7 @@ public class Author implements Serializable {
         this.authorType = null;
         this.paper = new ArrayList();
         this.featureVector = new HashMapVector();
-        this.Recommendation = new ArrayList();
+        this.RecommendationList = new ArrayList();
         this.groundTruth = new ArrayList();
         this.ndcg5 = 0;
         this.ndcg10 = 0;
@@ -115,17 +115,17 @@ public class Author implements Serializable {
     }
 
     /**
-     * @return the Recommendation
+     * @return the RecommendationList
      */
-    public List getRecommendation() {
-        return Recommendation;
+    public List getRecommendationList() {
+        return RecommendationList;
     }
 
     /**
-     * @param Recommendation the Recommendation to set
+     * @param RecommendationList the RecommendationList to set
      */
-    public void setRecommendation(List Recommendation) {
-        this.Recommendation = Recommendation;
+    public void setRecommendationList(List RecommendationList) {
+        this.RecommendationList = RecommendationList;
     }
 
     /**

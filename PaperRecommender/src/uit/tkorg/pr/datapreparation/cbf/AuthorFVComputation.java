@@ -28,31 +28,13 @@ public class AuthorFVComputation {
     }
 
     /**
-     * This method computes and set value of full feature vector for all authors.
-     * Each author has attached paper objects list.
-     * 
-     * @param combiningScheme: like params in paper fv computation.
-     * @param weightingScheme: like params in paper fv computation.
-     * @param timeAwareScheme 0: unaware of author's publication time, 1: weighting author's publications by exp(- delta time).
-     * @param gamma: forgetting coefficient.
-     */
-    public static void computeFVForAllAuthorsWithAttachedPaperList(HashMap<String, Author> authors, int combiningScheme, int weightingScheme, int timeAwareScheme, double gamma) throws Exception {
-        HashMap<String, Paper> papers = getPapersFromAuthors(authors);
-        PaperFVComputation.computeFeatureVectorForAllPapers(papers, combiningScheme, weightingScheme);
-        
-        for (String authorId : authors.keySet()) {
-            authors.get(authorId).setFeatureVector(computeAuthorFV(authors, authorId, papers, timeAwareScheme, gamma));
-        }
-    }
-
-    /**
      * This method get all papers attached in hashmap authors recursively.
      * 
      * @param authors
      * @return Hashmap of all papers attached in hashmap authors.
      * @throws Exception 
      */
-    private static HashMap<String, Paper> getPapersFromAuthors(HashMap<String, Author> authors) throws Exception {
+    public static HashMap<String, Paper> getPapersFromAuthors(HashMap<String, Author> authors) throws Exception {
         HashMap<String, Paper> allPapers = new HashMap<>();
         
         for (String authorId : authors.keySet()) {
@@ -94,16 +76,13 @@ public class AuthorFVComputation {
      * This method computes and set value of full feature vector for all authors. 
      * Need to put in a hashmap containing all papers with FV computed.
      * 
-     * @param combiningScheme: like params in paper fv computation.
-     * @param weightingScheme: like params in paper fv computation.
-     * @param timeAwareScheme 0: unaware of author's publication time, 1: weighting author's publications by exp(- delta time).
-     * @param currentYear: the current year used to compute delta time.
-     * @param gamma: forgetting coefficient.
+     * @param timeAwareScheme 
+     *      0: unaware of author's publication time
+     *      1: weighting author's publications by exp(- delta time * gamma).
+     * @param gamma: forgetting coefficient 0 <= gamma <= 1.
      */
-    public static void computeFVForAllAuthorsWithSeparatedPaperList(HashMap<String, Author> authors, HashMap<String, Paper> papers, int combiningScheme, int weightingScheme, boolean reComputingPaperFV, int timeAwareScheme, double gamma) throws Exception {
-        if (reComputingPaperFV) {
-            PaperFVComputation.computeFeatureVectorForAllPapers(papers, combiningScheme, weightingScheme);
-        }
+    public static void computeFVForAllAuthors(HashMap<String, Author> authors, HashMap<String, Paper> papers, 
+            int timeAwareScheme, double gamma) throws Exception {
 
         for (String authorId : authors.keySet()) {
             authors.get(authorId).setFeatureVector(computeAuthorFV(authors, authorId, papers, timeAwareScheme, gamma));
@@ -113,7 +92,8 @@ public class AuthorFVComputation {
     /**
      * @return author feature vector.
      */
-    public static HashMapVector computeAuthorFV(HashMap<String, Author> authors, String authorId, HashMap<String, Paper> papers, int timeAwareScheme, double gamma) throws Exception {
+    public static HashMapVector computeAuthorFV(HashMap<String, Author> authors, String authorId, HashMap<String, Paper> papers, 
+            int timeAwareScheme, double gamma) throws Exception {
         HashMapVector featureVector = new HashMapVector();
         
         Author author = authors.get(authorId);

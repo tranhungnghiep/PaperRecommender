@@ -102,10 +102,11 @@ public class PaperRecommender {
         PaperFVComputation.computeFeatureVectorForAllPapers(papers, 0, 0);
         
         // Step 8: read list 1000 authors.
-        HashMap<String, Author> authorTestSet = MASDataset1.readAuthorListTestSet(fileNameAuthorTestSet, fileNameGroundTruth, fileNameAuthorship);
+        HashMap<String, Author> authorTestSet = MASDataset1.readAuthorListTestSet(fileNameAuthorTestSet, 
+                fileNameGroundTruth, fileNameAuthorship);
 
         // Step 9: compute feature vector for those all 1000 authors.
-        AuthorFVComputation.computeFVForAllAuthorsWithSeparatedPaperList(authorTestSet, papers, 0, 0, false, 0, 0);
+        AuthorFVComputation.computeFVForAllAuthors(authorTestSet, papers, 0, 0);
 
         // Step 10: generate recommended papers list.
         CBFRecommender.generateRecommendationForAllAuthors(authorTestSet, papers, 0, 10);
@@ -127,6 +128,7 @@ public class PaperRecommender {
 
         HashMap<String, Paper> papers = new HashMap<>();
         HashMap<String, Author> authors = new HashMap<>();
+        HashMap<String, Paper> papersOfAuthors = new HashMap<>();
 
         String[] response = new String[2];
 
@@ -155,6 +157,7 @@ public class PaperRecommender {
                         Dataset1Folder = PRConstant.FOLDER_NUS_DATASET1;
                     }
                     authors = NUSDataset1.buildListOfAuthors(Dataset1Folder);
+                    papersOfAuthors = AuthorFVComputation.getPapersFromAuthors(authors);
                     response[0] = "Success.";
                     break;
                 case "Save paper":
@@ -195,6 +198,7 @@ public class PaperRecommender {
                         SaveDataFolder = PRConstant.SAVEDATAFOLDER;
                     }
                     authors = (HashMap<String, Author>) BinaryFileUtility.loadObjectFromFile(SaveDataFolder + "\\Authors.dat");
+                    papersOfAuthors = AuthorFVComputation.getPapersFromAuthors(authors);
                     response[0] = "Success.";
                     break;
 
@@ -212,15 +216,18 @@ public class PaperRecommender {
                     response[0] = "Success.";
                     break;
                 case "Author FV linear":
-                    AuthorFVComputation.computeFVForAllAuthorsWithAttachedPaperList(authors, 3, 0, 0, 0);
+                    PaperFVComputation.computeFeatureVectorForAllPapers(papersOfAuthors, 3, 0);
+                    AuthorFVComputation.computeFVForAllAuthors(authors, papersOfAuthors, 0, 0);
                     response[0] = "Success.";
                     break;
                 case "Author FV cosine":
-                    AuthorFVComputation.computeFVForAllAuthorsWithAttachedPaperList(authors, 3, 1, 0, 0);
+                    PaperFVComputation.computeFeatureVectorForAllPapers(papersOfAuthors, 3, 1);
+                    AuthorFVComputation.computeFVForAllAuthors(authors, papersOfAuthors, 0, 0);
                     response[0] = "Success.";
                     break;
                 case "Author FV RPY":
-                    AuthorFVComputation.computeFVForAllAuthorsWithAttachedPaperList(authors, 3, 2, 0, 0);
+                    PaperFVComputation.computeFeatureVectorForAllPapers(papersOfAuthors, 3, 2);
+                    AuthorFVComputation.computeFVForAllAuthors(authors, papersOfAuthors, 0, 0);
                     response[0] = "Success.";
                     break;
                 case "Recommend":

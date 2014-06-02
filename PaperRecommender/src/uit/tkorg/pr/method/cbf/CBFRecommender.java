@@ -32,7 +32,7 @@ public class CBFRecommender {
     /**
      * This method runs content based recommendation business for all authors.
      * 
-     * @param authors: all authors.
+     * @param authors: all authors in the test set.
      * @param papers: all papers.
      * @param similarityScheme 0: cosine
      * @param n: top n item to recommend.
@@ -43,9 +43,10 @@ public class CBFRecommender {
      * + Take top n papers with highest similarity for the recommendation list.
      * + Save recommendation list into current author.
      */
-    public static void generateRecommendationForAllAuthors(HashMap<String, Author> authors, HashMap<String, Paper> papers, int similarityScheme, int n) throws Exception {
+    public static void generateRecommendationForAllAuthors(HashMap<String, Author> authors, HashMap<String, Paper> papers, 
+            int similarityScheme, int n) throws Exception {
         for (String authorId : authors.keySet()) {
-            authors.get(authorId).setRecommendation(generateRecommdation(authors.get(authorId), papers, similarityScheme, n));
+            authors.get(authorId).setRecommendationList(generateRecommdation(authors.get(authorId), papers, similarityScheme, n));
         }
     }
 

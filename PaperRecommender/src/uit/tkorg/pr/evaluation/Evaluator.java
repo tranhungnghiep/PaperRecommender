@@ -41,20 +41,20 @@ public class Evaluator {
         double currentNDCG = 0;
         if (n == 5) {
             for (String authorId : authors.keySet()) {
-                currentNDCG = NDCG.computeNDCG(authors.get(authorId).getRecommendation(), authors.get(authorId).getGroundTruth(), n);
+                currentNDCG = NDCG.computeNDCG(authors.get(authorId).getRecommendationList(), authors.get(authorId).getGroundTruth(), n);
                 authors.get(authorId).setNdcg5(currentNDCG);
                 ndcg += currentNDCG;
             }
         } else if (n == 10) {
             for (String authorId : authors.keySet()) {
-                currentNDCG = NDCG.computeNDCG(authors.get(authorId).getRecommendation(), authors.get(authorId).getGroundTruth(), n);
+                currentNDCG = NDCG.computeNDCG(authors.get(authorId).getRecommendationList(), authors.get(authorId).getGroundTruth(), n);
                 authors.get(authorId).setNdcg10(currentNDCG);
                 ndcg += currentNDCG;
             }
             
         } else {
             for (String authorId : authors.keySet()) {
-                ndcg += NDCG.computeNDCG(authors.get(authorId).getRecommendation(), authors.get(authorId).getGroundTruth(), n);
+                ndcg += NDCG.computeNDCG(authors.get(authorId).getRecommendationList(), authors.get(authorId).getGroundTruth(), n);
             }
         }
         // Compute average.
@@ -75,7 +75,7 @@ public class Evaluator {
 
         double currentRR = 0;
         for (String authorId : authors.keySet()) {
-            currentRR = ReciprocalRank.computeRR(authors.get(authorId).getRecommendation(), authors.get(authorId).getGroundTruth());
+            currentRR = ReciprocalRank.computeRR(authors.get(authorId).getRecommendationList(), authors.get(authorId).getGroundTruth());
             authors.get(authorId).setRr(currentRR);
             mrr += currentRR;
         }
