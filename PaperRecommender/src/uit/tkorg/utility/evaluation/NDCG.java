@@ -39,8 +39,13 @@ public class NDCG {
      * @return ndcg
      */
     public static double computeNDCG(List rankList, List idealList, int k) throws Exception {
-        double ndcg = 0;
+        if ((rankList == null) || (idealList == null) || (k <= 0)) {
+            return 0.0;
+        }
         
+        double ndcg = 0.0;
+        
+        // Note: for IDCG, we need to keep the value of k unchange, not reduce to ranklist's length.
         ndcg = computeDCG(rankList, idealList, k) / computeIDCG(k);
         
         return ndcg;
@@ -54,17 +59,21 @@ public class NDCG {
      * @return dcg
      */
     public static double computeDCG(List rankList, List idealList, int k) throws Exception {
-        double dcg = 0;
+        if ((rankList == null) || (idealList == null) || (k <= 0)) {
+            return 0.0;
+        }
+        
+        double dcg = 0.0;
         
         // Items out of ranklist are irrelevant items and gain 0.
         // Reduce k to ranklist size to avoid out of range error and to imply 0 gain.
-        if (k > rankList.size()) {
-            k = rankList.size();
+        int nK = k;
+        if (nK > rankList.size()) {
+            nK = rankList.size();
         }
         
-        for (int i = 0; i < k; i++) {
-            Object item = rankList.get(i);
-            if (idealList.contains(item)) {
+        for (int i = 0; i < nK; i++) {
+            if (idealList.contains(rankList.get(i))) {
                 dcg += Math.log(2) / Math.log(i + 2);
             }
         }
@@ -79,7 +88,11 @@ public class NDCG {
      * @return idcg
      */
     public static double computeIDCG(int k) throws Exception {
-        double idcg = 0;
+        if (k <= 0) {
+            return 0.0;
+        }
+        
+        double idcg = 0.0;
 
         // With our assumption, the ideal list contents k relevant items.
         // So we sum up all the item.
@@ -99,17 +112,21 @@ public class NDCG {
      * @return cg
      */
     public static double computeCG(List rankList, List idealList, int k) throws Exception {
-        double cg = 0;
+        if ((rankList == null) || (idealList == null) || (k <= 0)) {
+            return 0.0;
+        }
+        
+        double cg = 0.0;
         
         // Items out of ranklist are irrelevant items and gain 0.
         // Reduce k to ranklist size to avoid out of range error and to imply 0 gain.
-        if (k > rankList.size()) {
-            k = rankList.size();
+        int nK = k;
+        if (nK > rankList.size()) {
+            nK = rankList.size();
         }
         
-        for (int i = 0; i < k; i++) {
-            Object item = rankList.get(i);
-            if (idealList.contains(item)) {
+        for (int i = 0; i < nK; i++) {
+            if (idealList.contains(rankList.get(i))) {
                 cg += 1;
             }
         }

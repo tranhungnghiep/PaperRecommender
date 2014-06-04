@@ -11,7 +11,9 @@ import java.util.List;
  * This class content methods for computing metric related to AveragePrecision.
  * Ref:
  * 1.http://www.stanford.edu/class/cs276/handouts/EvaluationNew-handout-6-per.pdf
- * 2.http://essay.utwente.nl/59711/1/MA_thesis_J_de_Wit.pdf Method: - computeAP
+ * 2.http://essay.utwente.nl/59711/1/MA_thesis_J_de_Wit.pdf 
+ * 
+ * Method: - computeAP
  *
  * @author Vinh-PC
  */
@@ -30,16 +32,24 @@ public class AveragePrecision {
      * @return
      */
     public static double computeAP(List rankList, List idealList, int k) {
-        double ap = 0;
+        if ((rankList == null) || (idealList == null) || (k <= 0)) {
+            return 0.0;
+        }
+        
+        double ap = 0.0;
+        
+        
+        
 
-        if (k > rankList.size()) {
-            k = rankList.size();
+        int nK = k;
+        if (nK > rankList.size()) {
+            nK = rankList.size();
         }
 
-        for (int i = 0; i < k; i += 2) {
-            ap += Precision.computePrecisionK(rankList, idealList, i + 1);
+        for (int i = 0; i < k; i++) {
+            ap += Precision.computePrecisionTopN(rankList, idealList, i + 1);
         }
 
-        return (double) ap / (int) k / 2;
+        return (double) ap / nK;
     }
 }

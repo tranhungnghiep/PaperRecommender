@@ -27,7 +27,10 @@ public class ReciprocalRank {
      * @return reciprocal rank.
      */
     public static double computeRR(List rankList, List idealList) throws Exception {
-
+        if ((rankList == null) || (idealList == null)) {
+            return 0.0;
+        }
+        
         for (int i = 0; i < rankList.size(); i++) {
             if (idealList.contains(rankList.get(i))) {
                 // Reciprocal of first relevant item position.

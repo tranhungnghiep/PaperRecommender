@@ -24,9 +24,13 @@ public class Author implements Serializable {
     private HashMapVector featureVector;
     private List groundTruth; // List string.
     private List RecommendationList; // List string.
+    private double precision;
+    private double recall;
+    private double f1;
+    private double map;
+    private double rr;
     private double ndcg5;
     private double ndcg10;
-    private double rr;
 
     /**
      * Default constructor used for serializable.
@@ -39,9 +43,13 @@ public class Author implements Serializable {
         this.featureVector = new HashMapVector();
         this.RecommendationList = new ArrayList();
         this.groundTruth = new ArrayList();
+        this.precision = 0;
+        this.recall = 0;
+        this.f1 = 0;
+        this.map = 0;
+        this.rr = 0;
         this.ndcg5 = 0;
         this.ndcg10 = 0;
-        this.rr = 0;
     }
 
     /**
@@ -185,5 +193,61 @@ public class Author implements Serializable {
      */
     public void setAuthorName(String authorName) {
         this.authorName = authorName;
+    }
+
+    /**
+     * @return the precision
+     */
+    public double getPrecision() {
+        return precision;
+    }
+
+    /**
+     * @param precision the precision to set
+     */
+    public void setPrecision(double precision) {
+        this.precision = precision;
+    }
+
+    /**
+     * @return the recall
+     */
+    public double getRecall() {
+        return recall;
+    }
+
+    /**
+     * @param recall the recall to set
+     */
+    public void setRecall(double recall) {
+        this.recall = recall;
+    }
+
+    /**
+     * @return the map
+     */
+    public double getMap() {
+        return map;
+    }
+
+    /**
+     * @param map the map to set
+     */
+    public void setMap(double map) {
+        this.map = map;
+    }
+
+    /**
+     * @return the f1
+     */
+    public double getF1() {
+        return f1;
+    }
+
+    /**
+     * @param f1 the f1 to set
+     */
+    public void setF1(double f1) {
+        this.f1 = f1;
     }
 }

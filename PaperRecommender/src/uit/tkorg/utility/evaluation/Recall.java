@@ -31,14 +31,48 @@ public class Recall {
      * @return rec
      */
     public static double computeRecall(List rankList, List idealList) {
-        double rec = 0;
+        if ((rankList == null) || (idealList == null)) {
+            return 0.0;
+        }
+        
+        double recall = 0.0;
 
-        for (int i = 0; i < rankList.size(); i++) {
-            if (idealList.contains(rankList.get(i))) {
-                rec++;
+        for (int i = 0; i < idealList.size(); i++) {
+            if (rankList.contains(idealList.get(i))) {
+                recall++;
             }
         }
         
-        return (double) rec / idealList.size();
+        return (double) recall / idealList.size();
+    }
+
+    /**
+     * 
+     * @param rankList
+     * @param idealList
+     * @param topN
+     * @return 
+     */
+    public static double computeRecallTopN(List rankList, List idealList, int topN) {
+        if ((rankList == null) || (idealList == null) || (topN <= 0)) {
+            return 0.0;
+        }
+        
+        double recallN = 0.0;
+
+        // count to rank list size but divide by original top n.
+        int nN = topN;
+        if (nN > rankList.size()) {
+            nN = rankList.size();
+        }
+        
+        List topNRankList = rankList.subList(0, nN - 1);
+        for (int i = 0; i < idealList.size(); i++) {
+            if (topNRankList.contains(idealList.get(i))) {
+                recallN++;
+            }
+        }
+        
+        return (double) recallN / idealList.size();
     }
 }

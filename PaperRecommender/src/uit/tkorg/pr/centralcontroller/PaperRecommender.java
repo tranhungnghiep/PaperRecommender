@@ -1,7 +1,10 @@
 package uit.tkorg.pr.centralcontroller;
 
 import ir.vsr.HashMapVector;
+import java.io.File;
+import java.util.Date;
 import java.util.HashMap;
+import org.apache.commons.io.FileUtils;
 import uit.tkorg.pr.constant.PRConstant;
 import uit.tkorg.pr.dataimex.MASDataset1;
 import uit.tkorg.pr.dataimex.MahoutFile;
@@ -34,7 +37,8 @@ public class PaperRecommender {
                     PRConstant.FOLDER_MAS_DATASET1 + "Text", 
                     PRConstant.FOLDER_MAS_DATASET1 + "PreProcessedPaper", 
                     PRConstant.FOLDER_MAS_DATASET1 + "Sequence", 
-                    PRConstant.FOLDER_MAS_DATASET1 + "Vector");
+                    PRConstant.FOLDER_MAS_DATASET1 + "Vector",
+                    PRConstant.FOLDER_MAS_DATASET1 + "EvaluationResult\\EvaluationResult.csv");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -43,7 +47,7 @@ public class PaperRecommender {
     public static void recommendationFlowController(String fileNamePapers, 
             String fileNamePaperCitePaper, String fileNameAuthorTestSet, 
             String fileNameGroundTruth, String fileNameAuthorship, String dirPapers, 
-            String dirPreProcessedPaper, String sequenceDir, String vectorDir) throws Exception {
+            String dirPreProcessedPaper, String sequenceDir, String vectorDir, String fileNameEvaluationResult) throws Exception {
         // Step 1: 
         // - Read content of papers from [Training] Paper_Before_2006.csv
         // - Store metadata of all papers into HashMap<String, Paper> papers
@@ -130,17 +134,41 @@ public class PaperRecommender {
         // Step 10: generate recommended papers list.
         System.out.println("Begin CBF Recommending...");
         startTime = System.nanoTime();
-        CBFRecommender.generateRecommendationForAllAuthors(authorTestSet, papers, 0, 10);
+        CBFRecommender.generateRecommendationForAllAuthors(authorTestSet, papers, 0, 100);
         estimatedTime = System.nanoTime() - startTime;
         System.out.println("CBF Recommending elapsed time: " + estimatedTime / 1000000000 + " seconds");
         System.out.println("End CBF Recommending.");
         
-        // Step 11: compute evaluation index: ndcg, mrr.
+        // Step 11: compute evaluation index: computeMeanNDCG, mrr.
         System.out.println("Begin evaluating...");
         startTime = System.nanoTime();
-        double ndcg5 = Evaluator.NDCG(authorTestSet, 5);
-        double ndcg10 = Evaluator.NDCG(authorTestSet, 10);
-        double mrr = Evaluator.MRR(authorTestSet);
+        double precision10 = Evaluator.computeMeanPrecisionTopN(authorTestSet, 10);
+        double precision20 = Evaluator.computeMeanPrecisionTopN(authorTestSet, 20);
+        double precision30 = Evaluator.computeMeanPrecisionTopN(authorTestSet, 30);
+        double precision40 = Evaluator.computeMeanPrecisionTopN(authorTestSet, 40);
+        double precision50 = Evaluator.computeMeanPrecisionTopN(authorTestSet, 50);
+        double recall100 = Evaluator.computeMeanRecallTopN(authorTestSet, 100);
+        double f1 = Evaluator.computeMeanFMeasure(authorTestSet, 1);
+        double ndcg5 = Evaluator.computeMeanNDCG(authorTestSet, 5);
+        double ndcg10 = Evaluator.computeMeanNDCG(authorTestSet, 10);
+        double mrr = Evaluator.computeMRR(authorTestSet);
+
+        String algorithmName = "CBF Baseline";
+        StringBuffer evaluationResult = new StringBuffer();
+        evaluationResult.append(new Date(System.currentTimeMillis()).toString()).append("\t")
+                .append(algorithmName).append("\t")
+                .append(precision10).append("\t")
+                .append(precision20).append("\t")
+                .append(precision30).append("\t")
+                .append(precision40).append("\t")
+                .append(precision50).append("\t")
+                .append(recall100).append("\t")
+                .append(f1).append("\t")
+                .append(ndcg5).append("\t")
+                .append(ndcg10).append("\t")
+                .append(mrr).append("\t")
+                .append("\n");
+        FileUtils.writeStringToFile(new File(fileNameEvaluationResult), evaluationResult.toString(), "UTF8", true);
         estimatedTime = System.nanoTime() - startTime;
         System.out.println("Evaluating elapsed time: " + estimatedTime / 1000000000 + " seconds");
         System.out.println("End evaluating.");
@@ -264,15 +292,15 @@ public class PaperRecommender {
                     response[0] = "Success.";
                     break;
                 case "NDCG5":
-                    response[1] = String.valueOf(Evaluator.NDCG(authors, 5));
+                    response[1] = String.valueOf(Evaluator.computeMeanNDCG(authors, 5));
                     response[0] = "Success.";
                     break;
                 case "NDCG10":
-                    response[1] = String.valueOf(Evaluator.NDCG(authors, 10));
+                    response[1] = String.valueOf(Evaluator.computeMeanNDCG(authors, 10));
                     response[0] = "Success.";
                     break;
                 case "MRR":
-                    response[1] = String.valueOf(Evaluator.MRR(authors));
+                    response[1] = String.valueOf(Evaluator.computeMRR(authors));
                     response[0] = "Success.";
                     break;
                 default:
