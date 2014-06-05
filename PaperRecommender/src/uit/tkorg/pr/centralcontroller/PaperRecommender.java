@@ -120,7 +120,7 @@ public class PaperRecommender {
         System.out.println("Setting tf-idf to papers elapsed time: " + estimatedTime / 1000000000 + " seconds");
         System.out.println("End setting tf-idf to papers.");
         
-        // Step 7: calculating feature vector for all papers and 
+        // Step 7: Aggregating feature vectors for all papers and 
         // put the result into HashMap<String, Paper> papers (model)
         // (papers, 0, 0): baseline
         System.out.println("Begin computing FV for all papers...");
