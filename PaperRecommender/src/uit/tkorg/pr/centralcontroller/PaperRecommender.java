@@ -160,7 +160,7 @@ public class PaperRecommender {
         
         // Predict ratings by kNNCF co-pearson.
         // 100 neighbors, get top 100.
-        int k = 100;
+        int k = 2;
         int n = 100;
         String MahoutCFRatingMatrixPredictionFile = MahoutCFDir + "\\CFRatingMatrixPredictionByCoPearson" + "k" + k + "n" + n + ".txt";
         KNNCF.CoPearsonRecommend(MahoutCFFileOriginalFile, 100, 100, MahoutCFRatingMatrixPredictionFile);
@@ -173,6 +173,9 @@ public class PaperRecommender {
         // Compute evaluation index.
         System.out.println("Begin evaluating...");
         startTime = System.nanoTime();
+        
+        String algorithmName = "CF Baseline";
+        
         double precision10 = Evaluator.computeMeanPrecisionTopN(authorTestSet, 10);
         double precision20 = Evaluator.computeMeanPrecisionTopN(authorTestSet, 20);
         double precision30 = Evaluator.computeMeanPrecisionTopN(authorTestSet, 30);
@@ -188,7 +191,6 @@ public class PaperRecommender {
         double ndcg5 = Evaluator.computeMeanNDCG(authorTestSet, 5);
         double ndcg10 = Evaluator.computeMeanNDCG(authorTestSet, 10);
         double mrr = Evaluator.computeMRR(authorTestSet);
-        String algorithmName = "CF Baseline";
         StringBuilder evaluationResult = new StringBuilder();
         evaluationResult.append("Time Stamp").append("\t")
                 .append("Algorithm").append("\t")
