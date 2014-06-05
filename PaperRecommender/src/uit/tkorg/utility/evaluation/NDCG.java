@@ -34,19 +34,19 @@ public class NDCG {
      * But this formula produce lower score than the first formula.
      * 
      * @param rankList
-     * @param idealList
+     * @param groundTruth
      * @param k
      * @return ndcg
      */
-    public static double computeNDCG(List rankList, List idealList, int k) throws Exception {
-        if ((rankList == null) || (idealList == null) || (k <= 0)) {
+    public static double computeNDCG(List rankList, List groundTruth, int k) throws Exception {
+        if ((rankList == null) || (groundTruth == null) || (rankList.isEmpty()) || (groundTruth.isEmpty()) || (k <= 0)) {
             return 0.0;
         }
         
         double ndcg = 0.0;
         
         // Note: for IDCG, we need to keep the value of k unchange, not reduce to ranklist's length.
-        ndcg = computeDCG(rankList, idealList, k) / computeIDCG(k);
+        ndcg = computeDCG(rankList, groundTruth, k) / computeIDCG(k);
         
         return ndcg;
     }
@@ -54,12 +54,12 @@ public class NDCG {
     /**
      * This method compute the standard basic binary DCG metric.
      * @param rankList
-     * @param idealList
+     * @param groundTruth
      * @param k
      * @return dcg
      */
-    public static double computeDCG(List rankList, List idealList, int k) throws Exception {
-        if ((rankList == null) || (idealList == null) || (k <= 0)) {
+    public static double computeDCG(List rankList, List groundTruth, int k) throws Exception {
+        if ((rankList == null) || (groundTruth == null) || (rankList.isEmpty()) || (groundTruth.isEmpty()) || (k <= 0)) {
             return 0.0;
         }
         
@@ -73,7 +73,7 @@ public class NDCG {
         }
         
         for (int i = 0; i < nK; i++) {
-            if (idealList.contains(rankList.get(i))) {
+            if (groundTruth.contains(rankList.get(i))) {
                 dcg += Math.log(2) / Math.log(i + 2);
             }
         }
@@ -107,12 +107,12 @@ public class NDCG {
      * This method computes the cumulated gain, i.e., it does not consider position of ranked items.
      * idealList used to decide relevance.
      * @param rankList
-     * @param idealList
+     * @param groundTruth
      * @param k
      * @return cg
      */
-    public static double computeCG(List rankList, List idealList, int k) throws Exception {
-        if ((rankList == null) || (idealList == null) || (k <= 0)) {
+    public static double computeCG(List rankList, List groundTruth, int k) throws Exception {
+        if ((rankList == null) || (groundTruth == null) || (rankList.isEmpty()) || (groundTruth.isEmpty()) || (k <= 0)) {
             return 0.0;
         }
         
@@ -126,7 +126,7 @@ public class NDCG {
         }
         
         for (int i = 0; i < nK; i++) {
-            if (idealList.contains(rankList.get(i))) {
+            if (groundTruth.contains(rankList.get(i))) {
                 cg += 1;
             }
         }

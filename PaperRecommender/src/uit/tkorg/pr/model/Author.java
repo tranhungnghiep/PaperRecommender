@@ -27,7 +27,7 @@ public class Author implements Serializable {
     private double precision;
     private double recall;
     private double f1;
-    private double map;
+    private double ap;
     private double rr;
     private double ndcg5;
     private double ndcg10;
@@ -46,7 +46,7 @@ public class Author implements Serializable {
         this.precision = 0;
         this.recall = 0;
         this.f1 = 0;
-        this.map = 0;
+        this.ap = 0;
         this.rr = 0;
         this.ndcg5 = 0;
         this.ndcg10 = 0;
@@ -224,17 +224,17 @@ public class Author implements Serializable {
     }
 
     /**
-     * @return the map
+     * @return the ap
      */
-    public double getMap() {
-        return map;
+    public double getAp() {
+        return ap;
     }
 
     /**
-     * @param map the map to set
+     * @param ap the ap to set
      */
-    public void setMap(double map) {
-        this.map = map;
+    public void setAp(double ap) {
+        this.ap = ap;
     }
 
     /**

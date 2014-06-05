@@ -23,21 +23,21 @@ public class ReciprocalRank {
     /**
      * This method computes the reciprocal rank of 1 list.
      * @param rankList
-     * @param idealList
+     * @param groundTruth
      * @return reciprocal rank.
      */
-    public static double computeRR(List rankList, List idealList) throws Exception {
-        if ((rankList == null) || (idealList == null)) {
+    public static double computeRR(List rankList, List groundTruth) throws Exception {
+        if ((rankList == null) || (groundTruth == null) || (rankList.isEmpty()) || (groundTruth.isEmpty())) {
             return 0.0;
         }
         
         for (int i = 0; i < rankList.size(); i++) {
-            if (idealList.contains(rankList.get(i))) {
+            if (groundTruth.contains(rankList.get(i))) {
                 // Reciprocal of first relevant item position.
                 return (double) 1 / (i + 1);
             }
         }
 
-        return 0;
+        return 0.0;
     }
 }

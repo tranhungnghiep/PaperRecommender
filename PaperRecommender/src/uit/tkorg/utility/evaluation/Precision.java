@@ -29,18 +29,18 @@ public class Precision {
      * total retrieved documents
      *
      * @param rankList
-     * @param idealList
+     * @param groundTruth
      * @return
      */
-    public static double computePrecision(List rankList, List idealList) {
-        if ((rankList == null) || (idealList == null)) {
+    public static double computePrecision(List rankList, List groundTruth) {
+        if ((rankList == null) || (groundTruth == null) || (rankList.isEmpty()) || (groundTruth.isEmpty())) {
             return 0.0;
         }
         
         double precision = 0.0;
 
         for (int i = 0; i < rankList.size(); i++) {
-            if (idealList.contains(rankList.get(i))) {
+            if (groundTruth.contains(rankList.get(i))) {
                 precision++;
             }
         }
@@ -53,12 +53,12 @@ public class Precision {
      * documents retrieved and k retrieved documents
      *
      * @param rankList
-     * @param idealList
+     * @param groundTruth
      * @param topN
      * @return
      */
-    public static double computePrecisionTopN(List rankList, List idealList, int topN) {
-        if ((rankList == null) || (idealList == null) || (topN <= 0)) {
+    public static double computePrecisionTopN(List rankList, List groundTruth, int topN) {
+        if ((rankList == null) || (groundTruth == null) || (rankList.isEmpty()) || (groundTruth.isEmpty()) || (topN <= 0)) {
             return 0.0;
         }
         
@@ -71,7 +71,7 @@ public class Precision {
         }
 
         for (int i = 0; i < nN; i++) {
-            if (idealList.contains(rankList.get(i))) {
+            if (groundTruth.contains(rankList.get(i))) {
                 precisionN++;
             }
         }

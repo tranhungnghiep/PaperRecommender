@@ -27,34 +27,34 @@ public class Recall {
      * total relevant documents
      *
      * @param rankList
-     * @param idealList
+     * @param groundTruth
      * @return rec
      */
-    public static double computeRecall(List rankList, List idealList) {
-        if ((rankList == null) || (idealList == null)) {
+    public static double computeRecall(List rankList, List groundTruth) {
+        if ((rankList == null) || (groundTruth == null) || (rankList.isEmpty()) || (groundTruth.isEmpty())) {
             return 0.0;
         }
         
         double recall = 0.0;
 
-        for (int i = 0; i < idealList.size(); i++) {
-            if (rankList.contains(idealList.get(i))) {
+        for (int i = 0; i < groundTruth.size(); i++) {
+            if (rankList.contains(groundTruth.get(i))) {
                 recall++;
             }
         }
         
-        return (double) recall / idealList.size();
+        return (double) recall / groundTruth.size();
     }
 
     /**
      * 
      * @param rankList
-     * @param idealList
+     * @param groundTruth
      * @param topN
      * @return 
      */
-    public static double computeRecallTopN(List rankList, List idealList, int topN) {
-        if ((rankList == null) || (idealList == null) || (topN <= 0)) {
+    public static double computeRecallTopN(List rankList, List groundTruth, int topN) {
+        if ((rankList == null) || (groundTruth == null) || (rankList.isEmpty()) || (groundTruth.isEmpty()) || (topN <= 0)) {
             return 0.0;
         }
         
@@ -67,12 +67,12 @@ public class Recall {
         }
         
         List topNRankList = rankList.subList(0, nN);
-        for (int i = 0; i < idealList.size(); i++) {
-            if (topNRankList.contains(idealList.get(i))) {
+        for (int i = 0; i < groundTruth.size(); i++) {
+            if (topNRankList.contains(groundTruth.get(i))) {
                 recallN++;
             }
         }
         
-        return (double) recallN / idealList.size();
+        return (double) recallN / groundTruth.size();
     }
 }

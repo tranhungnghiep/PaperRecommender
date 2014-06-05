@@ -180,6 +180,7 @@ public class PaperRecommender {
         double precision50 = Evaluator.computeMeanPrecisionTopN(authorTestSet, 50);
         double recall100 = Evaluator.computeMeanRecallTopN(authorTestSet, 100);
         double f1 = Evaluator.computeMeanFMeasure(authorTestSet, 1);
+        double map10 = Evaluator.computeMAP(authorTestSet, 10);
         double ndcg5 = Evaluator.computeMeanNDCG(authorTestSet, 5);
         double ndcg10 = Evaluator.computeMeanNDCG(authorTestSet, 10);
         double mrr = Evaluator.computeMRR(authorTestSet);
@@ -194,6 +195,7 @@ public class PaperRecommender {
                 .append(precision50).append("\t")
                 .append(recall100).append("\t")
                 .append(f1).append("\t")
+                .append(map10).append("\t")
                 .append(ndcg5).append("\t")
                 .append(ndcg10).append("\t")
                 .append(mrr).append("\t")

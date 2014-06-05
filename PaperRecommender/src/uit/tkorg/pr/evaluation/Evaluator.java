@@ -143,8 +143,8 @@ public class Evaluator {
 
         double currentAP = 0;
         for (String authorId : authors.keySet()) {
-            currentAP = AveragePrecision.computeAP(authors.get(authorId).getRecommendationList(), authors.get(authorId).getGroundTruth(), k);
-            authors.get(authorId).setMap(currentAP);
+            currentAP = AveragePrecision.computeAPK(authors.get(authorId).getRecommendationList(), authors.get(authorId).getGroundTruth(), k);
+            authors.get(authorId).setAp(currentAP);
             map += currentAP;
         }
 
