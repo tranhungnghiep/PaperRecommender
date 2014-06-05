@@ -13,7 +13,7 @@ import uit.tkorg.pr.dataimex.PRGeneralFile;
 import uit.tkorg.pr.datapreparation.cbf.AuthorFVComputation;
 import uit.tkorg.pr.datapreparation.cbf.PaperFVComputation;
 import uit.tkorg.pr.evaluation.Evaluator;
-import uit.tkorg.pr.method.cbf.CBFRecommender;
+import uit.tkorg.pr.method.cbf.FeatureVectorSimilarity;
 import uit.tkorg.pr.model.Author;
 import uit.tkorg.pr.model.Paper;
 import uit.tkorg.utility.general.BinaryFileUtility;
@@ -38,7 +38,7 @@ public class PaperRecommender {
                     PRConstant.FOLDER_MAS_DATASET1 + "PreProcessedPaper", 
                     PRConstant.FOLDER_MAS_DATASET1 + "Sequence", 
                     PRConstant.FOLDER_MAS_DATASET1 + "Vector",
-                    PRConstant.FOLDER_MAS_DATASET1 + "EvaluationResult\\EvaluationResult.csv");
+                    PRConstant.FOLDER_MAS_DATASET1 + "EvaluationResult\\EvaluationResult.xls");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -134,7 +134,7 @@ public class PaperRecommender {
         // Step 10: generate recommended papers list.
         System.out.println("Begin CBF Recommending...");
         startTime = System.nanoTime();
-        CBFRecommender.generateRecommendationForAllAuthors(authorTestSet, papers, 0, 100);
+        FeatureVectorSimilarity.generateRecommendationForAllAuthors(authorTestSet, papers, 0, 100);
         estimatedTime = System.nanoTime() - startTime;
         System.out.println("CBF Recommending elapsed time: " + estimatedTime / 1000000000 + " seconds");
         System.out.println("End CBF Recommending.");
@@ -154,7 +154,7 @@ public class PaperRecommender {
         double mrr = Evaluator.computeMRR(authorTestSet);
 
         String algorithmName = "CBF Baseline";
-        StringBuffer evaluationResult = new StringBuffer();
+        StringBuilder evaluationResult = new StringBuilder();
         evaluationResult.append(new Date(System.currentTimeMillis()).toString()).append("\t")
                 .append(algorithmName).append("\t")
                 .append(precision10).append("\t")
@@ -288,7 +288,7 @@ public class PaperRecommender {
                     response[0] = "Success.";
                     break;
                 case "Recommend":
-                    CBFRecommender.generateRecommendationForAllAuthors(authors, papers, 0, 10);
+                    FeatureVectorSimilarity.generateRecommendationForAllAuthors(authors, papers, 0, 10);
                     response[0] = "Success.";
                     break;
                 case "NDCG5":

@@ -273,6 +273,81 @@ public class MASDataset1 {
 //        System.out.println("End reading ground truth.");
     }
 
+    /**
+     * Note: this method read the raw rating matrix, i.d., ratings are number of citing, not normalized.
+     * 
+     * @param fileNameAuthorCitePaperMatrix
+     * @return
+     * @throws Exception 
+     */
+    public static HashMap<String, HashMap<String, Double>> readAuthorCitePaperMatrix(String fileNameAuthorCitePaperMatrix) throws Exception {
+        System.out.println("Begin reading authorship...");
+        long startTime = System.nanoTime();
+
+        HashMap<String, HashMap<String, HashMap<String, Integer>>> authorCitePaperYear = new HashMap<>();
+        HashMap<String, HashMap<String, Double>> authorPaperRating = new HashMap<>();
+        
+        try (BufferedReader br = new BufferedReader(new FileReader(fileNameAuthorCitePaperMatrix))) {
+            String line;
+            
+            while ((line = br.readLine()) != null) {
+                if ((line == null) || (line.equals(""))) {
+                    break;
+                }
+                String[] str = line.split("\\|\\|\\|");
+                String authorId = getAcceptedFieldValue(str[0]);
+                String paperId = getAcceptedFieldValue(str[1]);
+                String year = getAcceptedFieldValue(str[2]);
+                
+                // put into authorCitePaperYear
+                // Reserved for using later.
+                /*if (authorCitePaperYear.containsKey(authorId)) {
+                    if (authorCitePaperYear.get(authorId).containsKey(paperId)) {
+                        if (authorCitePaperYear.get(authorId).get(paperId).containsKey(year)) {
+                            Integer numOfCite = authorCitePaperYear.get(authorId).get(paperId).get(year) + 1;
+                            authorCitePaperYear.get(authorId).get(paperId).put(year, numOfCite);
+                        } else {
+                            authorCitePaperYear.get(authorId).get(paperId).put(year, Integer.valueOf(1));
+                        }
+                    } else {
+                        HashMap<String, Integer> yearCite = new HashMap();
+                        yearCite.put(year, Integer.valueOf(1));
+                        authorCitePaperYear.get(authorId).put(paperId, yearCite);
+                    }
+                } else {
+                    HashMap<String, Integer> yearCite = new HashMap();
+                    yearCite.put(year, Integer.valueOf(1));
+                    HashMap<String, HashMap<String, Integer>> paper = new HashMap<>();
+                    paper.put(paperId, yearCite);
+                    authorCitePaperYear.put(authorId, paper);
+                }*/
+
+                // put into authorPaperRating
+                if (authorPaperRating.containsKey(authorId)) {
+                    if (authorPaperRating.get(authorId).containsKey(paperId)) {
+                        Double rating = authorPaperRating.get(authorId).get(paperId) + 1;
+                        authorPaperRating.get(authorId).put(paperId, rating);
+                    } else {
+                        authorPaperRating.get(authorId).put(paperId, Double.valueOf(1));
+                    }
+                } else {
+                    HashMap<String, Double> paperRating = new HashMap<>();
+                    paperRating.put(paperId, Double.valueOf(1));
+                    authorPaperRating.put(authorId, paperRating);
+                }
+            }
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+            throw e;
+        }
+        
+        long estimatedTime = System.nanoTime() - startTime;
+        System.out.println("Reading authorship elapsed time: " + estimatedTime / 1000000000 + " seconds");
+        System.out.println("End reading author list.");
+        
+        return authorPaperRating;
+    }
+
     private static String getAcceptedFieldValue(String fieldValue) throws Exception {
         String value = fieldValue.trim();
         if (value.equalsIgnoreCase("\\N")) {
@@ -298,5 +373,7 @@ public class MASDataset1 {
                 + "[Training] 1000Authors.csv", PRConstant.FOLDER_MAS_DATASET1 
                 + "[Validation] Ground_Truth_2006_2008.csv", PRConstant.FOLDER_MAS_DATASET1 
                 + "[Training] Author_Paper_Before_2006.csv");
+        HashMap<String, HashMap<String, Double>> authorPaperRating = readAuthorCitePaperMatrix(PRConstant.FOLDER_MAS_DATASET1 
+                + "[Training] Author_Cite_Paper_Before_2006.csv");
     }
 }

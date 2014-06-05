@@ -23,10 +23,10 @@ import uit.tkorg.utility.general.WeightingUtility;
  * This output could be used as universal recommendation list, upto the input list of authors.
  * @author THNghiep
  */
-public class CBFRecommender {
+public class FeatureVectorSimilarity {
     
     // Prevent instantiation.
-    private CBFRecommender() {
+    private FeatureVectorSimilarity() {
     }
 
     /**
