@@ -12,8 +12,10 @@ import uit.tkorg.pr.dataimex.NUSDataset1;
 import uit.tkorg.pr.dataimex.PRGeneralFile;
 import uit.tkorg.pr.datapreparation.cbf.AuthorFVComputation;
 import uit.tkorg.pr.datapreparation.cbf.PaperFVComputation;
+import uit.tkorg.pr.datapreparation.cf.CFRatingMatrixComputation;
 import uit.tkorg.pr.evaluation.Evaluator;
 import uit.tkorg.pr.method.cbf.FeatureVectorSimilarity;
+import uit.tkorg.pr.method.cf.KNNCF;
 import uit.tkorg.pr.model.Author;
 import uit.tkorg.pr.model.Paper;
 import uit.tkorg.utility.general.BinaryFileUtility;
@@ -34,10 +36,12 @@ public class PaperRecommender {
                     PRConstant.FOLDER_MAS_DATASET1 + "[Training] 1000Authors.csv", 
                     PRConstant.FOLDER_MAS_DATASET1 + "[Validation] Ground_Truth_2006_2008.csv", 
                     PRConstant.FOLDER_MAS_DATASET1 + "[Training] Author_Paper_Before_2006.csv",
+                    PRConstant.FOLDER_MAS_DATASET1 + "[Training] Author_Cite_Paper_Before_2006.csv",
                     PRConstant.FOLDER_MAS_DATASET1 + "Text", 
                     PRConstant.FOLDER_MAS_DATASET1 + "PreProcessedPaper", 
                     PRConstant.FOLDER_MAS_DATASET1 + "Sequence", 
                     PRConstant.FOLDER_MAS_DATASET1 + "Vector",
+                    PRConstant.FOLDER_MAS_DATASET1 + "MahoutCF",
                     PRConstant.FOLDER_MAS_DATASET1 + "EvaluationResult\\EvaluationResult.xls");
         } catch (Exception e) {
             e.printStackTrace();
@@ -46,15 +50,26 @@ public class PaperRecommender {
     
     public static void recommendationFlowController(String fileNamePapers, 
             String fileNamePaperCitePaper, String fileNameAuthorTestSet, 
-            String fileNameGroundTruth, String fileNameAuthorship, String dirPapers, 
-            String dirPreProcessedPaper, String sequenceDir, String vectorDir, String fileNameEvaluationResult) throws Exception {
+            String fileNameGroundTruth, String fileNameAuthorship, String fileNameAuthorCitePaper, 
+            String dirPapers, String dirPreProcessedPaper, String sequenceDir, String vectorDir, 
+            String MahoutCFDir, String fileNameEvaluationResult) throws Exception {
+
+        // First: read list 1000 authors for test set.
+        System.out.println("Begin reading author test set...");
+        long startTime = System.nanoTime();
+        HashMap<String, Author> authorTestSet = MASDataset1.readAuthorListTestSet(fileNameAuthorTestSet, fileNameGroundTruth, fileNameAuthorship);
+        long estimatedTime = System.nanoTime() - startTime;
+        System.out.println("Reading author test set elapsed time: " + estimatedTime / 1000000000 + " seconds");
+        System.out.println("End reading author test set.");
+
+        /* Begin Content based */
         // Step 1: 
         // - Read content of papers from [Training] Paper_Before_2006.csv
         // - Store metadata of all papers into HashMap<String, Paper> papers
         System.out.println("Begin reading paper list...");
-        long startTime = System.nanoTime();
+        startTime = System.nanoTime();
         HashMap<String, Paper> papers = MASDataset1.readPaperList(fileNamePapers, fileNamePaperCitePaper);
-        long estimatedTime = System.nanoTime() - startTime;
+        estimatedTime = System.nanoTime() - startTime;
         System.out.println("Reading paper list elapsed time: " + estimatedTime / 1000000000 + " seconds");
         System.out.println("End reading paper list.");
         
@@ -115,15 +130,7 @@ public class PaperRecommender {
         System.out.println("Computing FV for all papers elapsed time: " + estimatedTime / 1000000000 + " seconds");
         System.out.println("End computing FV for all papers.");
         
-        // Step 8: read list 1000 authors.
-        System.out.println("Begin reading author test set...");
-        startTime = System.nanoTime();
-        HashMap<String, Author> authorTestSet = MASDataset1.readAuthorListTestSet(fileNameAuthorTestSet, fileNameGroundTruth, fileNameAuthorship);
-        estimatedTime = System.nanoTime() - startTime;
-        System.out.println("Reading author test set elapsed time: " + estimatedTime / 1000000000 + " seconds");
-        System.out.println("End reading author test set.");
-
-        // Step 9: compute feature vector for those all 1000 authors.
+        // Step 8: compute feature vector for those all 1000 authors.
         System.out.println("Begin computing authors FV...");
         startTime = System.nanoTime();
         AuthorFVComputation.computeFVForAllAuthors(authorTestSet, papers, 0, 0);
@@ -131,15 +138,39 @@ public class PaperRecommender {
         System.out.println("Computing authors FV elapsed time: " + estimatedTime / 1000000000 + " seconds");
         System.out.println("End computing authors FV.");
 
-        // Step 10: generate recommended papers list.
+        // Step 9: generate recommended papers list.
         System.out.println("Begin CBF Recommending...");
         startTime = System.nanoTime();
         FeatureVectorSimilarity.generateRecommendationForAllAuthors(authorTestSet, papers, 0, 100);
         estimatedTime = System.nanoTime() - startTime;
         System.out.println("CBF Recommending elapsed time: " + estimatedTime / 1000000000 + " seconds");
         System.out.println("End CBF Recommending.");
+        /* End Content based */
+
+        /* Begin Collaborative filtering */
+        // Read Raw rating matrix
+        HashMap<String, HashMap<String, Double>> authorPaperRating = MASDataset1.readAuthorCitePaperMatrix(fileNameAuthorCitePaper);
         
-        // Step 11: compute evaluation index: computeMeanNDCG, mrr.
+        // Normalize
+        CFRatingMatrixComputation.normalizeAuthorRatingVector(authorPaperRating);
+        
+        // Write to Mahout file
+        String MahoutCFFileOriginalFile = MahoutCFDir + "\\CFRatingMatrixOriginal.txt";
+        CFRatingMatrixComputation.writeCFRatingToMahoutFormatFile(authorPaperRating, MahoutCFFileOriginalFile);
+        
+        // Predict ratings by kNNCF co-pearson.
+        // 100 neighbors, get top 100.
+        int k = 100;
+        int n = 100;
+        String MahoutCFRatingMatrixPredictionFile = MahoutCFDir + "\\CFRatingMatrixPredictionByCoPearson" + "k" + k + "n" + n + ".txt";
+        KNNCF.CoPearsonRecommend(MahoutCFFileOriginalFile, 100, 100, MahoutCFRatingMatrixPredictionFile);
+
+        // Read Recommendation for 1000 authors, put it into authorTestSetList.
+        MahoutFile.readMahoutCFRating(MahoutCFRatingMatrixPredictionFile, authorTestSet);
+        /* End Collaborative filtering */
+        
+        /* Begin evaluation */
+        // Compute evaluation index.
         System.out.println("Begin evaluating...");
         startTime = System.nanoTime();
         double precision10 = Evaluator.computeMeanPrecisionTopN(authorTestSet, 10);
@@ -152,7 +183,6 @@ public class PaperRecommender {
         double ndcg5 = Evaluator.computeMeanNDCG(authorTestSet, 5);
         double ndcg10 = Evaluator.computeMeanNDCG(authorTestSet, 10);
         double mrr = Evaluator.computeMRR(authorTestSet);
-
         String algorithmName = "CBF Baseline";
         StringBuilder evaluationResult = new StringBuilder();
         evaluationResult.append(new Date(System.currentTimeMillis()).toString()).append("\t")
@@ -172,6 +202,7 @@ public class PaperRecommender {
         estimatedTime = System.nanoTime() - startTime;
         System.out.println("Evaluating elapsed time: " + estimatedTime / 1000000000 + " seconds");
         System.out.println("End evaluating.");
+        /* End evaluation */
     }
 
     /**

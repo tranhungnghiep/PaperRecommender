@@ -13,9 +13,9 @@ import uit.tkorg.pr.model.Paper;
  *
  * @author THNghiep
  */
-public class ComputeCFRatingMatrix {
+public class CFRatingMatrixComputation {
     // Prevent instantiation.
-    private ComputeCFRatingMatrix() {}
+    private CFRatingMatrixComputation() {}
 
     public static void normalizeAuthorRatingVector(HashMap<String, HashMap<String, Double>> authorPaperRating) throws Exception {
         HashMap<String, Double> numAllAuthorCite = computeNumAllAuthorCite(authorPaperRating);
@@ -42,7 +42,7 @@ public class ComputeCFRatingMatrix {
         return numAllAuthorCite;
     }
 
-    public static void writeCFRatingToMahoutFormatFile(String fileNameCFRatingMahoutFormatFile, HashMap<String, HashMap<String, Double>> authorPaperRating) throws Exception {
+    public static void writeCFRatingToMahoutFormatFile(HashMap<String, HashMap<String, Double>> authorPaperRating, String fileNameCFRatingMahoutFormatFile) throws Exception {
         FileUtils.deleteQuietly(new File(fileNameCFRatingMahoutFormatFile));
         for (String authorId : authorPaperRating.keySet()) {
             for (String paperId : authorPaperRating.get(authorId).keySet()) {

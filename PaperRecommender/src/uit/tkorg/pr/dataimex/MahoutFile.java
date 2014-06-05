@@ -6,6 +6,9 @@ package uit.tkorg.pr.dataimex;
 
 import com.mysql.jdbc.StringUtils;
 import ir.vsr.HashMapVector;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.regex.Matcher;
@@ -18,13 +21,14 @@ import org.apache.hadoop.io.SequenceFile;
 import org.apache.hadoop.io.Text;
 import org.apache.mahout.math.Vector;
 import org.apache.mahout.math.VectorWritable;
+import uit.tkorg.pr.model.Author;
 
 /**
  *
  * @author THNghiep
  */
 public class MahoutFile {
-    
+
     private MahoutFile() {}
 
     /**
@@ -85,5 +89,29 @@ public class MahoutFile {
         reader.close();
         
         return vectorizedDocuments;
+    }
+    
+    public static void readMahoutCFRating(String MahoutCFRatingMatrixPredictionFile, HashMap<String, Author> authorTestSet) throws Exception {
+        try (BufferedReader br = new BufferedReader(new FileReader(MahoutCFRatingMatrixPredictionFile))) {
+            String line;
+            
+            while ((line = br.readLine()) != null) {
+                if ((line == null) || (line.equals(""))) {
+                    break;
+                }
+                
+                String[] str = line.split(",");
+                String authorId = str[0];
+                String paperId = str[1];
+                String rating = str[2];
+                
+                if (authorTestSet.containsKey(authorId)) {
+                    authorTestSet.get(authorId).getRecommendationList().add(paperId);
+                }
+            }
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+            throw e;
+        }
     }
 }

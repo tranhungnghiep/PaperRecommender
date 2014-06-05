@@ -281,7 +281,7 @@ public class MASDataset1 {
      * @throws Exception 
      */
     public static HashMap<String, HashMap<String, Double>> readAuthorCitePaperMatrix(String fileNameAuthorCitePaperMatrix) throws Exception {
-        System.out.println("Begin reading authorship...");
+        System.out.println("Begin reading author cite paper matrix...");
         long startTime = System.nanoTime();
 
         HashMap<String, HashMap<String, HashMap<String, Integer>>> authorCitePaperYear = new HashMap<>();
@@ -342,8 +342,8 @@ public class MASDataset1 {
         }
         
         long estimatedTime = System.nanoTime() - startTime;
-        System.out.println("Reading authorship elapsed time: " + estimatedTime / 1000000000 + " seconds");
-        System.out.println("End reading author list.");
+        System.out.println("Reading author cite paper matrix elapsed time: " + estimatedTime / 1000000000 + " seconds");
+        System.out.println("End reading author cite paper matrix.");
         
         return authorPaperRating;
     }
