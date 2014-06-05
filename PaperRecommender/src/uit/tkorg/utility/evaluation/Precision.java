@@ -37,15 +37,17 @@ public class Precision {
             return 0.0;
         }
         
-        double precision = 0.0;
+        // true positive
+        double tp = 0.0;
 
         for (int i = 0; i < rankList.size(); i++) {
             if (groundTruth.contains(rankList.get(i))) {
-                precision++;
+                tp++;
             }
         }
 
-        return (double) precision / rankList.size();
+        // ranklist size = true positive + false positive.
+        return (double) tp / rankList.size();
     }
 
     /**
@@ -62,7 +64,8 @@ public class Precision {
             return 0.0;
         }
         
-        double precisionN = 0.0;
+        // true positive
+        double tp = 0.0;
 
         // count to rank list size but divide by original top n.
         int nN = topN;
@@ -72,10 +75,11 @@ public class Precision {
 
         for (int i = 0; i < nN; i++) {
             if (groundTruth.contains(rankList.get(i))) {
-                precisionN++;
+                tp++;
             }
         }
 
-        return (double) precisionN / topN;
+        // topN = true positive + false positive.
+        return (double) tp / topN;
     }
 }

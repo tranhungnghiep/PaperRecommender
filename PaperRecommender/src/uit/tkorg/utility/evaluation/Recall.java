@@ -35,15 +35,17 @@ public class Recall {
             return 0.0;
         }
         
-        double recall = 0.0;
+        // true positive
+        double tp = 0.0;
 
         for (int i = 0; i < groundTruth.size(); i++) {
             if (rankList.contains(groundTruth.get(i))) {
-                recall++;
+                tp++;
             }
         }
         
-        return (double) recall / groundTruth.size();
+        // ground truth size = true positive + false negative.
+        return (double) tp / groundTruth.size();
     }
 
     /**
@@ -58,7 +60,8 @@ public class Recall {
             return 0.0;
         }
         
-        double recallN = 0.0;
+        // true positive
+        double tp = 0.0;
 
         // count to rank list size but divide by original top n.
         int nN = topN;
@@ -69,10 +72,11 @@ public class Recall {
         List topNRankList = rankList.subList(0, nN);
         for (int i = 0; i < groundTruth.size(); i++) {
             if (topNRankList.contains(groundTruth.get(i))) {
-                recallN++;
+                tp++;
             }
         }
         
-        return (double) recallN / groundTruth.size();
+        // ground truth size = true positive + false negative.
+        return (double) tp / groundTruth.size();
     }
 }
