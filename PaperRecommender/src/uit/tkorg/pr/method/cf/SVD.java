@@ -47,12 +47,10 @@ public class SVD {
 
             // Generate a list of n recommendations for the user
             List<RecommendedItem> topItems = svdRecommender.recommend(userId, n);
-            if (topItems.isEmpty()) {
-                bw.write(userId + "\t" + "No recommendations for this user." + "\n");
-            } else {
+            if (!topItems.isEmpty()) {
                 // Display the list of recommendations
                 for (RecommendedItem recommendedItem : topItems) {
-                    bw.write(userId + "\t" + recommendedItem.getItemID() + "\t" + recommendedItem.getValue() + "\n");
+                    bw.write(userId + "," + recommendedItem.getItemID() + "," + recommendedItem.getValue() + "\n");
                 }
             }
         }

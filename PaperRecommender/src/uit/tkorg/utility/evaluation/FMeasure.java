@@ -42,8 +42,12 @@ public class FMeasure {
         
         double precision = Precision.computePrecision(rankList, idealList);
         double recall = Recall.computeRecall(rankList, idealList);
+        double f = ((1 + beta) * precision * recall) / ((beta * beta * precision) + recall);
+        if (Double.isNaN(f) || (Double.isInfinite(f))) {
+            f = 0.0;
+        }
 
-        return ((1 + beta) * precision * recall) / ((beta * beta * precision) + recall);
+        return f;
     }
     
 }

@@ -68,7 +68,7 @@ public class PaperRecommender {
         // - Store metadata of all papers into HashMap<String, Paper> papers
         System.out.println("Begin reading paper list...");
         startTime = System.nanoTime();
-        HashMap<String, Paper> papers = MASDataset1.readPaperList(fileNamePapers, fileNamePaperCitePaper);
+//        HashMap<String, Paper> papers = MASDataset1.readPaperList(fileNamePapers, fileNamePaperCitePaper);
         estimatedTime = System.nanoTime() - startTime;
         System.out.println("Reading paper list elapsed time: " + estimatedTime / 1000000000 + " seconds");
         System.out.println("End reading paper list.");
@@ -79,7 +79,7 @@ public class PaperRecommender {
         System.out.println("Begin writing abstract to file...");
         startTime = System.nanoTime();
 //        PRGeneralFile.writePaperAbstractToTextFile(papers, dirPapers);
-        PaperFVComputation.clearPaperAbstract(papers);
+//        PaperFVComputation.clearPaperAbstract(papers);
         estimatedTime = System.nanoTime() - startTime;
         System.out.println("Writing abstract to file elapsed time: " + estimatedTime / 1000000000 + " seconds");
         System.out.println("End writing abstract to file.");
@@ -115,7 +115,7 @@ public class PaperRecommender {
         // into HashMap<String, Paper> papers (model)
         System.out.println("Begin setting tf-idf to papers...");
         startTime = System.nanoTime();
-        PaperFVComputation.setTFIDFVectorForAllPapers(papers, vectorizedDocuments);
+//        PaperFVComputation.setTFIDFVectorForAllPapers(papers, vectorizedDocuments);
         estimatedTime = System.nanoTime() - startTime;
         System.out.println("Setting tf-idf to papers elapsed time: " + estimatedTime / 1000000000 + " seconds");
         System.out.println("End setting tf-idf to papers.");
@@ -125,7 +125,7 @@ public class PaperRecommender {
         // (papers, 0, 0): baseline
         System.out.println("Begin computing FV for all papers...");
         startTime = System.nanoTime();
-        PaperFVComputation.computeFeatureVectorForAllPapers(papers, 0, 0);
+//        PaperFVComputation.computeFeatureVectorForAllPapers(papers, 0, 0);
         estimatedTime = System.nanoTime() - startTime;
         System.out.println("Computing FV for all papers elapsed time: " + estimatedTime / 1000000000 + " seconds");
         System.out.println("End computing FV for all papers.");
@@ -133,7 +133,7 @@ public class PaperRecommender {
         // Step 8: compute feature vector for those all 1000 authors.
         System.out.println("Begin computing authors FV...");
         startTime = System.nanoTime();
-        AuthorFVComputation.computeFVForAllAuthors(authorTestSet, papers, 0, 0);
+//        AuthorFVComputation.computeFVForAllAuthors(authorTestSet, papers, 0, 0);
         estimatedTime = System.nanoTime() - startTime;
         System.out.println("Computing authors FV elapsed time: " + estimatedTime / 1000000000 + " seconds");
         System.out.println("End computing authors FV.");
@@ -141,7 +141,7 @@ public class PaperRecommender {
         // Step 9: generate recommended papers list.
         System.out.println("Begin CBF Recommending...");
         startTime = System.nanoTime();
-        FeatureVectorSimilarity.generateRecommendationForAllAuthors(authorTestSet, papers, 0, 100);
+//        FeatureVectorSimilarity.generateRecommendationForAllAuthors(authorTestSet, papers, 0, 100);
         estimatedTime = System.nanoTime() - startTime;
         System.out.println("CBF Recommending elapsed time: " + estimatedTime / 1000000000 + " seconds");
         System.out.println("End CBF Recommending.");
@@ -183,7 +183,7 @@ public class PaperRecommender {
         double ndcg5 = Evaluator.computeMeanNDCG(authorTestSet, 5);
         double ndcg10 = Evaluator.computeMeanNDCG(authorTestSet, 10);
         double mrr = Evaluator.computeMRR(authorTestSet);
-        String algorithmName = "CBF Baseline";
+        String algorithmName = "CF Baseline";
         StringBuilder evaluationResult = new StringBuilder();
         evaluationResult.append(new Date(System.currentTimeMillis()).toString()).append("\t")
                 .append(algorithmName).append("\t")

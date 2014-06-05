@@ -66,7 +66,7 @@ public class Recall {
             nN = rankList.size();
         }
         
-        List topNRankList = rankList.subList(0, nN - 1);
+        List topNRankList = rankList.subList(0, nN);
         for (int i = 0; i < idealList.size(); i++) {
             if (topNRankList.contains(idealList.get(i))) {
                 recallN++;
