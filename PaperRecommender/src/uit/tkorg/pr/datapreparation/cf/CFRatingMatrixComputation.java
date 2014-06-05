@@ -50,7 +50,7 @@ public class CFRatingMatrixComputation {
                 row.append(authorId).append(",")
                         .append(paperId).append(",")
                         .append(authorPaperRating.get(authorId).get(paperId).toString())
-                        .append("\n");
+                        .append("\r\n");
                 FileUtils.writeStringToFile(new File(fileNameCFRatingMahoutFormatFile), row.toString(), "UTF8", true);
             }
         }

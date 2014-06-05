@@ -209,7 +209,7 @@ public class PaperRecommender {
                 .append("NDCG@5").append("\t")
                 .append("NDCG@10").append("\t")
                 .append("MRR")
-                .append("\n")
+                .append("\r\n")
                 .append(new Date(System.currentTimeMillis()).toString()).append("\t")
                 .append(algorithmName).append("\t")
                 .append(precision10).append("\t")
@@ -227,7 +227,7 @@ public class PaperRecommender {
                 .append(ndcg5).append("\t")
                 .append(ndcg10).append("\t")
                 .append(mrr)
-                .append("\n");
+                .append("\r\n");
         FileUtils.writeStringToFile(new File(fileNameEvaluationResult), evaluationResult.toString(), "UTF8", true);
         estimatedTime = System.nanoTime() - startTime;
         System.out.println("Evaluating elapsed time: " + estimatedTime / 1000000000 + " seconds");

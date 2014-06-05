@@ -59,7 +59,7 @@ public class KNNCF {
             if (!itemRecommendations.isEmpty()) {
                 // Display the list of recommendations
                 for (RecommendedItem recommendedItem : itemRecommendations) {
-                    bw.write(userId + "," + recommendedItem.getItemID() + "," + recommendedItem.getValue() + "\n");
+                    bw.write(userId + "," + recommendedItem.getItemID() + "," + recommendedItem.getValue() + "\r\n");
                 }
             }
         }
@@ -87,7 +87,7 @@ public class KNNCF {
             if (!itemRecommendations.isEmpty()) {
                 // Display the list of recommendations
                 for (RecommendedItem recommendedItem : itemRecommendations) {
-                    bw.write(userId + "," + recommendedItem.getItemID() + "," + recommendedItem.getValue() + "\n");
+                    bw.write(userId + "," + recommendedItem.getItemID() + "," + recommendedItem.getValue() + "\r\n");
                 }
             }
         }

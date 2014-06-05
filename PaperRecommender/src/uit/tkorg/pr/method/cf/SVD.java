@@ -50,7 +50,7 @@ public class SVD {
             if (!topItems.isEmpty()) {
                 // Display the list of recommendations
                 for (RecommendedItem recommendedItem : topItems) {
-                    bw.write(userId + "," + recommendedItem.getItemID() + "," + recommendedItem.getValue() + "\n");
+                    bw.write(userId + "," + recommendedItem.getItemID() + "," + recommendedItem.getValue() + "\r\n");
                 }
             }
         }
