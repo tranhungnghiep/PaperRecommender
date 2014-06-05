@@ -181,12 +181,34 @@ public class PaperRecommender {
         double recall100 = Evaluator.computeMeanRecallTopN(authorTestSet, 100);
         double f1 = Evaluator.computeMeanFMeasure(authorTestSet, 1);
         double map10 = Evaluator.computeMAP(authorTestSet, 10);
+        double map20 = Evaluator.computeMAP(authorTestSet, 20);
+        double map30 = Evaluator.computeMAP(authorTestSet, 30);
+        double map40 = Evaluator.computeMAP(authorTestSet, 40);
+        double map50 = Evaluator.computeMAP(authorTestSet, 50);
         double ndcg5 = Evaluator.computeMeanNDCG(authorTestSet, 5);
         double ndcg10 = Evaluator.computeMeanNDCG(authorTestSet, 10);
         double mrr = Evaluator.computeMRR(authorTestSet);
         String algorithmName = "CF Baseline";
         StringBuilder evaluationResult = new StringBuilder();
-        evaluationResult.append(new Date(System.currentTimeMillis()).toString()).append("\t")
+        evaluationResult.append("Time Stamp").append("\t")
+                .append("Algorithm").append("\t")
+                .append("P@10").append("\t")
+                .append("P@20").append("\t")
+                .append("P@30").append("\t")
+                .append("P@40").append("\t")
+                .append("P@50").append("\t")
+                .append("R@100").append("\t")
+                .append("F1").append("\t")
+                .append("MAP@10").append("\t")
+                .append("MAP@20").append("\t")
+                .append("MAP@30").append("\t")
+                .append("MAP@40").append("\t")
+                .append("MAP@50").append("\t")
+                .append("NDCG@5").append("\t")
+                .append("NDCG@10").append("\t")
+                .append("MRR")
+                .append("\n")
+                .append(new Date(System.currentTimeMillis()).toString()).append("\t")
                 .append(algorithmName).append("\t")
                 .append(precision10).append("\t")
                 .append(precision20).append("\t")
@@ -196,9 +218,13 @@ public class PaperRecommender {
                 .append(recall100).append("\t")
                 .append(f1).append("\t")
                 .append(map10).append("\t")
+                .append(map20).append("\t")
+                .append(map30).append("\t")
+                .append(map40).append("\t")
+                .append(map50).append("\t")
                 .append(ndcg5).append("\t")
                 .append(ndcg10).append("\t")
-                .append(mrr).append("\t")
+                .append(mrr)
                 .append("\n");
         FileUtils.writeStringToFile(new File(fileNameEvaluationResult), evaluationResult.toString(), "UTF8", true);
         estimatedTime = System.nanoTime() - startTime;
