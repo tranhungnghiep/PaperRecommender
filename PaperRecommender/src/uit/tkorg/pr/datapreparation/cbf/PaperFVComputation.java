@@ -51,8 +51,7 @@ public class PaperFVComputation {
     public static void computeFeatureVectorForAllPapers(HashMap<String, Paper> papers, int combiningScheme, int weightingScheme) throws Exception {
         for (String paperId : papers.keySet()) {
             List<String> combiningPapers = getCombiningPapers(papers, paperId, combiningScheme);
-            HashMapVector featureVector = computePaperFV(papers, paperId, combiningPapers, weightingScheme);
-            papers.get(paperId).setFeatureVector(featureVector);
+            computePaperFV(papers, paperId, combiningPapers, weightingScheme);
         }
     }
 
@@ -75,7 +74,9 @@ public class PaperFVComputation {
         } else if (combiningScheme == 2) {
             combiningPapers = papers.get(paperId).getCitation();
         } else if (combiningScheme == 3) {
-            combiningPapers = papers.get(paperId).getReference();
+            combiningPapers = new ArrayList<>(papers.get(paperId).getReference());
+            // Be very careful when working with object/reference type.
+            // Mutating.
             combiningPapers.addAll(papers.get(paperId).getCitation());
         }
         
@@ -89,11 +90,11 @@ public class PaperFVComputation {
      * @param paperId
      * @return list represents feature vector.
      */
-    public static HashMapVector computePaperFV(HashMap<String, Paper> papers, String paperId, List<String> combiningPapers, int weightingScheme) throws Exception {
+    public static void computePaperFV(HashMap<String, Paper> papers, String paperId, List<String> combiningPapers, int weightingScheme) throws Exception {
         HashMapVector featureVector = new HashMapVector();
 
         Paper paper = papers.get(paperId);//get paper has Id is paperId in ListofPapers
-        featureVector.add(paper.getTfidfVector());//assign HashMapVector featureVector equal HashMapVector paper
+        featureVector.add(paper.getTfidfVector());// add tfidf to zero vector, not assign
         
         // weighting scheme
         if (weightingScheme == 0) {
@@ -104,7 +105,7 @@ public class PaperFVComputation {
             featureVector.add(sumFVRPY(papers, paper, combiningPapers));
         }
         
-        return featureVector;
+        paper.setFeatureVector(featureVector);
     }
 
     /**
