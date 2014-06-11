@@ -30,6 +30,7 @@ import uit.tkorg.utility.general.WeightingUtility;
  */
 public class FeatureVectorSimilarity {
 
+    public static int count = 0;
     // Prevent instantiation.
     private FeatureVectorSimilarity() {
     }
@@ -54,9 +55,8 @@ public class FeatureVectorSimilarity {
         ExecutorService executor = Executors.newFixedThreadPool(numOfProcessors - 1);
 
         System.out.println("NUM OF AUTHOR:" + authors.size());
-        int count = 0;
+        
         for (String authorId : authors.keySet()) {
-            System.out.println((new Date(System.currentTimeMillis()).toString()) + "...PROCESSING:" + count++);
             final Author authorObj = authors.get(authorId);
             executor.submit(new Runnable() {
                 @Override
@@ -85,8 +85,8 @@ public class FeatureVectorSimilarity {
      *
      * @return recommendationPapers
      */
-    private static void generateRecommendation(Author author, HashMap<String, Paper> papers, int similarityScheme, int n)
-            throws Exception {
+    private static void generateRecommendation(Author author, HashMap<String, Paper> papers, 
+            int similarityScheme, int n) throws Exception {
 
         List<String> recommendedPapers = new ArrayList<>();
         HashMap<String, Double> paperSimilarityHM = new HashMap(); // <IDPaper, SimValue>
@@ -113,5 +113,6 @@ public class FeatureVectorSimilarity {
         }
         
         author.setRecommendationList(recommendedPapers);
+        System.out.println(count++ + (new Date(System.currentTimeMillis()).toString()) + "DONE for :" + author.getAuthorId());
     }
 }
