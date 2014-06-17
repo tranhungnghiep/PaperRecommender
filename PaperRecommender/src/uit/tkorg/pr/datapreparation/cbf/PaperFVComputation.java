@@ -49,7 +49,17 @@ public class PaperFVComputation {
      * @param weightingScheme   0: linear; 1: cosine; 2: rpy
      */
     public static void computeFeatureVectorForAllPapers(HashMap<String, Paper> papers, int combiningScheme, int weightingScheme) throws Exception {
+        // Current paper.
+        int count = 0;
+        System.out.println("Number of papers: " + papers.size());
+
         for (String paperId : papers.keySet()) {
+            // Print current paper number.
+            if (count % 1000 == 0) {
+                System.out.println("Compting FV for paper No. " + (count + 1));
+            }
+            count++;
+
             List<String> combiningPapers = getCombiningPapers(papers, paperId, combiningScheme);
             computePaperFV(papers, paperId, combiningPapers, weightingScheme);
         }

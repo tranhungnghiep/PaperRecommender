@@ -70,145 +70,146 @@ public class PaperRecommender {
         // Step 1:
         // - Read content of papers from [Training] Paper_Before_2006.csv
         // - Store metadata of all papers into HashMap<String, Paper> papers
-        /*System.out.println("Begin reading paper list...");
-         * startTime = System.nanoTime();
-         * HashMap<String, Paper> papers = MASDataset1.readPaperList(fileNamePapers, fileNamePaperCitePaper);
-         * estimatedTime = System.nanoTime() - startTime;
-         * System.out.println("Reading paper list elapsed time: " + estimatedTime / 1000000000 + " seconds");
-         * System.out.println("End reading paper list.");
-         * 
-         * // Step 2:
-         * // - Writing abstract of all papers to text files. One file for each paper in 'dirPapers' directory.
-         * // - Clear abstract of all papers.
-         * System.out.println("Begin writing abstract to file...");
-         * startTime = System.nanoTime();
-         * //PRGeneralFile.writePaperAbstractToTextFile(papers, dirPapers);
-         * //PaperFVComputation.clearPaperAbstract(papers);
-         * estimatedTime = System.nanoTime() - startTime;
-         * System.out.println("Writing abstract to file elapsed time: " + estimatedTime / 1000000000 + " seconds");
-         * System.out.println("End writing abstract to file.");
-         * 
-         * // Step 3: Preprocessing content of all papers. Remove stop words and stemming
-         * System.out.println("Begin removing stopword and stemming...");
-         * startTime = System.nanoTime();
-         * //TextPreprocessUtility.parallelProcess(dirPapers, dirPreProcessedPaper, true, true);
-         * estimatedTime = System.nanoTime() - startTime;
-         * System.out.println("Removing stopword and stemming elapsed time: " + estimatedTime / 1000000000 + " seconds");
-         * System.out.println("End removing stopword and stemming.");
-         * 
-         * // Step 4: tf-idf. Output of this process is vectors of papers stored in a Mahout's binary file
-         * System.out.println("Begin vectorizing...");
-         * startTime = System.nanoTime();
-         * //TextVectorizationByMahoutTerminalUtility.textVectorizeFiles(dirPreProcessedPaper, sequenceDir, vectorDir);
-         * estimatedTime = System.nanoTime() - startTime;
-         * System.out.println("Vectorizing elapsed time: " + estimatedTime / 1000000000 + " seconds");
-         * System.out.println("End vectorizing.");
-         * 
-         * // Step 5: Read vectors of all papers store in
-         * // - HashMap<Integer, String> dictMap: Dictionary of the whole collection.
-         * // - HashMap<String, HashMapVector> vectorizedDocuments: <PaperID, Vector TF*IDF of PaperID>
-         * System.out.println("Begin reading vector...");
-         * startTime = System.nanoTime();
-         * HashMap<Integer, String> dictMap = MahoutFile.readMahoutDictionaryFiles(vectorDir);
-         * HashMap<String, HashMapVector> vectorizedDocuments = MahoutFile.readMahoutVectorFiles(vectorDir);
-         * estimatedTime = System.nanoTime() - startTime;
-         * System.out.println("Reading vector elapsed time: " + estimatedTime / 1000000000 + " seconds");
-         * System.out.println("End reading vector.");
-         * 
-         * // Step 6: put TFIDF vectors of all paper (vectorizedDocuments)
-         * // into HashMap<String, Paper> papers (model)
-         * System.out.println("Begin setting tf-idf to papers...");
-         * startTime = System.nanoTime();
-         * PaperFVComputation.setTFIDFVectorForAllPapers(papers, vectorizedDocuments);
-         * estimatedTime = System.nanoTime() - startTime;
-         * System.out.println("Setting tf-idf to papers elapsed time: " + estimatedTime / 1000000000 + " seconds");
-         * System.out.println("End setting tf-idf to papers.");
-         * 
-         * // Step 7: Aggregating feature vectors for all papers and
-         * // put the result into HashMap<String, Paper> papers (model)
-         * // (papers, 0, 0): baseline
-         * System.out.println("Begin computing FV for all papers...");
-         * startTime = System.nanoTime();
-         * PaperFVComputation.computeFeatureVectorForAllPapers(papers, 3, 0);
-         * estimatedTime = System.nanoTime() - startTime;
-         * System.out.println("Computing FV for all papers elapsed time: " + estimatedTime / 1000000000 + " seconds");
-         * System.out.println("End computing FV for all papers.");
-         * 
-         * // Step 8: compute feature vector for those all 1000 authors.
-         * System.out.println("Begin computing authors FV...");
-         * startTime = System.nanoTime();
-         * AuthorFVComputation.computeFVForAllAuthors(authorTestSet, papers, 0, 0);
-         * estimatedTime = System.nanoTime() - startTime;
-         * System.out.println("Computing authors FV elapsed time: " + estimatedTime / 1000000000 + " seconds");
-         * System.out.println("End computing authors FV.");
-         * 
-         * // Step 9: generate recommended papers list.
-         * System.out.println("Begin CBF Recommending...");
-         * startTime = System.nanoTime();
-         * FeatureVectorSimilarity.generateRecommendationForAllAuthors(authorTestSet, papers, 0, 100);
-         * estimatedTime = System.nanoTime() - startTime;
-         * System.out.println("CBF Recommending elapsed time: " + estimatedTime / 1000000000 + " seconds");
-         * System.out.println("End CBF Recommending.");*/
+        System.out.println("Begin reading paper list...");
+        startTime = System.nanoTime();
+        HashMap<String, Paper> papers = MASDataset1.readPaperList(fileNamePapers, fileNamePaperCitePaper);
+        estimatedTime = System.nanoTime() - startTime;
+        System.out.println("Reading paper list elapsed time: " + estimatedTime / 1000000000 + " seconds");
+        System.out.println("End reading paper list.");
+        
+        // Step 2:
+        // - Writing abstract of all papers to text files. One file for each paper in 'dirPapers' directory.
+        // - Clear abstract of all papers.
+        System.out.println("Begin writing abstract to file...");
+        startTime = System.nanoTime();
+        //PRGeneralFile.writePaperAbstractToTextFile(papers, dirPapers);
+        //PaperFVComputation.clearPaperAbstract(papers);
+        estimatedTime = System.nanoTime() - startTime;
+        System.out.println("Writing abstract to file elapsed time: " + estimatedTime / 1000000000 + " seconds");
+        System.out.println("End writing abstract to file.");
+        
+        // Step 3: Preprocessing content of all papers. Remove stop words and stemming
+        System.out.println("Begin removing stopword and stemming...");
+        startTime = System.nanoTime();
+        //TextPreprocessUtility.parallelProcess(dirPapers, dirPreProcessedPaper, true, true);
+        estimatedTime = System.nanoTime() - startTime;
+        System.out.println("Removing stopword and stemming elapsed time: " + estimatedTime / 1000000000 + " seconds");
+        System.out.println("End removing stopword and stemming.");
+         
+        // Step 4: tf-idf. Output of this process is vectors of papers stored in a Mahout's binary file
+        System.out.println("Begin vectorizing...");
+        startTime = System.nanoTime();
+        //TextVectorizationByMahoutTerminalUtility.textVectorizeFiles(dirPreProcessedPaper, sequenceDir, vectorDir);
+        estimatedTime = System.nanoTime() - startTime;
+        System.out.println("Vectorizing elapsed time: " + estimatedTime / 1000000000 + " seconds");
+        System.out.println("End vectorizing.");
+        
+        // Step 5: Read vectors of all papers store in
+        // - HashMap<Integer, String> dictMap: Dictionary of the whole collection.
+        // - HashMap<String, HashMapVector> vectorizedDocuments: <PaperID, Vector TF*IDF of PaperID>
+        System.out.println("Begin reading vector...");
+        startTime = System.nanoTime();
+        HashMap<Integer, String> dictMap = MahoutFile.readMahoutDictionaryFiles(vectorDir);
+        HashMap<String, HashMapVector> vectorizedDocuments = MahoutFile.readMahoutVectorFiles(vectorDir);
+        estimatedTime = System.nanoTime() - startTime;
+        System.out.println("Reading vector elapsed time: " + estimatedTime / 1000000000 + " seconds");
+        System.out.println("End reading vector.");
+        
+         // Step 6: put TFIDF vectors of all paper (vectorizedDocuments)
+         // into HashMap<String, Paper> papers (model)
+         System.out.println("Begin setting tf-idf to papers...");
+         startTime = System.nanoTime();
+         PaperFVComputation.setTFIDFVectorForAllPapers(papers, vectorizedDocuments);
+         estimatedTime = System.nanoTime() - startTime;
+         System.out.println("Setting tf-idf to papers elapsed time: " + estimatedTime / 1000000000 + " seconds");
+         System.out.println("End setting tf-idf to papers.");
+         
+         // Step 7: Aggregating feature vectors for all papers and
+         // put the result into HashMap<String, Paper> papers (model)
+         // (papers, 0, 0): baseline
+         System.out.println("Begin computing FV for all papers...");
+         startTime = System.nanoTime();
+         PaperFVComputation.computeFeatureVectorForAllPapers(papers, 3, 0);
+         estimatedTime = System.nanoTime() - startTime;
+         System.out.println("Computing FV for all papers elapsed time: " + estimatedTime / 1000000000 + " seconds");
+         System.out.println("End computing FV for all papers.");
+         
+         // Step 8: compute feature vector for those all 1000 authors.
+         System.out.println("Begin computing authors FV...");
+         startTime = System.nanoTime();
+         AuthorFVComputation.computeFVForAllAuthors(authorTestSet, papers, 0, 0);
+         estimatedTime = System.nanoTime() - startTime;
+         System.out.println("Computing authors FV elapsed time: " + estimatedTime / 1000000000 + " seconds");
+         System.out.println("End computing authors FV.");
+         
+         // Step 9: generate recommended papers list.
+         System.out.println("Begin CBF Recommending...");
+         startTime = System.nanoTime();
+         FeatureVectorSimilarity.generateRecommendationForAllAuthors(authorTestSet, papers, 0, 100);
+         estimatedTime = System.nanoTime() - startTime;
+         System.out.println("CBF Recommending elapsed time: " + estimatedTime / 1000000000 + " seconds");
+         System.out.println("End CBF Recommending.");
         //</editor-fold>
 
         //<editor-fold defaultstate="collapsed" desc="CF METHODS">
         String MahoutCFFileOriginalFile = MahoutCFDir + "\\CFRatingMatrixOriginal.txt";
         String MahoutCFRatingMatrixPredictionFile = null;
         
-        /*// Read Raw rating matrix
-         * HashMap<String, HashMap<String, Double>> authorPaperRating = MASDataset1.readAuthorCitePaperMatrix(fileNameAuthorCitePaper);
-         * 
-         * // Normalize
-         * System.out.println("Begin Normalize reating values in Citation Matrix");
-         * CFRatingMatrixComputation.normalizeAuthorRatingVector(authorPaperRating);
-         * System.out.println("End Normalize reating values in Citation Matrix");
-         * 
-         * // Write to Mahout file
-         * System.out.println("Begin writeCFRatingToMahoutFormatFile");
-         * CFRatingMatrixComputation.writeCFRatingToMahoutFormatFile(authorPaperRating, MahoutCFFileOriginalFile);
-         * System.out.println("End writeCFRatingToMahoutFormatFile");*/
+         // Read Raw rating matrix
+         //HashMap<String, HashMap<String, Double>> authorPaperRating = MASDataset1.readAuthorCitePaperMatrix(fileNameAuthorCitePaper);
+         
+         // Normalize
+         //System.out.println("Begin Normalize reating values in Citation Matrix");
+         //CFRatingMatrixComputation.normalizeAuthorRatingVector(authorPaperRating);
+         //System.out.println("End Normalize reating values in Citation Matrix");
+         
+         // Write to Mahout file
+         //System.out.println("Begin writeCFRatingToMahoutFormatFile");
+         //CFRatingMatrixComputation.writeCFRatingToMahoutFormatFile(authorPaperRating, MahoutCFFileOriginalFile);
+         //System.out.println("End writeCFRatingToMahoutFormatFile");
          
         
-        /*// Predict ratings by kNNCF co-pearson.
-         * // k neighbors, get top n.
-         * System.out.println("Begin CoPearsonRecommend");
-         * int k = 8;
-         * int n = 100;
-         * 
-         * // Recommend for all author in matrix.
-         * //        MahoutCFRatingMatrixPredictionFile = MahoutCFDir + "\\CFRatingMatrixPredictionByCoPearson" + "k" + k + "n" + n + ".txt";
-         * //        KNNCF.CoPearsonRecommend(MahoutCFFileOriginalFile, k, n, MahoutCFRatingMatrixPredictionFile);
-         * 
-         * // Recommend for authors in author test set.
-         * MahoutCFRatingMatrixPredictionFile = MahoutCFDir + "\\CFRatingMatrixPredictionByCoPearson" + "ForAuthorTestSet" + "k" + k + "n" + n + ".txt";
-         * KNNCF.CoPearsonRecommendToAuthorList(MahoutCFFileOriginalFile, k, n, authorTestSet, MahoutCFRatingMatrixPredictionFile);
-         * System.out.println("End CoPearsonRecommend");*/
+         // Predict ratings by kNNCF co-pearson.
+         // k neighbors, get top n.
+         /*System.out.println("Begin CoPearsonRecommend");
+         int k = 8;
+         int n = 100;
+         
+         // Recommend for all author in matrix.
+//        MahoutCFRatingMatrixPredictionFile = MahoutCFDir + "\\CFRatingMatrixPredictionByCoPearson" + "k" + k + "n" + n + ".txt";
+//        KNNCF.CoPearsonRecommend(MahoutCFFileOriginalFile, k, n, MahoutCFRatingMatrixPredictionFile);
+         
+         // Recommend for authors in author test set.
+         MahoutCFRatingMatrixPredictionFile = MahoutCFDir + "\\CFRatingMatrixPredictionByCoPearson" + "ForAuthorTestSet" + "k" + k + "n" + n + ".txt";
+         KNNCF.CoPearsonRecommendToAuthorList(MahoutCFFileOriginalFile, k, n, authorTestSet, MahoutCFRatingMatrixPredictionFile);
+         System.out.println("End CoPearsonRecommend");*/
         
         
         // Predict ratings by SVD.
         // get top n, f features, normalize by l, i iterations.
-        System.out.println("Begin SVD Recommend");
+        //System.out.println("Begin SVD Recommend");
         int n = 100;
         int f = 50;
         double l = 0.01;
         int i = 1000;
         // Recommend for authors in author test set.
         MahoutCFRatingMatrixPredictionFile = MahoutCFDir + "\\CFRatingMatrixPredictionBySVD" + "ForAuthorTestSet" + "n" + n + "f" + f + "l" + l + "i" + i + ".txt";
-        SVDCF.SVDRecommendationToAuthorList(MahoutCFFileOriginalFile, n, f, l, i, authorTestSet, MahoutCFRatingMatrixPredictionFile);
-        System.out.println("End SVD Recommend");
+        //SVDCF.SVDRecommendationToAuthorList(MahoutCFFileOriginalFile, n, f, l, i, authorTestSet, MahoutCFRatingMatrixPredictionFile);
+        //System.out.println("End SVD Recommend");
         
         
         // Read Recommendation for 1000 authors, put it into authorTestSetList.
-        MahoutFile.readMahoutCFRating(MahoutCFRatingMatrixPredictionFile, authorTestSet);
+        //MahoutFile.readMahoutCFRating(MahoutCFRatingMatrixPredictionFile, authorTestSet);
         //</editor-fold>
 
         //<editor-fold defaultstate="collapsed" desc="EVALUATION">
         // Compute evaluation index.
         System.out.println("Begin evaluating...");
         startTime = System.nanoTime();
-        
+
+        String algorithmName = "CB with FV_Papers(3,0) and FV_Authors(0,0)";        
 //        String algorithmName = "CF-CoPearson K=" + k;
-        String algorithmName = "CF SVD " + "n" + n + "f" + f + "l" + l + "i" + i;
+//        String algorithmName = "CF SVD " + "n" + n + "f" + f + "l" + l + "i" + i;
         
         double precision10 = Evaluator.computeMeanPrecisionTopN(authorTestSet, 10);
         double precision20 = Evaluator.computeMeanPrecisionTopN(authorTestSet, 20);
@@ -232,7 +233,7 @@ public class PaperRecommender {
         StringBuilder evaluationResult = new StringBuilder();
         evaluationResult.append("Time Stamp").append("\t")
                 .append("Algorithm").append("\t")
-                .append("Running Time").append("\t")
+                .append("Running time in second").append("\t")
                 .append("P@10").append("\t")
                 .append("P@20").append("\t")
                 .append("P@30").append("\t")
@@ -252,7 +253,7 @@ public class PaperRecommender {
                 .append("\r\n")
                 .append(new Date(System.currentTimeMillis()).toString()).append("\t")
                 .append(algorithmName).append("\t")
-                .append(estimatedRecommendationFlowTime).append("\t")
+                .append(estimatedRecommendationFlowTime / 1000000000).append("\t")
                 .append(precision10).append("\t")
                 .append(precision20).append("\t")
                 .append(precision30).append("\t")
