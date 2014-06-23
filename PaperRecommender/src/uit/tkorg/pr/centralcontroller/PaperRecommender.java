@@ -121,6 +121,9 @@ public class PaperRecommender {
          System.out.println("Begin setting tf-idf to papers...");
          startTime = System.nanoTime();
          PaperFVComputation.setTFIDFVectorForAllPapers(papers, vectorizedDocuments);
+         // Clear no longer in use objects to free memory (just procedure, underlying data are still in use).
+//         dictMap = null;
+         vectorizedDocuments = null;
          estimatedTime = System.nanoTime() - startTime;
          System.out.println("Setting tf-idf to papers elapsed time: " + estimatedTime / 1000000000 + " seconds");
          System.out.println("End setting tf-idf to papers.");

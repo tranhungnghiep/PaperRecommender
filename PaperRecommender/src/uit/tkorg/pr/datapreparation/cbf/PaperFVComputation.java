@@ -60,39 +60,10 @@ public class PaperFVComputation {
             }
             count++;
 
-            List<String> combiningPapers = getCombiningPapers(papers, paperId, combiningScheme);
-            computePaperFV(papers, paperId, combiningPapers, weightingScheme);
+            computePaperFV(papers, paperId, combiningScheme, weightingScheme);
         }
     }
 
-    /**
-     * 
-     * @param papers
-     * @param paperId
-     * @param combiningScheme
-     * @return List of papers which are used to combine with current paper.
-     * @throws Exception 
-     */
-    private static List<String> getCombiningPapers(HashMap<String, Paper> papers, String paperId, int combiningScheme) throws Exception {
-        List<String> combiningPapers = null;
-        
-        // combining scheme
-        if (combiningScheme == 0) {
-            combiningPapers = new ArrayList<>();
-        } else if (combiningScheme == 1) {
-            combiningPapers = papers.get(paperId).getReference();
-        } else if (combiningScheme == 2) {
-            combiningPapers = papers.get(paperId).getCitation();
-        } else if (combiningScheme == 3) {
-            combiningPapers = new ArrayList<>(papers.get(paperId).getReference());
-            // Be very careful when working with object/reference type.
-            // Mutating.
-            combiningPapers.addAll(papers.get(paperId).getCitation());
-        }
-        
-        return combiningPapers;
-    }
-    
     /**
      * This method compute final feature vector by combining citation and
      * reference.
@@ -100,22 +71,40 @@ public class PaperFVComputation {
      * @param paperId
      * @return list represents feature vector.
      */
-    public static void computePaperFV(HashMap<String, Paper> papers, String paperId, List<String> combiningPapers, int weightingScheme) throws Exception {
-        HashMapVector featureVector = new HashMapVector();
+    public static void computePaperFV(HashMap<String, Paper> papers, String paperId, int combiningScheme, int weightingScheme) throws Exception {
 
-        Paper paper = papers.get(paperId);//get paper has Id is paperId in ListofPapers
-        featureVector.add(paper.getTfidfVector());// add tfidf to zero vector, not assign
+        papers.get(paperId).setFeatureVector(new HashMapVector());
+        papers.get(paperId).getFeatureVector().add(papers.get(paperId).getTfidfVector());// add tfidf to zero vector, not assign
         
         // weighting scheme
         if (weightingScheme == 0) {
-            featureVector.add(sumFVLinear(papers, combiningPapers)); // add featureVector of combining papers
+            if (combiningScheme == 1) {
+                sumFVLinear(papers, paperId, papers.get(paperId).getReference());
+            } else if (combiningScheme == 2) {
+                sumFVLinear(papers, paperId, papers.get(paperId).getCitation());
+            } else if (combiningScheme == 3) {
+                sumFVLinear(papers, paperId, papers.get(paperId).getReference());
+                sumFVLinear(papers, paperId, papers.get(paperId).getCitation());
+            }
         } else if (weightingScheme == 1) {
-            featureVector.add(sumFVCosine(papers, paper, combiningPapers));
+            if (combiningScheme == 1) {
+                sumFVCosine(papers, paperId, papers.get(paperId).getReference());
+            } else if (combiningScheme == 2) {
+                sumFVCosine(papers, paperId, papers.get(paperId).getCitation());
+            } else if (combiningScheme == 3) {
+                sumFVCosine(papers, paperId, papers.get(paperId).getReference());
+                sumFVCosine(papers, paperId, papers.get(paperId).getCitation());
+            }
         } else if (weightingScheme == 2) {
-            featureVector.add(sumFVRPY(papers, paper, combiningPapers));
+            if (combiningScheme == 1) {
+                sumFVRPY(papers, paperId, papers.get(paperId).getReference());
+            } else if (combiningScheme == 2) {
+                sumFVRPY(papers, paperId, papers.get(paperId).getCitation());
+            } else if (combiningScheme == 3) {
+                sumFVRPY(papers, paperId, papers.get(paperId).getReference());
+                sumFVRPY(papers, paperId, papers.get(paperId).getCitation());
+            }
         }
-        
-        paper.setFeatureVector(featureVector);
     }
 
     /**
@@ -125,16 +114,12 @@ public class PaperFVComputation {
      * @param combiningPaperIds
      * @return featureVector
      */
-    private static HashMapVector sumFVLinear(HashMap<String, Paper> papers, List<String> combiningPaperIds) throws Exception {
-        HashMapVector featureVector = new HashMapVector();
-        
+    private static void sumFVLinear(HashMap<String, Paper> papers, String paperId, List<String> combiningPaperIds) throws Exception {
         for (String combiningPaperId : combiningPaperIds) {
             if (papers.containsKey(combiningPaperId)) {
-                featureVector.add(papers.get(combiningPaperId).getTfidfVector());
+                papers.get(paperId).getFeatureVector().add(papers.get(combiningPaperId).getTfidfVector());
             }
         }
-        
-        return featureVector;
     }
 
     /**
@@ -145,17 +130,13 @@ public class PaperFVComputation {
      * @param combiningPaperIds
      * @return featureVector
      */
-    private static HashMapVector sumFVCosine(HashMap<String, Paper> papers, Paper paper, List<String> combiningPaperIds) throws Exception {
-        HashMapVector featureVector = new HashMapVector();
-        
+    private static void sumFVCosine(HashMap<String, Paper> papers, String paperId, List<String> combiningPaperIds) throws Exception {
         for (String combiningPaperId : combiningPaperIds) {
             if (papers.containsKey(combiningPaperId)) {
-                double cosine = WeightingUtility.computeCosine(paper.getTfidfVector(), papers.get(combiningPaperId).getTfidfVector());
-                featureVector.addScaled(papers.get(combiningPaperId).getTfidfVector(), cosine);
+                double cosine = WeightingUtility.computeCosine(papers.get(paperId).getTfidfVector(), papers.get(combiningPaperId).getTfidfVector());
+                papers.get(paperId).getFeatureVector().addScaled(papers.get(combiningPaperId).getTfidfVector(), cosine);
             }
         }
-        
-        return featureVector;
     }
 
     /**
@@ -166,16 +147,12 @@ public class PaperFVComputation {
      * @param combiningPaperIds
      * @return featureVector
      */
-    private static HashMapVector sumFVRPY(HashMap<String, Paper> papers, Paper paper, List<String> combiningPaperIds) throws Exception {
-        HashMapVector featureVector = new HashMapVector();
-        
+    private static void sumFVRPY(HashMap<String, Paper> papers, String paperId, List<String> combiningPaperIds) throws Exception {
         for (String combiningPaperId : combiningPaperIds) {
             if (papers.containsKey(combiningPaperId)) {
-                double rpy = WeightingUtility.computeRPY(paper.getYear(), papers.get(combiningPaperId).getYear(), 0.9);
-                featureVector.addScaled(papers.get(combiningPaperId).getTfidfVector(), rpy);
+                double rpy = WeightingUtility.computeRPY(papers.get(paperId).getYear(), papers.get(combiningPaperId).getYear(), 0.9);
+                papers.get(paperId).getFeatureVector().addScaled(papers.get(combiningPaperId).getTfidfVector(), rpy);
             }
         }
-        
-        return featureVector;
     }
 }
