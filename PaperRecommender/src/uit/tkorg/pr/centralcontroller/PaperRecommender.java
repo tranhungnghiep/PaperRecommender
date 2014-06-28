@@ -158,7 +158,6 @@ public class PaperRecommender {
         System.out.println("Computing FV for all papers elapsed time: " + estimatedTime / 1000000000 + " seconds");
         System.out.println("End computing FV for all papers.");
 
-
         // Step 9: generate recommended papers list.
         System.out.println("Begin CBF Recommending...");
         startTime = System.nanoTime();
@@ -168,7 +167,6 @@ public class PaperRecommender {
         System.out.println("End CBF Recommending.");
         //</editor-fold>
 
-        
         //<editor-fold defaultstate="collapsed" desc="CF METHODS">
         /*
 //        String MahoutCFFileOriginalFile = MahoutCFDir + "\\CFRatingMatrixOriginal.txt";

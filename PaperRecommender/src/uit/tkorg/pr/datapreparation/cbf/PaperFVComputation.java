@@ -37,13 +37,13 @@ public class PaperFVComputation {
 
     public static void clearTFIDF(HashMap<String, Paper> papers) throws Exception {
         for (String paperId : papers.keySet()) {
-            papers.get(paperId).setTfidfVector(null);
+            papers.get(paperId).setTfidfVector(new HashMapVector());
         }
     }
 
     public static void clearFV(HashMap<String, Paper> papers) throws Exception {
         for (String paperId : papers.keySet()) {
-            papers.get(paperId).setFeatureVector(null);
+            papers.get(paperId).setFeatureVector(new HashMapVector());
         }
     }
 
@@ -57,7 +57,9 @@ public class PaperFVComputation {
         HashMap<String, Paper> returnPapers = new HashMap<>();
         
         for (String paperId : paperIds) {
-            returnPapers.put(paperId, papers.get(paperId));
+            if (papers.containsKey(paperId)) {
+                returnPapers.put(paperId, papers.get(paperId));
+            }
         }
         
         return returnPapers;
@@ -90,7 +92,9 @@ public class PaperFVComputation {
             }
             count++;
 
-            computePaperFV(papers, paperId, combiningScheme, weightingScheme);
+            if (papers.containsKey(paperId)) {
+                computePaperFV(papers, paperId, combiningScheme, weightingScheme);
+            }
         }
     }
 
