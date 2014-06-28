@@ -7,6 +7,7 @@ package uit.tkorg.pr.datapreparation.cbf;
 import ir.vsr.HashMapVector;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import uit.tkorg.pr.model.Author;
 import uit.tkorg.pr.model.Paper;
@@ -25,6 +26,27 @@ public class AuthorFVComputation {
 
     // Prevent instantiation.
     private AuthorFVComputation() {
+    }
+
+    public static HashSet<String> getPaperIdsOfAuthors(HashMap<String, Author> authors) throws Exception {
+        HashSet<String> paperIds = new HashSet<>();
+        
+        for (String authorId : authors.keySet()) {
+            paperIds.addAll(authors.get(authorId).getPaper());
+        }
+        
+        return paperIds;
+        
+    }
+
+    public static HashSet<String> getPaperIdsTestSet(HashMap<String, Author> authors) throws Exception {
+        HashSet<String> paperIds = new HashSet<>();
+        
+        for (String authorId : authors.keySet()) {
+            paperIds.addAll(authors.get(authorId).getGroundTruth());
+        }
+        
+        return paperIds;
     }
 
     /**

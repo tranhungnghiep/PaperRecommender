@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import org.apache.commons.io.FileUtils;
@@ -34,26 +35,55 @@ public class PaperFVComputation {
         }
     }
 
+    public static void clearTFIDF(HashMap<String, Paper> papers) throws Exception {
+        for (String paperId : papers.keySet()) {
+            papers.get(paperId).setTfidfVector(null);
+        }
+    }
+
+    public static void clearFV(HashMap<String, Paper> papers) throws Exception {
+        for (String paperId : papers.keySet()) {
+            papers.get(paperId).setFeatureVector(null);
+        }
+    }
+
     public static void setTFIDFVectorForAllPapers(HashMap<String, Paper> papers, HashMap<String, HashMapVector> vectorizedDocuments) throws Exception {
         for (String paperId : papers.keySet()) {
             papers.get(paperId).setTfidfVector(vectorizedDocuments.get(paperId));
         }
     }
 
+    public static HashMap<String, Paper> extractPapers(HashMap<String, Paper> papers, HashSet<String> paperIds) throws Exception {
+        HashMap<String, Paper> returnPapers = new HashMap<>();
+        
+        for (String paperId : paperIds) {
+            returnPapers.put(paperId, papers.get(paperId));
+        }
+        
+        return returnPapers;
+    }
+
+    
     /**
      * This method computes and set value for all papers' full feature vector
      * (after combining citation and reference papers).
-     *
+     * 
+     * @param paperIds: restrict paper ids to compute FV. Null means no restriction.
      * @param combiningScheme   0: itself content, 1: itself content + content of references; 
      *                          2: itself content + content of citations; 3: itself content + content of references + content of citations.
      * @param weightingScheme   0: linear; 1: cosine; 2: rpy
      */
-    public static void computeFeatureVectorForAllPapers(HashMap<String, Paper> papers, int combiningScheme, int weightingScheme) throws Exception {
+    public static void computeFeatureVectorForAllPapers(HashMap<String, Paper> papers, HashSet<String> paperIds, int combiningScheme, int weightingScheme) throws Exception {
+        
+        if (paperIds == null) {
+            paperIds = (HashSet) papers.keySet();
+        }
+        
         // Current paper.
         int count = 0;
-        System.out.println("Number of papers: " + papers.size());
+        System.out.println("Number of papers to compute FV: " + paperIds.size());
 
-        for (String paperId : papers.keySet()) {
+        for (String paperId : paperIds) {
             // Print current paper number.
             if (count % 1000 == 0) {
                 System.out.println("Compting FV for paper No. " + (count + 1));
@@ -73,7 +103,7 @@ public class PaperFVComputation {
      */
     public static void computePaperFV(HashMap<String, Paper> papers, String paperId, int combiningScheme, int weightingScheme) throws Exception {
 
-        papers.get(paperId).setFeatureVector(new HashMapVector());
+        papers.get(paperId).setFeatureVector(new HashMapVector()); // Re-initiate feature vector
         papers.get(paperId).getFeatureVector().add(papers.get(paperId).getTfidfVector());// add tfidf to zero vector, not assign
         
         // weighting scheme
