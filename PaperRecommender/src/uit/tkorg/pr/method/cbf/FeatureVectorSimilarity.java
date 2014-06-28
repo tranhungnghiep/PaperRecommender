@@ -54,7 +54,7 @@ public class FeatureVectorSimilarity {
         int numOfProcessors = runtime.availableProcessors();
         ExecutorService executor = Executors.newFixedThreadPool(numOfProcessors - 1);
 
-        System.out.println("NUM OF AUTHOR:" + authors.size());
+        System.out.println("NUM OF AUTHOR: " + authors.size());
         
         for (String authorId : authors.keySet()) {
             final Author authorObj = authors.get(authorId);
@@ -113,6 +113,6 @@ public class FeatureVectorSimilarity {
         }
         
         author.setRecommendationList(recommendedPapers);
-        System.out.println(count++ + (new Date(System.currentTimeMillis()).toString()) + "DONE for :" + author.getAuthorId());
+        System.out.println(count++ + ". " + (new Date(System.currentTimeMillis()).toString()) + " DONE for authorId: " + author.getAuthorId());
     }
 }
