@@ -97,7 +97,7 @@ public class PaperRecommender {
         HashSet<String> paperIdsOfAuthorTestSet = new HashSet<>();
         HashSet<String> paperIdsTestSet = new HashSet<>();
         
-        // Read and Prepare Data (TFIDF).
+        //<editor-fold defaultstate="collapsed" desc="Read and Prepare Data (TFIDF)">
         if (DatasetToUse == 1) {
             datasetName = "NUS Dataset 1";
             if (DatasetByResearcherType == 1) {
@@ -150,6 +150,7 @@ public class PaperRecommender {
             paperIdsOfAuthorTestSet = AuthorFVComputation.getPaperIdsOfAuthors(authorTestSet);
             paperIdsTestSet = AuthorFVComputation.getPaperIdsTestSet(authorTestSet);
         }
+        //</editor-fold>
 
         // Recommendation.
         if (recommendationMethod == 1) {
