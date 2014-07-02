@@ -34,7 +34,7 @@ public class PaperRecommender {
 
     public static void main(String[] args) {
         try {
-            recommendationFlowController(3, 
+            recommendationFlowController(1, 
                     PRConstant.FOLDER_NUS_DATASET1,
                     PRConstant.FOLDER_NUS_DATASET2,
                     PRConstant.FOLDER_MAS_DATASET1 + "[Training] Paper_Before_2006.csv",
@@ -105,7 +105,7 @@ public class PaperRecommender {
             // Read papers (test set) from data folder.
             papers = NUSDataset1.buildListOfPapers(NUSDataset1Dir);
             // paper id of Test set (597 papers)
-            paperIdsTestSet = (HashSet) papers.keySet();
+            paperIdsTestSet.addAll(papers.keySet());
             // extract papers from authors and put into the common paper map.
             papers.putAll(AuthorFVComputation.getPapersFromAuthors(authorTestSet));
             // paper id of authors.
