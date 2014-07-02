@@ -66,6 +66,16 @@ public class AuthorFVComputation {
         return allPapers;
     }
 
+    public static void getPapersFromAuthorsAndMergeToAPaperMap(HashMap<String, Author> authors, HashMap<String, Paper> papers) throws Exception {
+        HashMap<String, Paper> allAuthorPapers = new HashMap<>();
+        
+        for (String authorId : authors.keySet()) {
+            authors.get(authorId).setPaper(convertPaperListToPaperIdList(allAuthorPapers, authors.get(authorId).getPaper()));
+        }
+        
+        papers.putAll(allAuthorPapers);
+    }
+
     /**
      * This method is called recursively to convert a list of papers to list of 
      * paper ids and save the paper object to the hashmap allPapers.
