@@ -34,6 +34,29 @@ public class PaperFVComputation {
     // Prevent instantiation.
     private PaperFVComputation() {}
 
+
+    public static void readTFIDFFromMahoutFile(HashMap<String, Paper> papers, String vectorDir) throws Exception {
+        // Step 1: Read vectors of all papers store in
+        // - HashMap<Integer, String> dictMap: Dictionary of the whole collection.
+        // - HashMap<String, HashMapVector> vectorizedDocuments: <PaperID, Vector TF*IDF of PaperID>
+        System.out.println("Begin reading vector...");
+        long startTime = System.nanoTime();
+//        HashMap<Integer, String> dictMap = MahoutFile.readMahoutDictionaryFiles(vectorDir);
+        HashMap<String, HashMapVector> vectorizedPapers = MahoutFile.readMahoutVectorFiles(vectorDir);
+        long estimatedTime = System.nanoTime() - startTime;
+        System.out.println("Reading vector elapsed time: " + estimatedTime / 1000000000 + " seconds");
+        System.out.println("End reading vector.");
+
+        // Step 2: put TFIDF vectors of all paper (vectorizedDocuments)
+        // into HashMap<String, Paper> papers (model)
+        System.out.println("Begin setting tf-idf to papers...");
+        startTime = System.nanoTime();
+        PaperFVComputation.setTFIDFVectorForAllPapers(papers, vectorizedPapers);
+        estimatedTime = System.nanoTime() - startTime;
+        System.out.println("Setting tf-idf to papers elapsed time: " + estimatedTime / 1000000000 + " seconds");
+        System.out.println("End setting tf-idf to papers.");
+    }
+    
     public static void computeTFIDFFromPaperAbstract(HashMap<String, Paper> papers, 
             String dirPapers, String dirPreProcessedPaper, String sequenceDir, String vectorDir) throws Exception {
         // Step 1:
@@ -42,9 +65,6 @@ public class PaperFVComputation {
         System.out.println("Begin writing abstract to file...");
         long startTime = System.nanoTime();
         PRGeneralFile.writePaperAbstractToTextFile(papers, dirPapers);
-        // Clear no longer in use objects.
-        // Always clear abstract.
-        PaperFVComputation.clearPaperAbstract(papers);
         long estimatedTime = System.nanoTime() - startTime;
         System.out.println("Writing abstract to file elapsed time: " + estimatedTime / 1000000000 + " seconds");
         System.out.println("End writing abstract to file.");
@@ -64,29 +84,6 @@ public class PaperFVComputation {
         estimatedTime = System.nanoTime() - startTime;
         System.out.println("Vectorizing elapsed time: " + estimatedTime / 1000000000 + " seconds");
         System.out.println("End vectorizing.");
-
-        // Step 4: Read vectors of all papers store in
-        // - HashMap<Integer, String> dictMap: Dictionary of the whole collection.
-        // - HashMap<String, HashMapVector> vectorizedDocuments: <PaperID, Vector TF*IDF of PaperID>
-        System.out.println("Begin reading vector...");
-        startTime = System.nanoTime();
-//        HashMap<Integer, String> dictMap = MahoutFile.readMahoutDictionaryFiles(vectorDir);
-        HashMap<String, HashMapVector> vectorizedPapers = MahoutFile.readMahoutVectorFiles(vectorDir);
-        estimatedTime = System.nanoTime() - startTime;
-        System.out.println("Reading vector elapsed time: " + estimatedTime / 1000000000 + " seconds");
-        System.out.println("End reading vector.");
-
-        // Step 5: put TFIDF vectors of all paper (vectorizedDocuments)
-        // into HashMap<String, Paper> papers (model)
-        System.out.println("Begin setting tf-idf to papers...");
-        startTime = System.nanoTime();
-        PaperFVComputation.setTFIDFVectorForAllPapers(papers, vectorizedPapers);
-        // Clear no longer in use objects to free memory (although just procedure, underlying data are still in use).
-//        dictMap = null;
-        vectorizedPapers = null;
-        estimatedTime = System.nanoTime() - startTime;
-        System.out.println("Setting tf-idf to papers elapsed time: " + estimatedTime / 1000000000 + " seconds");
-        System.out.println("End setting tf-idf to papers.");
     }
 
     public static void clearPaperAbstract(HashMap<String, Paper> papers) throws Exception {

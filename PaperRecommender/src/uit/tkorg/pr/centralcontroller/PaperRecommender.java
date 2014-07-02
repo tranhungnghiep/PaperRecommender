@@ -40,7 +40,8 @@ public class PaperRecommender {
                     PRConstant.FOLDER_MAS_DATASET1 + "[Training] Paper_Before_2006.csv",
                     PRConstant.FOLDER_MAS_DATASET1 + "[Training] Paper_Cite_Paper_Before_2006.csv",
                     PRConstant.FOLDER_MAS_DATASET1 + "[Testing] 1000Authors.csv",
-                    PRConstant.FOLDER_MAS_DATASET1 + "[Testing] Ground_Truth_2006_2008_New_Citation.csv",
+                    PRConstant.FOLDER_MAS_DATASET1 + "[Testing] Ground_Truth_2006_2008.csv",
+//                    PRConstant.FOLDER_MAS_DATASET1 + "[Testing] Ground_Truth_2006_2008_New_Citation.csv",
                     PRConstant.FOLDER_MAS_DATASET1 + "[Training] Author_Paper_Before_2006.csv",
                     PRConstant.FOLDER_MAS_DATASET1 + "[Training] Author_Cite_Paper_Before_2006.csv",
                     PRConstant.FOLDER_MAS_DATASET1 + "Text",
@@ -48,7 +49,7 @@ public class PaperRecommender {
                     PRConstant.FOLDER_MAS_DATASET1 + "Sequence",
                     PRConstant.FOLDER_MAS_DATASET1 + "Vector",
                     PRConstant.FOLDER_MAS_DATASET1 + "MahoutCF",
-                    PRConstant.FOLDER_MAS_DATASET1 + "EvaluationResult\\EvaluationResult.xls",
+                    PRConstant.FOLDER_MAS_DATASET1 + "EvaluationResult\\EvaluationResult_TestRestructuredCode.xls",
                     1);
         } catch (Exception e) {
             e.printStackTrace();
@@ -92,7 +93,7 @@ public class PaperRecommender {
         HashMap<String, Author> authorTestSet = new HashMap<>();
         HashMap<String, Paper> papers = new HashMap<>();
         
-        // Read and Prepare Data.
+        // Read and Prepare Data (TFIDF).
         if (DatasetToUse == 1) {
             algorithmName = "NUS Dataset 1";
             authorTestSet = NUSDataset1.buildListOfAuthors(NUSDataset1Dir);
@@ -121,19 +122,23 @@ public class PaperRecommender {
             System.out.println("End reading paper list.");
             // Step 3: 
             // Compute TF-IDF for MAS papers.
-            PaperFVComputation.computeTFIDFFromPaperAbstract(papers, dirPapers, dirPreProcessedPaper, sequenceDir, vectorDir);
+//            PaperFVComputation.computeTFIDFFromPaperAbstract(papers, dirPapers, dirPreProcessedPaper, sequenceDir, vectorDir);
+            PaperFVComputation.readTFIDFFromMahoutFile(papers, vectorDir);
+            // Clear no longer in use objects.
+            // Always clear abstract.
+            PaperFVComputation.clearPaperAbstract(papers);
         }
 
         // Recommendation.
         if (recommendationMethod == 1) {
             //<editor-fold defaultstate="collapsed" desc="CONTENT BASED METHOD">
             // parameters for CBF methods.
-            int combiningSchemePaperOfAuthor = 3;
-            int weightingSchemePaperOfAuthor = 1;
-            int timeAwareScheme = 1;
+            int combiningSchemePaperOfAuthor = 1;
+            int weightingSchemePaperOfAuthor = 0;
+            int timeAwareScheme = 0;
             double gamma = 0.2;
-            int combiningSchemePaperTestSet = 3;
-            int weightingSchemePaperTestSet = 1;
+            int combiningSchemePaperTestSet = 1;
+            int weightingSchemePaperTestSet = 0;
             int similarityScheme = 1;
                     
             System.out.println("Begin CBF recommendation...");
