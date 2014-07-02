@@ -34,7 +34,7 @@ public class PaperRecommender {
 
     public static void main(String[] args) {
         try {
-            recommendationFlowController(1, 
+            recommendationFlowController(1, 1,
                     PRConstant.FOLDER_NUS_DATASET1,
                     PRConstant.FOLDER_NUS_DATASET2,
                     PRConstant.FOLDER_MAS_DATASET1 + "[Training] Paper_Before_2006.csv",
@@ -59,6 +59,7 @@ public class PaperRecommender {
     /**
      * 
      * @param DatasetToUse : 1: NUS Dataset 1, 2: NUS Dataset 2, 3: MAS Dataset.
+     * @param DatasetByResearcherType 1: Junior, 2: Senior.
      * @param fileNamePapers
      * @param fileNamePaperCitePaper
      * @param fileNameAuthorTestSet
@@ -74,7 +75,7 @@ public class PaperRecommender {
      * @param recommendationMethod: 1: CBF, 2: CF, 3: Hybrid.
      * @throws Exception 
      */
-    public static void recommendationFlowController(int DatasetToUse, 
+    public static void recommendationFlowController(int DatasetToUse, int DatasetByResearcherType,
             String NUSDataset1Dir, String NUSDataset2Dir,
             String fileNamePapers, String fileNamePaperCitePaper, String fileNameAuthorTestSet,
             String fileNameGroundTruth, String fileNameAuthorship, String fileNameAuthorCitePaper,
@@ -99,9 +100,14 @@ public class PaperRecommender {
         // Read and Prepare Data (TFIDF).
         if (DatasetToUse == 1) {
             datasetName = "NUS Dataset 1";
+            if (DatasetByResearcherType == 1) {
+                datasetName += " Junior";
+            } else if (DatasetByResearcherType == 2) {
+                datasetName += " Senior";
+            }
             fileNameEvaluationResult = PRConstant.FOLDER_NUS_DATASET1 + "\\" + fileNameEvaluationResult;
             // Read authors and their papers from data folder.
-            authorTestSet = NUSDataset1.buildListOfAuthors(NUSDataset1Dir);
+            authorTestSet = NUSDataset1.buildListOfAuthors(NUSDataset1Dir, DatasetByResearcherType);
             // Read papers (test set) from data folder.
             papers = NUSDataset1.buildListOfPapers(NUSDataset1Dir);
             // paper id of Test set (597 papers)
@@ -149,13 +155,14 @@ public class PaperRecommender {
         if (recommendationMethod == 1) {
             //<editor-fold defaultstate="collapsed" desc="CONTENT BASED METHOD">
             // parameters for CBF methods.
-            int combiningSchemePaperOfAuthor = 0;
-            int weightingSchemePaperOfAuthor = 0;
+            int combiningSchemePaperOfAuthor = 3;
+            int weightingSchemePaperOfAuthor = 1;
             int timeAwareScheme = 0;
             double gamma = 0.2;
-            int combiningSchemePaperTestSet = 0;
-            int weightingSchemePaperTestSet = 0;
+            int combiningSchemePaperTestSet = 3;
+            int weightingSchemePaperTestSet = 1;
             int similarityScheme = 0;
+            double pruning = 0.2;
                     
             System.out.println("Begin CBF recommendation...");
             startTime = System.nanoTime();
@@ -164,7 +171,8 @@ public class PaperRecommender {
                     topNRecommend, 
                     combiningSchemePaperOfAuthor, weightingSchemePaperOfAuthor, 
                     timeAwareScheme, gamma, 
-                    combiningSchemePaperTestSet, weightingSchemePaperTestSet, similarityScheme);
+                    combiningSchemePaperTestSet, weightingSchemePaperTestSet, similarityScheme,
+                    pruning);
 
             estimatedTime = System.nanoTime() - startTime;
             System.out.println("CBF recommendation elapsed time: " + estimatedTime / 1000000000 + " seconds");
@@ -210,14 +218,16 @@ public class PaperRecommender {
             int combiningSchemePaperOfAuthor, int weightingSchemePaperOfAuthor,
             int timeAwareScheme, double gamma,
             int combiningSchemePaperTestSet, int weightingSchemePaperTestSet,
-            int similarityScheme) throws Exception {
+            int similarityScheme,
+            double pruning) throws Exception {
         
         String algorithmName = "CBF with FV_PaperOfAuthor(" 
                 + combiningSchemePaperOfAuthor + "," + weightingSchemePaperOfAuthor + ")"
                 + ", FV_Authors("
                 + timeAwareScheme + "," + gamma + ")"
                 + ", FV_PaperTestSet("
-                + combiningSchemePaperTestSet + "," + weightingSchemePaperTestSet + ")";
+                + combiningSchemePaperTestSet + "," + weightingSchemePaperTestSet + ")"
+                + "pruned by " + pruning;
 
         long startTime;
         long estimatedTime;
@@ -225,7 +235,8 @@ public class PaperRecommender {
         // Step 1: compute feature vector for those all 1000 authors.
         System.out.println("Begin computing authors FV...");
         startTime = System.nanoTime();
-        PaperFVComputation.computeFeatureVectorForAllPapers(papers, paperIdsOfAuthorTestSet, combiningSchemePaperOfAuthor, weightingSchemePaperOfAuthor);
+        PaperFVComputation.computeFeatureVectorForAllPapers(papers, paperIdsOfAuthorTestSet, 
+                combiningSchemePaperOfAuthor, weightingSchemePaperOfAuthor, pruning);
         AuthorFVComputation.computeFVForAllAuthors(authorTestSet, papers, timeAwareScheme, gamma);
         // Clear no longer in use objects.
         PaperFVComputation.clearFV(papers);
@@ -238,7 +249,8 @@ public class PaperRecommender {
         // (papers, 0, 0): baseline
         System.out.println("Begin computing FV for all papers...");
         startTime = System.nanoTime();
-        PaperFVComputation.computeFeatureVectorForAllPapers(papers, paperIdsTestSet, combiningSchemePaperTestSet, weightingSchemePaperTestSet);
+        PaperFVComputation.computeFeatureVectorForAllPapers(papers, paperIdsTestSet, 
+                combiningSchemePaperTestSet, weightingSchemePaperTestSet, pruning);
         HashMap<String, Paper> paperTestSet = PaperFVComputation.extractPapers(papers, paperIdsTestSet);
         // Clear no longer in use objects.
         papers = null;
@@ -250,7 +262,8 @@ public class PaperRecommender {
         // Step 3: generate recommended papers list.
         System.out.println("Begin CBF Recommending...");
         startTime = System.nanoTime();
-        FeatureVectorSimilarity.generateRecommendationForAllAuthors(authorTestSet, paperTestSet, similarityScheme, topNRecommend);
+        FeatureVectorSimilarity.generateRecommendationForAllAuthors(authorTestSet, paperTestSet, 
+                similarityScheme, topNRecommend);
         estimatedTime = System.nanoTime() - startTime;
         System.out.println("CBF Recommending elapsed time: " + estimatedTime / 1000000000 + " seconds");
         System.out.println("End CBF Recommending.");
@@ -479,7 +492,7 @@ public class PaperRecommender {
                     } else {
                         Dataset1Folder = PRConstant.FOLDER_NUS_DATASET1;
                     }
-                    authors = NUSDataset1.buildListOfAuthors(Dataset1Folder);
+                    authors = NUSDataset1.buildListOfAuthors(Dataset1Folder, 0);
                     papersOfAuthors = AuthorFVComputation.getPapersFromAuthors(authors);
                     response[0] = "Success.";
                     break;
@@ -527,29 +540,29 @@ public class PaperRecommender {
 
                 // Dataset 1: data preparation.
                 case "Paper FV linear":
-                    PaperFVComputation.computeFeatureVectorForAllPapers(papers, null, 3, 0);
+                    PaperFVComputation.computeFeatureVectorForAllPapers(papers, null, 3, 0, 0.2);
                     response[0] = "Success.";
                     break;
                 case "Paper FV cosine":
-                    PaperFVComputation.computeFeatureVectorForAllPapers(papers, null, 3, 1);
+                    PaperFVComputation.computeFeatureVectorForAllPapers(papers, null, 3, 1, 0.2);
                     response[0] = "Success.";
                     break;
                 case "Paper FV RPY":
-                    PaperFVComputation.computeFeatureVectorForAllPapers(papers, null, 3, 2);
+                    PaperFVComputation.computeFeatureVectorForAllPapers(papers, null, 3, 2, 0.2);
                     response[0] = "Success.";
                     break;
                 case "Author FV linear":
-                    PaperFVComputation.computeFeatureVectorForAllPapers(papersOfAuthors, null, 3, 0);
+                    PaperFVComputation.computeFeatureVectorForAllPapers(papersOfAuthors, null, 3, 0, 0.2);
                     AuthorFVComputation.computeFVForAllAuthors(authors, papersOfAuthors, 0, 0);
                     response[0] = "Success.";
                     break;
                 case "Author FV cosine":
-                    PaperFVComputation.computeFeatureVectorForAllPapers(papersOfAuthors, null, 3, 1);
+                    PaperFVComputation.computeFeatureVectorForAllPapers(papersOfAuthors, null, 3, 1, 0.2);
                     AuthorFVComputation.computeFVForAllAuthors(authors, papersOfAuthors, 0, 0);
                     response[0] = "Success.";
                     break;
                 case "Author FV RPY":
-                    PaperFVComputation.computeFeatureVectorForAllPapers(papersOfAuthors, null, 3, 2);
+                    PaperFVComputation.computeFeatureVectorForAllPapers(papersOfAuthors, null, 3, 2, 0.2);
                     AuthorFVComputation.computeFVForAllAuthors(authors, papersOfAuthors, 0, 0);
                     response[0] = "Success.";
                     break;

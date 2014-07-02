@@ -19,8 +19,7 @@ import uit.tkorg.utility.general.TextFileUtility;
 
 /**
  *
- * @author THNghiep 
- * This class contents all method to import data from dataset1.
+ * @author THNghiep This class contents all method to import data from dataset1.
  * Import process needs to filter out noisy data such as keywords longer than 50
  * characters.
  */
@@ -28,7 +27,6 @@ public class NUSDataset1 {
 
     // Prevent instantiation.
     private NUSDataset1() {
-
     }
 
     /**
@@ -103,7 +101,7 @@ public class NUSDataset1 {
      */
     private static int paperYear(String paperId) throws Exception {
         String year = paperId.substring(1, 3);
-        
+
         if (NumericUtility.isNum(year)) {
             return Integer.parseInt("20" + year);
         } else {
@@ -223,7 +221,7 @@ public class NUSDataset1 {
      */
     private static List<Paper> findCitOfPaper(File dir) throws Exception {
         List cites = new ArrayList();
-        
+
         File[] files = dir.listFiles();
 
         for (File file : files) {
@@ -231,7 +229,7 @@ public class NUSDataset1 {
             paper.setPaperId(file.getName().replaceAll("_fv.txt|.txt", ""));
             paper.setPaperType("Citation");
             paper.setTfidfVector(readFilePaper(new File(file.getAbsolutePath())));
-            
+
             cites.add(paper);
         }
         return cites;
@@ -247,7 +245,7 @@ public class NUSDataset1 {
      */
     private static List<Paper> findRefOfPaper(File dir) throws Exception {
         List refs = new ArrayList();
-        
+
         File[] files = dir.listFiles();
 
         for (File file : files) {
@@ -255,10 +253,10 @@ public class NUSDataset1 {
             paper.setPaperId(file.getName().replaceAll("_fv.txt", ""));
             paper.setPaperType("Reference");
             paper.setTfidfVector(readFilePaper(new File(file.getAbsolutePath())));
-            
+
             refs.add(paper);
         }
-        
+
         return refs;
 
     }
@@ -287,7 +285,7 @@ public class NUSDataset1 {
             // ten duong dan den vector dac trung cua paper
             String pathVectorFv = dir.getAbsolutePath() + "\\" + authorId + "-1" + "_fv.txt";
             paper.setTfidfVector(readFilePaper(new File(pathVectorFv)));// set content cho paper i
-            
+
             papers.add(paper);
 
         } else {
@@ -295,20 +293,20 @@ public class NUSDataset1 {
             for (File file : files) {
                 if (file.isDirectory()) {
                     Paper paper = new Paper();
-                    
+
                     String paperId = file.getName();
                     paper.setPaperId(paperId); // set id paper i cua Senior
                     paper.setPaperType("Paper of senior");
 
                     String citePath = file.getAbsolutePath() + "\\" + paperId + "CitsFV";
                     paper.setCitation(findCitOfPaper(new File(citePath))); // set List cit cua  paper i
-                    
+
                     String refPath = file.getAbsolutePath() + "\\" + paperId + "RefsFV";
                     paper.setReference(findRefOfPaper(new File(refPath))); // set List ref cua paper i
-                    
+
                     String pathVectorFv = file.getAbsolutePath() + "\\" + file.getName() + "_fv.txt";
                     paper.setTfidfVector(readFilePaper(new File(pathVectorFv)));// set content cho paper i
-                    
+
                     papers.add(paper);
                 }
             }
@@ -324,34 +322,64 @@ public class NUSDataset1 {
      * @throws FileNotFoundException
      * @throws IOException
      */
-    private static HashMap<String, Author> readAllAuthor(File dir) throws Exception {
+    private static HashMap<String, Author> readAllAuthor(File dir, int DatasetByResearcherType) throws Exception {
         HashMap<String, Author> authors = new HashMap<String, Author>();
         File[] files = dir.listFiles();
         for (File file : files) {
             if (file.isDirectory()) {
-                if (file.getName().equals("JuniorR")) {
-                    File[] juniors = file.listFiles();
-                    for (File junior : juniors) {
-                        Author author = new Author();
-                        
-                        author.setAuthorId(junior.getName());
-                        author.setAuthorType("Junior");
-                        author.setGroundTruth(findGroundTruth(junior));
-                        author.setPaper(findPaperOfAuthor(junior));
-                        
-                        authors.put(junior.getName(), author);
+                if (DatasetByResearcherType == 0) {
+                    if (file.getName().equals("JuniorR")) {
+                        File[] juniors = file.listFiles();
+                        for (File junior : juniors) {
+                            Author author = new Author();
+
+                            author.setAuthorId(junior.getName());
+                            author.setAuthorType("Junior");
+                            author.setGroundTruth(findGroundTruth(junior));
+                            author.setPaper(findPaperOfAuthor(junior));
+
+                            authors.put(junior.getName(), author);
+                        }
+                    } else if (file.getName().equals("SeniorR")) {
+                        File[] seniors = file.listFiles();
+                        for (File senior : seniors) {
+                            Author author = new Author();
+
+                            author.setAuthorId(senior.getName());
+                            author.setAuthorType("Senior");
+                            author.setGroundTruth(findGroundTruth(senior));
+                            author.setPaper(findPaperOfAuthor(senior));
+
+                            authors.put(senior.getName(), author);
+                        }
                     }
-                } else if (file.getName().equals("SeniorR")) {
-                    File[] seniors = file.listFiles();
-                    for (File senior : seniors) {
-                        Author author = new Author();
-                        
-                        author.setAuthorId(senior.getName());
-                        author.setAuthorType("Senior");
-                        author.setGroundTruth(findGroundTruth(senior));
-                        author.setPaper(findPaperOfAuthor(senior));
-                        
-                        authors.put(senior.getName(), author);
+                } else if (DatasetByResearcherType == 1) {
+                    if (file.getName().equals("JuniorR")) {
+                        File[] juniors = file.listFiles();
+                        for (File junior : juniors) {
+                            Author author = new Author();
+
+                            author.setAuthorId(junior.getName());
+                            author.setAuthorType("Junior");
+                            author.setGroundTruth(findGroundTruth(junior));
+                            author.setPaper(findPaperOfAuthor(junior));
+
+                            authors.put(junior.getName(), author);
+                        }
+                    }
+                } else if (DatasetByResearcherType == 2) {
+                    if (file.getName().equals("SeniorR")) {
+                        File[] seniors = file.listFiles();
+                        for (File senior : seniors) {
+                            Author author = new Author();
+
+                            author.setAuthorId(senior.getName());
+                            author.setAuthorType("Senior");
+                            author.setGroundTruth(findGroundTruth(senior));
+                            author.setPaper(findPaperOfAuthor(senior));
+
+                            authors.put(senior.getName(), author);
+                        }
                     }
                 }
             }
@@ -368,9 +396,9 @@ public class NUSDataset1 {
      * @return the hashmap contents all authors.
      * @throws java.io.IOException
      */
-    public static HashMap<String, Author> buildListOfAuthors(String Dataset1Folder) throws Exception {
+    public static HashMap<String, Author> buildListOfAuthors(String Dataset1Folder, int DatasetByResearcherType) throws Exception {
         HashMap<String, Author> authors = new HashMap();
-        authors = readAllAuthor(new File(Dataset1Folder));
+        authors = readAllAuthor(new File(Dataset1Folder), DatasetByResearcherType);
         return authors;
     }
 }

@@ -30,7 +30,7 @@ import uit.tkorg.utility.general.WeightingUtility;
  */
 public class FeatureVectorSimilarity {
 
-    public static int count = 0;
+    public static Integer count = 0;
     // Prevent instantiation.
     private FeatureVectorSimilarity() {
     }
@@ -41,7 +41,7 @@ public class FeatureVectorSimilarity {
      * @param authors: all authors in the test set.
      * @param papers: all papers.
      * @param similarityScheme 0: cosine
-     * @param n: top n item to recommend.
+     * @param topNRecommend: top n item to recommend.
      *
      * - For each author: + Compute similarity with all papers. + Sort list of
      * papers, based on similarity. + Take top n papers with highest similarity
@@ -49,7 +49,7 @@ public class FeatureVectorSimilarity {
      * author.
      */
     public static void generateRecommendationForAllAuthors(final HashMap<String, Author> authors, final HashMap<String, Paper> papers,
-            final int similarityScheme, final int n) throws Exception {
+            final int similarityScheme, final int topNRecommend) throws Exception {
         Runtime runtime = Runtime.getRuntime();
         int numOfProcessors = runtime.availableProcessors();
         ExecutorService executor = Executors.newFixedThreadPool(numOfProcessors - 1);
@@ -62,7 +62,7 @@ public class FeatureVectorSimilarity {
                 @Override
                 public void run() {
                     try {
-                        generateRecommendation(authorObj, papers, similarityScheme, n);
+                        generateRecommendation(authorObj, papers, similarityScheme, topNRecommend);
                     } catch (Exception ex) {
                         Logger.getLogger(FeatureVectorSimilarity.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -81,12 +81,12 @@ public class FeatureVectorSimilarity {
      * @param author: current author
      * @param papers: hashmap of all papers to recommend.
      * @param similarityScheme 0: cosine
-     * @param n: top n item to recommend.
+     * @param topNRecommend: top n item to recommend.
      *
      * @return recommendationPapers
      */
     private static void generateRecommendation(Author author, HashMap<String, Paper> papers, 
-            int similarityScheme, int n) throws Exception {
+            int similarityScheme, int topNRecommend) throws Exception {
 
         List<String> recommendedPapers = new ArrayList<>();
         HashMap<String, Double> paperSimilarityHM = new HashMap(); // <IDPaper, SimValue>
@@ -107,12 +107,15 @@ public class FeatureVectorSimilarity {
         for (String paperId : sortedPaperSimilarityHM.keySet()) {
             recommendedPapers.add(paperId);
             counter++;
-            if (counter >= n) {
+            if (counter >= topNRecommend) {
                 break;
             }
         }
         
         author.setRecommendationList(recommendedPapers);
-        System.out.println(count++ + ". " + (new Date(System.currentTimeMillis()).toString()) + " DONE for authorId: " + author.getAuthorId());
+        
+        synchronized(count) {
+            System.out.println(count++ + ". " + (new Date(System.currentTimeMillis()).toString()) + " DONE for authorId: " + author.getAuthorId());
+        }
     }
 }

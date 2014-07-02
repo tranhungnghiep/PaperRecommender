@@ -131,8 +131,11 @@ public class PaperFVComputation {
      * @param combiningScheme   0: itself content, 1: itself content + content of references; 
      *                          2: itself content + content of citations; 3: itself content + content of references + content of citations.
      * @param weightingScheme   0: linear; 1: cosine; 2: rpy
+     * @param pruning : Threshold of similarity between the main paper and combining papers.
      */
-    public static void computeFeatureVectorForAllPapers(HashMap<String, Paper> papers, HashSet<String> paperIds, int combiningScheme, int weightingScheme) throws Exception {
+    public static void computeFeatureVectorForAllPapers(HashMap<String, Paper> papers, HashSet<String> paperIds, 
+            int combiningScheme, int weightingScheme,
+            double pruning) throws Exception {
         
         if (paperIds == null) {
             paperIds = (HashSet) papers.keySet();
@@ -150,7 +153,7 @@ public class PaperFVComputation {
             count++;
 
             if (papers.containsKey(paperId)) {
-                computePaperFV(papers, paperId, combiningScheme, weightingScheme);
+                computePaperFV(papers, paperId, combiningScheme, weightingScheme, pruning);
             }
         }
     }
@@ -162,7 +165,9 @@ public class PaperFVComputation {
      * @param paperId
      * @return list represents feature vector.
      */
-    public static void computePaperFV(HashMap<String, Paper> papers, String paperId, int combiningScheme, int weightingScheme) throws Exception {
+    public static void computePaperFV(HashMap<String, Paper> papers, String paperId, 
+            int combiningScheme, int weightingScheme,
+            double pruning) throws Exception {
 
         papers.get(paperId).setFeatureVector(new HashMapVector()); // Re-initiate feature vector
         papers.get(paperId).getFeatureVector().add(papers.get(paperId).getTfidfVector());// add tfidf to zero vector, not assign
@@ -170,30 +175,30 @@ public class PaperFVComputation {
         // weighting scheme
         if (weightingScheme == 0) {
             if (combiningScheme == 1) {
-                sumFVLinear(papers, paperId, papers.get(paperId).getReference());
+                sumFVLinear(papers, paperId, papers.get(paperId).getReference(), pruning);
             } else if (combiningScheme == 2) {
-                sumFVLinear(papers, paperId, papers.get(paperId).getCitation());
+                sumFVLinear(papers, paperId, papers.get(paperId).getCitation(), pruning);
             } else if (combiningScheme == 3) {
-                sumFVLinear(papers, paperId, papers.get(paperId).getReference());
-                sumFVLinear(papers, paperId, papers.get(paperId).getCitation());
+                sumFVLinear(papers, paperId, papers.get(paperId).getReference(), pruning);
+                sumFVLinear(papers, paperId, papers.get(paperId).getCitation(), pruning);
             }
         } else if (weightingScheme == 1) {
             if (combiningScheme == 1) {
-                sumFVCosine(papers, paperId, papers.get(paperId).getReference());
+                sumFVCosine(papers, paperId, papers.get(paperId).getReference(), pruning);
             } else if (combiningScheme == 2) {
-                sumFVCosine(papers, paperId, papers.get(paperId).getCitation());
+                sumFVCosine(papers, paperId, papers.get(paperId).getCitation(), pruning);
             } else if (combiningScheme == 3) {
-                sumFVCosine(papers, paperId, papers.get(paperId).getReference());
-                sumFVCosine(papers, paperId, papers.get(paperId).getCitation());
+                sumFVCosine(papers, paperId, papers.get(paperId).getReference(), pruning);
+                sumFVCosine(papers, paperId, papers.get(paperId).getCitation(), pruning);
             }
         } else if (weightingScheme == 2) {
             if (combiningScheme == 1) {
-                sumFVRPY(papers, paperId, papers.get(paperId).getReference());
+                sumFVRPY(papers, paperId, papers.get(paperId).getReference(), pruning);
             } else if (combiningScheme == 2) {
-                sumFVRPY(papers, paperId, papers.get(paperId).getCitation());
+                sumFVRPY(papers, paperId, papers.get(paperId).getCitation(), pruning);
             } else if (combiningScheme == 3) {
-                sumFVRPY(papers, paperId, papers.get(paperId).getReference());
-                sumFVRPY(papers, paperId, papers.get(paperId).getCitation());
+                sumFVRPY(papers, paperId, papers.get(paperId).getReference(), pruning);
+                sumFVRPY(papers, paperId, papers.get(paperId).getCitation(), pruning);
             }
         }
     }
@@ -205,9 +210,14 @@ public class PaperFVComputation {
      * @param combiningPaperIds
      * @return featureVector
      */
-    private static void sumFVLinear(HashMap<String, Paper> papers, String paperId, List<String> combiningPaperIds) throws Exception {
+    private static void sumFVLinear(HashMap<String, Paper> papers, String paperId, List<String> combiningPaperIds,
+            double pruning) throws Exception {
         for (String combiningPaperId : combiningPaperIds) {
             if (papers.containsKey(combiningPaperId)) {
+                double cosine = WeightingUtility.computeCosine(papers.get(paperId).getTfidfVector(), papers.get(combiningPaperId).getTfidfVector());
+                if (cosine < pruning) {
+                    continue;
+                }
                 papers.get(paperId).getFeatureVector().add(papers.get(combiningPaperId).getTfidfVector());
             }
         }
@@ -221,10 +231,15 @@ public class PaperFVComputation {
      * @param combiningPaperIds
      * @return featureVector
      */
-    private static void sumFVCosine(HashMap<String, Paper> papers, String paperId, List<String> combiningPaperIds) throws Exception {
+    private static void sumFVCosine(HashMap<String, Paper> papers, String paperId, List<String> combiningPaperIds,
+            double pruning) throws Exception {
         for (String combiningPaperId : combiningPaperIds) {
             if (papers.containsKey(combiningPaperId)) {
                 double cosine = WeightingUtility.computeCosine(papers.get(paperId).getTfidfVector(), papers.get(combiningPaperId).getTfidfVector());
+                if (cosine < pruning) {
+                    continue;
+                }
+                cosine = WeightingUtility.computeCosine(papers.get(paperId).getTfidfVector(), papers.get(combiningPaperId).getTfidfVector());
                 papers.get(paperId).getFeatureVector().addScaled(papers.get(combiningPaperId).getTfidfVector(), cosine);
             }
         }
@@ -238,9 +253,14 @@ public class PaperFVComputation {
      * @param combiningPaperIds
      * @return featureVector
      */
-    private static void sumFVRPY(HashMap<String, Paper> papers, String paperId, List<String> combiningPaperIds) throws Exception {
+    private static void sumFVRPY(HashMap<String, Paper> papers, String paperId, List<String> combiningPaperIds,
+            double pruning) throws Exception {
         for (String combiningPaperId : combiningPaperIds) {
             if (papers.containsKey(combiningPaperId)) {
+                double cosine = WeightingUtility.computeCosine(papers.get(paperId).getTfidfVector(), papers.get(combiningPaperId).getTfidfVector());
+                if (cosine < pruning) {
+                    continue;
+                }
                 double rpy = WeightingUtility.computeRPY(papers.get(paperId).getYear(), papers.get(combiningPaperId).getYear(), 0.9);
                 papers.get(paperId).getFeatureVector().addScaled(papers.get(combiningPaperId).getTfidfVector(), rpy);
             }
