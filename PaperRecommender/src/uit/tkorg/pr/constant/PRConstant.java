@@ -5,6 +5,7 @@ import java.util.logging.Level;
 public class PRConstant {
 
     public static final String FOLDER_NUS_DATASET1 = "C:\\3.PRS-Experiment\\NUS Data\\Dataset 1\\20100825-SchPaperRecData";
+    public static final String FOLDER_NUS_DATASET2 = null;
     public static final String FOLDER_MAS_DATASET1 = "C:\\3.PRS-Experiment\\Dataset1 - MAS\\PRS Experimental data\\";
 //    public static final String FOLDER_MAS_DATASET1 = "C:\\3.PRS-Experiment\\Dataset1 - MAS\\Sample Data\\Sample 1 - Simple\\";
     public static final String SAVEDATAFOLDER = "E:\\ResE\\Paper recommendation\\Save Object Dataset 1";

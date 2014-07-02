@@ -36,7 +36,7 @@ public class PaperRecommender {
         try {
             recommendationFlowController(3, 
                     PRConstant.FOLDER_NUS_DATASET1,
-                    null,
+                    PRConstant.FOLDER_NUS_DATASET2,
                     PRConstant.FOLDER_MAS_DATASET1 + "[Training] Paper_Before_2006.csv",
                     PRConstant.FOLDER_MAS_DATASET1 + "[Training] Paper_Cite_Paper_Before_2006.csv",
                     PRConstant.FOLDER_MAS_DATASET1 + "[Testing] 1000Authors.csv",
@@ -49,7 +49,7 @@ public class PaperRecommender {
                     PRConstant.FOLDER_MAS_DATASET1 + "Sequence",
                     PRConstant.FOLDER_MAS_DATASET1 + "Vector",
                     PRConstant.FOLDER_MAS_DATASET1 + "MahoutCF",
-                    "EvaluationResult\\EvaluationResult_TestRestructuredCode.xls",
+                    "EvaluationResult\\EvaluationResult_Maintain_OldCitation.xls",
                     1);
         } catch (Exception e) {
             e.printStackTrace();
@@ -88,23 +88,33 @@ public class PaperRecommender {
         long estimatedTime;
         
         int topNRecommend = 100;
+        String datasetName = null;
         String algorithmName = null;
         
         HashMap<String, Author> authorTestSet = new HashMap<>();
         HashMap<String, Paper> papers = new HashMap<>();
+        HashSet<String> paperIdsOfAuthorTestSet = new HashSet<>();
+        HashSet<String> paperIdsTestSet = new HashSet<>();
         
         // Read and Prepare Data (TFIDF).
         if (DatasetToUse == 1) {
-            algorithmName = "NUS Dataset 1";
+            datasetName = "NUS Dataset 1";
             fileNameEvaluationResult = PRConstant.FOLDER_NUS_DATASET1 + "\\" + fileNameEvaluationResult;
+            // Read authors and their papers from data folder.
             authorTestSet = NUSDataset1.buildListOfAuthors(NUSDataset1Dir);
+            // Read papers (test set) from data folder.
             papers = NUSDataset1.buildListOfPapers(NUSDataset1Dir);
-            AuthorFVComputation.getPapersFromAuthorsAndMergeToAPaperMap(authorTestSet, papers);
+            // paper id of Test set (597 papers)
+            paperIdsTestSet = (HashSet) papers.keySet();
+            // extract papers from authors and put into the common paper map.
+            papers.putAll(AuthorFVComputation.getPapersFromAuthors(authorTestSet));
+            // paper id of authors.
+            paperIdsOfAuthorTestSet = AuthorFVComputation.getPaperIdsOfAuthors(authorTestSet);
         } else if (DatasetToUse == 2) {
-            algorithmName = "NUS Dataset 2";
+            datasetName = "NUS Dataset 2";
             // Not yet implement.
         } else if (DatasetToUse == 3) {
-            algorithmName = "MAS Dataset";
+            datasetName = "MAS Dataset";
             fileNameEvaluationResult = PRConstant.FOLDER_MAS_DATASET1 + fileNameEvaluationResult;
             // Step 1: read list 1000 authors for test set.
             System.out.println("Begin reading author test set...");
@@ -129,25 +139,29 @@ public class PaperRecommender {
             // Clear no longer in use objects.
             // Always clear abstract.
             PaperFVComputation.clearPaperAbstract(papers);
+            // Step 4:
+            // Get list of papers to process.
+            paperIdsOfAuthorTestSet = AuthorFVComputation.getPaperIdsOfAuthors(authorTestSet);
+            paperIdsTestSet = AuthorFVComputation.getPaperIdsTestSet(authorTestSet);
         }
 
         // Recommendation.
         if (recommendationMethod == 1) {
             //<editor-fold defaultstate="collapsed" desc="CONTENT BASED METHOD">
             // parameters for CBF methods.
-            int combiningSchemePaperOfAuthor = 1;
+            int combiningSchemePaperOfAuthor = 0;
             int weightingSchemePaperOfAuthor = 0;
             int timeAwareScheme = 0;
             double gamma = 0.2;
-            int combiningSchemePaperTestSet = 1;
+            int combiningSchemePaperTestSet = 0;
             int weightingSchemePaperTestSet = 0;
-            int similarityScheme = 1;
+            int similarityScheme = 0;
                     
             System.out.println("Begin CBF recommendation...");
             startTime = System.nanoTime();
             
-            algorithmName = algorithmName + ": " + 
-                    cbfRecommendation(authorTestSet, papers, topNRecommend, 
+            algorithmName = cbfRecommendation(authorTestSet, papers, paperIdsOfAuthorTestSet, paperIdsTestSet, 
+                    topNRecommend, 
                     combiningSchemePaperOfAuthor, weightingSchemePaperOfAuthor, 
                     timeAwareScheme, gamma, 
                     combiningSchemePaperTestSet, weightingSchemePaperTestSet, similarityScheme);
@@ -163,8 +177,7 @@ public class PaperRecommender {
             System.out.println("Begin CF recommendation...");
             startTime = System.nanoTime();
             
-            algorithmName = algorithmName + ": " + 
-                    cfRecommendation(fileNameAuthorCitePaper, MahoutCFDir, cfMethod, 
+            algorithmName = cfRecommendation(fileNameAuthorCitePaper, MahoutCFDir, cfMethod, 
                     authorTestSet, topNRecommend);
             
             estimatedTime = System.nanoTime() - startTime;
@@ -177,7 +190,7 @@ public class PaperRecommender {
         System.out.println("Begin evaluating...");
         startTime = System.nanoTime();
 
-        evaluation(algorithmName, startRecommendationFlowTime, authorTestSet, fileNameEvaluationResult);
+        evaluation(datasetName, algorithmName, startRecommendationFlowTime, authorTestSet, fileNameEvaluationResult);
 
         estimatedTime = System.nanoTime() - startTime;
         System.out.println("Evaluating elapsed time: " + estimatedTime / 1000000000 + " seconds");
@@ -191,6 +204,8 @@ public class PaperRecommender {
     
     public static String cbfRecommendation(HashMap<String, Author> authorTestSet, 
             HashMap<String, Paper> papers,
+            HashSet<String> paperIdsOfAuthorTestSet,
+            HashSet<String> paperIdsTestSet,
             int topNRecommend,
             int combiningSchemePaperOfAuthor, int weightingSchemePaperOfAuthor,
             int timeAwareScheme, double gamma,
@@ -210,7 +225,6 @@ public class PaperRecommender {
         // Step 1: compute feature vector for those all 1000 authors.
         System.out.println("Begin computing authors FV...");
         startTime = System.nanoTime();
-        HashSet<String> paperIdsOfAuthorTestSet = AuthorFVComputation.getPaperIdsOfAuthors(authorTestSet);
         PaperFVComputation.computeFeatureVectorForAllPapers(papers, paperIdsOfAuthorTestSet, combiningSchemePaperOfAuthor, weightingSchemePaperOfAuthor);
         AuthorFVComputation.computeFVForAllAuthors(authorTestSet, papers, timeAwareScheme, gamma);
         // Clear no longer in use objects.
@@ -224,7 +238,6 @@ public class PaperRecommender {
         // (papers, 0, 0): baseline
         System.out.println("Begin computing FV for all papers...");
         startTime = System.nanoTime();
-        HashSet<String> paperIdsTestSet = AuthorFVComputation.getPaperIdsTestSet(authorTestSet);
         PaperFVComputation.computeFeatureVectorForAllPapers(papers, paperIdsTestSet, combiningSchemePaperTestSet, weightingSchemePaperTestSet);
         HashMap<String, Paper> paperTestSet = PaperFVComputation.extractPapers(papers, paperIdsTestSet);
         // Clear no longer in use objects.
@@ -358,7 +371,7 @@ public class PaperRecommender {
         MahoutFile.readMahoutCFRating(MahoutCFRatingMatrixPredictionFile, authorTestSet);
     }
     
-    public static void evaluation(String algorithmName, long startRecommendationFlowTime,
+    public static void evaluation(String datasetName, String algorithmName, long startRecommendationFlowTime,
             HashMap<String, Author> authorTestSet, String fileNameEvaluationResult) throws Exception {
 
         // Compute evaluation index.
@@ -383,6 +396,7 @@ public class PaperRecommender {
 
         StringBuilder evaluationResult = new StringBuilder();
         evaluationResult.append("Time Stamp").append("\t")
+                .append("Dataset").append("\t")
                 .append("Algorithm").append("\t")
                 .append("Running time in second").append("\t")
                 .append("P@10").append("\t")
@@ -403,6 +417,7 @@ public class PaperRecommender {
                 .append("MRR")
                 .append("\r\n")
                 .append(new Date(System.currentTimeMillis()).toString()).append("\t")
+                .append(datasetName).append("\t")
                 .append(algorithmName).append("\t")
                 .append(estimatedRecommendationFlowTime / 1000000000).append("\t")
                 .append(precision10).append("\t")
