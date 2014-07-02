@@ -34,7 +34,7 @@ public class PaperRecommender {
 
     public static void main(String[] args) {
         try {
-            recommendationFlowController(1, 
+            recommendationFlowController(3, 
                     PRConstant.FOLDER_NUS_DATASET1,
                     null,
                     PRConstant.FOLDER_MAS_DATASET1 + "[Training] Paper_Before_2006.csv",
@@ -49,7 +49,7 @@ public class PaperRecommender {
                     PRConstant.FOLDER_MAS_DATASET1 + "Sequence",
                     PRConstant.FOLDER_MAS_DATASET1 + "Vector",
                     PRConstant.FOLDER_MAS_DATASET1 + "MahoutCF",
-                    PRConstant.FOLDER_MAS_DATASET1 + "EvaluationResult\\EvaluationResult_TestRestructuredCode.xls",
+                    "EvaluationResult\\EvaluationResult_TestRestructuredCode.xls",
                     1);
         } catch (Exception e) {
             e.printStackTrace();
@@ -96,6 +96,7 @@ public class PaperRecommender {
         // Read and Prepare Data (TFIDF).
         if (DatasetToUse == 1) {
             algorithmName = "NUS Dataset 1";
+            fileNameEvaluationResult = PRConstant.FOLDER_NUS_DATASET1 + "\\" + fileNameEvaluationResult;
             authorTestSet = NUSDataset1.buildListOfAuthors(NUSDataset1Dir);
             papers = NUSDataset1.buildListOfPapers(NUSDataset1Dir);
             AuthorFVComputation.getPapersFromAuthorsAndMergeToAPaperMap(authorTestSet, papers);
@@ -104,6 +105,7 @@ public class PaperRecommender {
             // Not yet implement.
         } else if (DatasetToUse == 3) {
             algorithmName = "MAS Dataset";
+            fileNameEvaluationResult = PRConstant.FOLDER_MAS_DATASET1 + fileNameEvaluationResult;
             // Step 1: read list 1000 authors for test set.
             System.out.println("Begin reading author test set...");
             startTime = System.nanoTime();
@@ -196,11 +198,11 @@ public class PaperRecommender {
             int similarityScheme) throws Exception {
         
         String algorithmName = "CBF with FV_PaperOfAuthor(" 
-                + combiningSchemePaperOfAuthor + weightingSchemePaperOfAuthor + ")"
+                + combiningSchemePaperOfAuthor + "," + weightingSchemePaperOfAuthor + ")"
                 + ", FV_Authors("
-                + timeAwareScheme + gamma + ")"
+                + timeAwareScheme + "," + gamma + ")"
                 + ", FV_PaperTestSet("
-                + combiningSchemePaperTestSet + weightingSchemePaperTestSet + ")";
+                + combiningSchemePaperTestSet + "," + weightingSchemePaperTestSet + ")";
 
         long startTime;
         long estimatedTime;
