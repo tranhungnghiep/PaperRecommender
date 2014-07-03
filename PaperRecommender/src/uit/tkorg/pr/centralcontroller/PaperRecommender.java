@@ -34,7 +34,7 @@ public class PaperRecommender {
 
     public static void main(String[] args) {
         try {
-            recommendationFlowController(1, 1,
+            recommendationFlowController(3, 0,
                     PRConstant.FOLDER_NUS_DATASET1,
                     PRConstant.FOLDER_NUS_DATASET2,
                     PRConstant.FOLDER_MAS_DATASET1 + "[Training] Paper_Before_2006.csv",
@@ -50,7 +50,7 @@ public class PaperRecommender {
                     PRConstant.FOLDER_MAS_DATASET1 + "Vector",
                     PRConstant.FOLDER_MAS_DATASET1 + "MahoutCF",
                     "EvaluationResult\\EvaluationResult_Maintain_OldCitation.xls",
-                    1);
+                    2);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -59,7 +59,7 @@ public class PaperRecommender {
     /**
      * 
      * @param DatasetToUse : 1: NUS Dataset 1, 2: NUS Dataset 2, 3: MAS Dataset.
-     * @param DatasetByResearcherType 1: Junior, 2: Senior.
+     * @param DatasetByResearcherType 0: Both, 1: Junior, 2: Senior.
      * @param fileNamePapers
      * @param fileNamePaperCitePaper
      * @param fileNameAuthorTestSet
@@ -129,26 +129,29 @@ public class PaperRecommender {
             estimatedTime = System.nanoTime() - startTime;
             System.out.println("Reading author test set elapsed time: " + estimatedTime / 1000000000 + " seconds");
             System.out.println("End reading author test set.");
-            // Step 2:
-            // - Read content of papers from [Training] Paper_Before_2006.csv
-            // - Store metadata of all papers into HashMap<String, Paper> papers
-            System.out.println("Begin reading paper list...");
-            startTime = System.nanoTime();
-            papers = MASDataset1.readPaperList(fileNamePapers, fileNamePaperCitePaper);
-            estimatedTime = System.nanoTime() - startTime;
-            System.out.println("Reading paper list elapsed time: " + estimatedTime / 1000000000 + " seconds");
-            System.out.println("End reading paper list.");
-            // Step 3: 
-            // Compute TF-IDF for MAS papers.
-//            PaperFVComputation.computeTFIDFFromPaperAbstract(papers, dirPapers, dirPreProcessedPaper, sequenceDir, vectorDir);
-            PaperFVComputation.readTFIDFFromMahoutFile(papers, vectorDir);
-            // Clear no longer in use objects.
-            // Always clear abstract.
-            PaperFVComputation.clearPaperAbstract(papers);
-            // Step 4:
-            // Get list of papers to process.
-            paperIdsOfAuthorTestSet = AuthorFVComputation.getPaperIdsOfAuthors(authorTestSet);
-            paperIdsTestSet = AuthorFVComputation.getPaperIdsTestSet(authorTestSet);
+            // When method is CF, do not read paper content.
+            if (recommendationMethod != 2) {
+                // Step 2:
+                // - Read content of papers from [Training] Paper_Before_2006.csv
+                // - Store metadata of all papers into HashMap<String, Paper> papers
+                System.out.println("Begin reading paper list...");
+                startTime = System.nanoTime();
+                papers = MASDataset1.readPaperList(fileNamePapers, fileNamePaperCitePaper);
+                estimatedTime = System.nanoTime() - startTime;
+                System.out.println("Reading paper list elapsed time: " + estimatedTime / 1000000000 + " seconds");
+                System.out.println("End reading paper list.");
+                // Step 3: 
+                // Compute TF-IDF for MAS papers.
+    //            PaperFVComputation.computeTFIDFFromPaperAbstract(papers, dirPapers, dirPreProcessedPaper, sequenceDir, vectorDir);
+                PaperFVComputation.readTFIDFFromMahoutFile(papers, vectorDir);
+                // Clear no longer in use objects.
+                // Always clear abstract.
+                PaperFVComputation.clearPaperAbstract(papers);
+                // Step 4:
+                // Get list of papers to process.
+                paperIdsOfAuthorTestSet = AuthorFVComputation.getPaperIdsOfAuthors(authorTestSet);
+                paperIdsTestSet = AuthorFVComputation.getPaperIdsTestSet(authorTestSet);
+            }
         }
         //</editor-fold>
 
@@ -182,7 +185,7 @@ public class PaperRecommender {
         } else if (recommendationMethod == 2) {
             //<editor-fold defaultstate="collapsed" desc="CF METHODS">
             // cf method: 1: KNN Pearson, 2: KNN Cosine, 3: KNN SVD
-            int cfMethod = 1;
+            int cfMethod = 3;
             System.out.println("Begin CF recommendation...");
             startTime = System.nanoTime();
             
@@ -299,22 +302,19 @@ public class PaperRecommender {
             if (cfMethod == 1) {
                 // kNNCF co-pearson.
                 algorithmName = "CF KNN Pearson " + "k" + k;
-                System.out.println("Begin knn pearson");
-                cfKNN(MahoutCFDir, MahoutCFFileOriginalFile, cfMethod, authorTestSet, topNRecommend, k);
-                System.out.println("End knn pearson");
             } else if (cfMethod == 2) {
                 // kNNCF cosine.
                 algorithmName = "CF KNN Cosine " + "k" + k;
-                System.out.println("Begin knn cosine");
-                cfKNN(MahoutCFDir, MahoutCFFileOriginalFile, cfMethod, authorTestSet, topNRecommend, k);
-                System.out.println("End knn cosine");
             }
+            System.out.println("Begin KNN");
+            cfKNN(MahoutCFDir, MahoutCFFileOriginalFile, cfMethod, authorTestSet, topNRecommend, k);
+            System.out.println("End KNN");
         } else if (cfMethod == 3) {
             // SVD ALSWRFactorizer.
             // f features, normalize by l, i iterations.
-            int f = 50;
+            int f = 5;
             double l = 0.01;
-            int i = 1000;
+            int i = 1;
             algorithmName = "CF SVD ALSWRFactorizer " + "n" + topNRecommend + "f" + f + "l" + l + "i" + i;
             // Recommend for authors in author test set.
             System.out.println("Begin SVD Recommend");
@@ -329,7 +329,9 @@ public class PaperRecommender {
     public static void cfPrepareMatrix(String fileNameAuthorCitePaper, String MahoutCFFileOriginalFile) throws Exception {
 
         // Read Raw rating matrix
+        System.out.println("Begin Reading raw rating matrix");
         HashMap<String, HashMap<String, Double>> authorPaperRating = MASDataset1.readAuthorCitePaperMatrix(fileNameAuthorCitePaper);
+        System.out.println("End Reading raw rating matrix");
 
         // Normalize
         System.out.println("Begin Normalize reating values in Citation Matrix");

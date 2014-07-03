@@ -34,11 +34,11 @@ public class CFRatingMatrixComputation {
         HashMap<String, Double> numAllAuthorCite = new HashMap<>();
 
         for (String authorId : authorPaperRating.keySet()) {
-            Double numAuthorCite = Double.valueOf(0);
+            double numAuthorCite = 0.0;
             for (String paperId : authorPaperRating.get(authorId).keySet()) {
                 numAuthorCite += authorPaperRating.get(authorId).get(paperId);
             }
-            numAllAuthorCite.put(authorId, numAuthorCite);
+            numAllAuthorCite.put(authorId, new Double(numAuthorCite));
         }
 
         return numAllAuthorCite;
@@ -46,15 +46,15 @@ public class CFRatingMatrixComputation {
 
     public static void writeCFRatingToMahoutFormatFile(HashMap<String, HashMap<String, Double>> authorPaperRating, String fileNameCFRatingMahoutFormatFile) throws Exception {
         FileUtils.deleteQuietly(new File(fileNameCFRatingMahoutFormatFile));
-        StringBuilder row = new StringBuilder();
+        StringBuilder content = new StringBuilder();
         for (String authorId : authorPaperRating.keySet()) {
             for (String paperId : authorPaperRating.get(authorId).keySet()) {
-                row.append(authorId).append(",")
+                content.append(authorId).append(",")
                         .append(paperId).append(",")
                         .append(authorPaperRating.get(authorId).get(paperId).toString())
                         .append("\r\n");
             }
         }
-        FileUtils.writeStringToFile(new File(fileNameCFRatingMahoutFormatFile), row.toString(), "UTF8", true);
+        FileUtils.writeStringToFile(new File(fileNameCFRatingMahoutFormatFile), content.toString(), "UTF8", true);
     }
 }
