@@ -7,6 +7,7 @@ package uit.tkorg.pr.model;
 import ir.vsr.HashMapVector;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 /**
@@ -23,7 +24,8 @@ public class Author implements Serializable {
     private List paper;
     private HashMapVector featureVector;
     private List groundTruth; // List string.
-    private List RecommendationList; // List string.
+    private List recommendationList; // List string.
+    private LinkedHashMap<String, Double> recommendationValue;
     private double precision;
     private double recall;
     private double f1;
@@ -41,8 +43,9 @@ public class Author implements Serializable {
         this.authorType = null;
         this.paper = new ArrayList();
         this.featureVector = new HashMapVector();
-        this.RecommendationList = new ArrayList();
         this.groundTruth = new ArrayList();
+        this.recommendationList = new ArrayList();
+        this.recommendationValue = new LinkedHashMap<>();
         this.precision = 0;
         this.recall = 0;
         this.f1 = 0;
@@ -126,17 +129,17 @@ public class Author implements Serializable {
     }
 
     /**
-     * @return the RecommendationList
+     * @return the recommendationList
      */
     public List getRecommendationList() {
-        return RecommendationList;
+        return recommendationList;
     }
 
     /**
-     * @param RecommendationList the RecommendationList to set
+     * @param recommendationList the recommendationList to set
      */
     public void setRecommendationList(List RecommendationList) {
-        this.RecommendationList = RecommendationList;
+        this.recommendationList = RecommendationList;
     }
 
     /**
@@ -249,5 +252,19 @@ public class Author implements Serializable {
      */
     public void setF1(double f1) {
         this.f1 = f1;
+    }
+
+    /**
+     * @return the recommendationValue
+     */
+    public LinkedHashMap<String, Double> getRecommendationValue() {
+        return recommendationValue;
+    }
+
+    /**
+     * @param recommendationValue the recommendationValue to set
+     */
+    public void setRecommendationValue(LinkedHashMap<String, Double> recommendationValue) {
+        this.recommendationValue = recommendationValue;
     }
 }

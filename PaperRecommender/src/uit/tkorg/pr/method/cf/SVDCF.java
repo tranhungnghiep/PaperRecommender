@@ -78,6 +78,7 @@ public class SVDCF {
                     // Display the list of recommendations
                     for (RecommendedItem recommendedItem : topItems) {
                         authorTestSet.get(String.valueOf(userId)).getRecommendationList().add(String.valueOf(recommendedItem.getItemID()));
+                        authorTestSet.get(String.valueOf(userId)).getRecommendationValue().put(String.valueOf(recommendedItem.getItemID()), Double.valueOf(recommendedItem.getValue()));
                         bw.write(userId + "," + recommendedItem.getItemID() + "," + recommendedItem.getValue() + "\r\n");
                     }
                 }

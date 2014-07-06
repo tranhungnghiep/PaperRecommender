@@ -88,7 +88,6 @@ public class FeatureVectorSimilarity {
     private static void generateRecommendation(Author author, HashMap<String, Paper> papers, 
             int similarityScheme, int topNRecommend) throws Exception {
 
-        List<String> recommendedPapers = new ArrayList<>();
         HashMap<String, Double> paperSimilarityHM = new HashMap(); // <IDPaper, SimValue>
 
         // Compute similarities between current author and all papers.
@@ -105,14 +104,13 @@ public class FeatureVectorSimilarity {
         // Take top n papers.
         int counter = 0;
         for (String paperId : sortedPaperSimilarityHM.keySet()) {
-            recommendedPapers.add(paperId);
+            author.getRecommendationList().add(paperId);
+            author.getRecommendationValue().put(paperId, sortedPaperSimilarityHM.get(paperId));
             counter++;
             if (counter >= topNRecommend) {
                 break;
             }
         }
-        
-        author.setRecommendationList(recommendedPapers);
         
         synchronized(count) {
             System.out.println(count++ + ". " + (new Date(System.currentTimeMillis()).toString()) + " DONE for authorId: " + author.getAuthorId());
