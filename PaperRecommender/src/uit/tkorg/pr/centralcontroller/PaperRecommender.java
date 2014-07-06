@@ -185,7 +185,7 @@ public class PaperRecommender {
         } else if (recommendationMethod == 2) {
             //<editor-fold defaultstate="collapsed" desc="CF METHODS">
             // cf method: 1: KNN Pearson, 2: KNN Cosine, 3: KNN SVD
-            int cfMethod = 3;
+            int cfMethod = 1;
             System.out.println("Begin CF recommendation...");
             startTime = System.nanoTime();
             
