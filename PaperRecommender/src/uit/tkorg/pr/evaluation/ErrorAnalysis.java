@@ -7,6 +7,7 @@ package uit.tkorg.pr.evaluation;
 import java.io.File;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import org.apache.commons.io.FileUtils;
 import uit.tkorg.pr.model.Author;
 
@@ -57,5 +58,28 @@ public class ErrorAnalysis {
                 .append("\r\n");
         }
         FileUtils.writeStringToFile(new File(fileNameEachAuthorEvaluationResults), content.toString(), "UTF8", true);
+    }
+
+    public static void printFalseNegativeTop10(HashMap<String, Author> authors, String fileNameFalseNegativeTop10, int method) throws Exception {
+        FileUtils.deleteQuietly(new File(fileNameFalseNegativeTop10));
+        StringBuilder content = new StringBuilder();
+        content.append("Author ID").append("\t")
+            .append("Paper ID False Negative").append("\t")
+            .append("Rank").append("\t")
+            .append("Ranking value").append("\t")
+            .append("\r\n");
+        for (String authorId : authors.keySet()) {
+            for (String paperId : (List<String>) authors.get(authorId).getGroundTruth()) {
+                if (!authors.get(authorId).getRecommendationList().contains(paperId)) {
+                    content.append(authorId).append("\t")
+                        .append(paperId).append("\t")
+                        .append(authors.get(authorId).getRecommendationList().indexOf(paperId) + 1).append("\t")
+                        .append(method).append("\t")
+                        .append(authors.get(authorId).getRecommendationValue().get(paperId))
+                        .append("\r\n");
+                }
+            }
+        }
+        FileUtils.writeStringToFile(new File(fileNameFalseNegativeTop10), content.toString(), "UTF8", true);
     }
 }
