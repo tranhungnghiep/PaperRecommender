@@ -66,11 +66,12 @@ public class ErrorAnalysis {
         content.append("Author ID").append("\t")
             .append("Paper ID False Negative").append("\t")
             .append("Rank").append("\t")
+            .append("Method").append("\t")
             .append("Ranking value").append("\t")
             .append("\r\n");
         for (String authorId : authors.keySet()) {
             for (String paperId : (List<String>) authors.get(authorId).getGroundTruth()) {
-                if (!authors.get(authorId).getRecommendationList().contains(paperId)) {
+                if (!authors.get(authorId).getRecommendationList().subList(0, 10).contains(paperId)) {
                     content.append(authorId).append("\t")
                         .append(paperId).append("\t")
                         .append(authors.get(authorId).getRecommendationList().indexOf(paperId) + 1).append("\t")

@@ -89,7 +89,7 @@ public class PaperRecommender {
         long startTime;
         long estimatedTime;
         
-        int topNRecommend = 100;
+        int topNRecommend = 1000;
         String datasetName = null;
         String algorithmName = null;
         
@@ -220,6 +220,7 @@ public class PaperRecommender {
                 + " Customed file name ending" + ".xls";
         ErrorAnalysis.printEachAuthorEvaluationResults(authorTestSet, fileNameEachAuthorEvaluationResults);
 
+        // FalseNegativeTop10
         String fileNameFalseNegativeTop10 = PRConstant.FOLDER_MAS_DATASET1 
                 + "ErrorAnalysis\\FalseNegativeTop10 Method" + recommendationMethod 
                 + " Customed file name ending" + ".xls";
