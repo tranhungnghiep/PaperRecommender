@@ -220,11 +220,20 @@ public class PaperRecommender {
                 + " Customed file name ending" + ".xls";
         ErrorAnalysis.printEachAuthorEvaluationResults(authorTestSet, fileNameEachAuthorEvaluationResults);
 
-        // FalseNegativeTop10
-        String fileNameFalseNegativeTop10 = PRConstant.FOLDER_MAS_DATASET1 
-                + "ErrorAnalysis\\FalseNegativeTop10 Method" + recommendationMethod 
+        // FalseNegativeTopN
+        int topNErrorAnalysis = 10;
+        String fileNameFalseNegativeTopN = PRConstant.FOLDER_MAS_DATASET1 
+                + "ErrorAnalysis\\FalseNegativeTop" + topNErrorAnalysis
+                + " Method" + recommendationMethod 
                 + " Customed file name ending" + ".xls";
-        ErrorAnalysis.printFalseNegativeTop10(authorTestSet, fileNameFalseNegativeTop10, recommendationMethod);
+        ErrorAnalysis.printFalseNegativeTopN(authorTestSet, fileNameFalseNegativeTopN, recommendationMethod, topNErrorAnalysis);
+
+        // FalsePositveTopN
+        String fileNameFalsePositiveTopN = PRConstant.FOLDER_MAS_DATASET1 
+                + "ErrorAnalysis\\FalsePositiveTop" + topNErrorAnalysis
+                + " Method" + recommendationMethod 
+                + " Customed file name ending" + ".xls";
+        ErrorAnalysis.printFalsePositiveTopN(authorTestSet, fileNameFalsePositiveTopN, recommendationMethod, topNErrorAnalysis);
 
         estimatedTime = System.nanoTime() - startTime;
         System.out.println("Error analysis elapsed time: " + estimatedTime / 1000000000 + " seconds");
