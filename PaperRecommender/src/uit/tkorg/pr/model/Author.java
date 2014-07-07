@@ -26,13 +26,22 @@ public class Author implements Serializable {
     private List groundTruth; // List string.
     private List recommendationList; // List string.
     private LinkedHashMap<String, Double> recommendationValue;
-    private double precision;
-    private double recall;
+    private double precision10;
+    private double precision20;
+    private double precision30;
+    private double precision40;
+    private double precision50;
+    private double recall50;
+    private double recall100;
     private double f1;
-    private double ap;
-    private double rr;
+    private double ap10;
+    private double ap20;
+    private double ap30;
+    private double ap40;
+    private double ap50;
     private double ndcg5;
     private double ndcg10;
+    private double rr;
 
     /**
      * Default constructor used for serializable.
@@ -46,13 +55,22 @@ public class Author implements Serializable {
         this.groundTruth = new ArrayList();
         this.recommendationList = new ArrayList();
         this.recommendationValue = new LinkedHashMap<>();
-        this.precision = 0;
-        this.recall = 0;
+        this.precision10 = 0;
+        this.precision20 = 0;
+        this.precision30 = 0;
+        this.precision40 = 0;
+        this.precision50 = 0;
+        this.recall50 = 0;
+        this.recall100 = 0;
         this.f1 = 0;
-        this.ap = 0;
-        this.rr = 0;
+        this.ap10 = 0;
+        this.ap20 = 0;
+        this.ap30 = 0;
+        this.ap40 = 0;
+        this.ap50 = 0;
         this.ndcg5 = 0;
         this.ndcg10 = 0;
+        this.rr = 0;
     }
 
     /**
@@ -199,45 +217,45 @@ public class Author implements Serializable {
     }
 
     /**
-     * @return the precision
+     * @return the precision10
      */
-    public double getPrecision() {
-        return precision;
+    public double getPrecision10() {
+        return precision10;
     }
 
     /**
-     * @param precision the precision to set
+     * @param precision10 the precision10 to set
      */
-    public void setPrecision(double precision) {
-        this.precision = precision;
+    public void setPrecision10(double precision10) {
+        this.precision10 = precision10;
     }
 
     /**
-     * @return the recall
+     * @return the recall50
      */
-    public double getRecall() {
-        return recall;
+    public double getRecall50() {
+        return recall50;
     }
 
     /**
-     * @param recall the recall to set
+     * @param recall50 the recall50 to set
      */
-    public void setRecall(double recall) {
-        this.recall = recall;
+    public void setRecall50(double recall50) {
+        this.recall50 = recall50;
     }
 
     /**
-     * @return the ap
+     * @return the ap10
      */
-    public double getAp() {
-        return ap;
+    public double getAp10() {
+        return ap10;
     }
 
     /**
-     * @param ap the ap to set
+     * @param ap10 the ap10 to set
      */
-    public void setAp(double ap) {
-        this.ap = ap;
+    public void setAp10(double ap10) {
+        this.ap10 = ap10;
     }
 
     /**
@@ -265,6 +283,132 @@ public class Author implements Serializable {
      * @param recommendationValue the recommendationValue to set
      */
     public void setRecommendationValue(LinkedHashMap<String, Double> recommendationValue) {
-        this.recommendationValue = recommendationValue;
+        this.setRecommendationValue(recommendationValue);
+    }
+
+    /**
+     * @return the precision20
+     */
+    public double getPrecision20() {
+        return precision20;
+    }
+
+    /**
+     * @param precision20 the precision20 to set
+     */
+    public void setPrecision20(double precision20) {
+        this.precision20 = precision20;
+    }
+
+    /**
+     * @return the precision30
+     */
+    public double getPrecision30() {
+        return precision30;
+    }
+
+    /**
+     * @param precision30 the precision30 to set
+     */
+    public void setPrecision30(double precision30) {
+        this.precision30 = precision30;
+    }
+
+    /**
+     * @return the precision40
+     */
+    public double getPrecision40() {
+        return precision40;
+    }
+
+    /**
+     * @param precision40 the precision40 to set
+     */
+    public void setPrecision40(double precision40) {
+        this.precision40 = precision40;
+    }
+
+    /**
+     * @return the precision50
+     */
+    public double getPrecision50() {
+        return precision50;
+    }
+
+    /**
+     * @param precision50 the precision50 to set
+     */
+    public void setPrecision50(double precision50) {
+        this.precision50 = precision50;
+    }
+
+    /**
+     * @return the recall100
+     */
+    public double getRecall100() {
+        return recall100;
+    }
+
+    /**
+     * @param recall100 the recall100 to set
+     */
+    public void setRecall100(double recall100) {
+        this.recall100 = recall100;
+    }
+
+    /**
+     * @return the ap20
+     */
+    public double getAp20() {
+        return ap20;
+    }
+
+    /**
+     * @param ap20 the ap20 to set
+     */
+    public void setAp20(double ap20) {
+        this.ap20 = ap20;
+    }
+
+    /**
+     * @return the ap30
+     */
+    public double getAp30() {
+        return ap30;
+    }
+
+    /**
+     * @param ap30 the ap30 to set
+     */
+    public void setAp30(double ap30) {
+        this.ap30 = ap30;
+    }
+
+    /**
+     * @return the ap40
+     */
+    public double getAp40() {
+        return ap40;
+    }
+
+    /**
+     * @param ap40 the ap40 to set
+     */
+    public void setAp40(double ap40) {
+        this.ap40 = ap40;
+    }
+
+    /**
+     * @return the ap50
+     */
+    public double getAp50() {
+        return ap50;
+    }
+
+    /**
+     * @param ap50 the ap50 to set
+     */
+    public void setAp50(double ap50) {
+        this.ap50 = ap50;
     }
 }

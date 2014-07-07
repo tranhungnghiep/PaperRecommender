@@ -15,6 +15,7 @@ import uit.tkorg.pr.dataimex.PRGeneralFile;
 import uit.tkorg.pr.datapreparation.cbf.AuthorFVComputation;
 import uit.tkorg.pr.datapreparation.cbf.PaperFVComputation;
 import uit.tkorg.pr.datapreparation.cf.CFRatingMatrixComputation;
+import uit.tkorg.pr.evaluation.ErrorAnalysis;
 import uit.tkorg.pr.evaluation.Evaluator;
 import uit.tkorg.pr.method.cbf.FeatureVectorSimilarity;
 import uit.tkorg.pr.method.cf.KNNCF;
@@ -209,6 +210,20 @@ public class PaperRecommender {
         System.out.println("End evaluating.");
         //</editor-fold>
         
+        //<editor-fold defaultstate="collapsed" desc="ERROR ANALYSIS">
+        System.out.println("Begin error analysis...");
+        startTime = System.nanoTime();
+
+        String fileNameEachAuthorEvaluationResults = PRConstant.FOLDER_MAS_DATASET1 
+                + "ErrorAnalysis\\EachAuthorEvaluationResults Method" + recommendationMethod 
+                + " Customed file name ending" + ".xls";
+        ErrorAnalysis.printEachAuthorEvaluationResults(authorTestSet, fileNameEachAuthorEvaluationResults);
+
+        estimatedTime = System.nanoTime() - startTime;
+        System.out.println("Error analysis elapsed time: " + estimatedTime / 1000000000 + " seconds");
+        System.out.println("End error analysis.");
+        //</editor-fold>
+        
         long estimatedRecommendationFlowTime = System.nanoTime() - startRecommendationFlowTime;
         System.out.println("Recommendation elapsed time: " + estimatedRecommendationFlowTime / 1000000000 + " seconds");
         System.out.println("End recommendation flow.");
@@ -391,13 +406,13 @@ public class PaperRecommender {
             HashMap<String, Author> authorTestSet, String fileNameEvaluationResult) throws Exception {
 
         // Compute evaluation index.
-        double precision10 = Evaluator.computeMeanPrecisionTopN(authorTestSet, 10);
-        double precision20 = Evaluator.computeMeanPrecisionTopN(authorTestSet, 20);
-        double precision30 = Evaluator.computeMeanPrecisionTopN(authorTestSet, 30);
-        double precision40 = Evaluator.computeMeanPrecisionTopN(authorTestSet, 40);
-        double precision50 = Evaluator.computeMeanPrecisionTopN(authorTestSet, 50);
-        double recall50 = Evaluator.computeMeanRecallTopN(authorTestSet, 50);
-        double recall100 = Evaluator.computeMeanRecallTopN(authorTestSet, 100);
+        double mp10 = Evaluator.computeMeanPrecisionTopN(authorTestSet, 10);
+        double mp20 = Evaluator.computeMeanPrecisionTopN(authorTestSet, 20);
+        double mp30 = Evaluator.computeMeanPrecisionTopN(authorTestSet, 30);
+        double mp40 = Evaluator.computeMeanPrecisionTopN(authorTestSet, 40);
+        double mp50 = Evaluator.computeMeanPrecisionTopN(authorTestSet, 50);
+        double mr50 = Evaluator.computeMeanRecallTopN(authorTestSet, 50);
+        double mr100 = Evaluator.computeMeanRecallTopN(authorTestSet, 100);
         double f1 = Evaluator.computeMeanFMeasure(authorTestSet, 1);
         double map10 = Evaluator.computeMAP(authorTestSet, 10);
         double map20 = Evaluator.computeMAP(authorTestSet, 20);
@@ -415,13 +430,13 @@ public class PaperRecommender {
                 .append("Dataset").append("\t")
                 .append("Algorithm").append("\t")
                 .append("Running time in second").append("\t")
-                .append("P@10").append("\t")
-                .append("P@20").append("\t")
-                .append("P@30").append("\t")
-                .append("P@40").append("\t")
-                .append("P@50").append("\t")
-                .append("R@50").append("\t")
-                .append("R@100").append("\t")
+                .append("MP@10").append("\t")
+                .append("MP@20").append("\t")
+                .append("MP@30").append("\t")
+                .append("MP@40").append("\t")
+                .append("MP@50").append("\t")
+                .append("MR@50").append("\t")
+                .append("MR@100").append("\t")
                 .append("F1").append("\t")
                 .append("MAP@10").append("\t")
                 .append("MAP@20").append("\t")
@@ -436,13 +451,13 @@ public class PaperRecommender {
                 .append(datasetName).append("\t")
                 .append(algorithmName).append("\t")
                 .append(estimatedRecommendationFlowTime / 1000000000).append("\t")
-                .append(precision10).append("\t")
-                .append(precision20).append("\t")
-                .append(precision30).append("\t")
-                .append(precision40).append("\t")
-                .append(precision50).append("\t")
-                .append(recall50).append("\t")
-                .append(recall100).append("\t")
+                .append(mp10).append("\t")
+                .append(mp20).append("\t")
+                .append(mp30).append("\t")
+                .append(mp40).append("\t")
+                .append(mp50).append("\t")
+                .append(mr50).append("\t")
+                .append(mr100).append("\t")
                 .append(f1).append("\t")
                 .append(map10).append("\t")
                 .append(map20).append("\t")
