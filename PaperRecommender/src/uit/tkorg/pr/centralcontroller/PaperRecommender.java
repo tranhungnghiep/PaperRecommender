@@ -51,7 +51,7 @@ public class PaperRecommender {
                     PRConstant.FOLDER_MAS_DATASET1 + "Vector",
                     PRConstant.FOLDER_MAS_DATASET1 + "MahoutCF",
                     "EvaluationResult\\EvaluationResult_Maintain_OldCitation.xls",
-                    2);
+                    1);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -162,7 +162,7 @@ public class PaperRecommender {
             // parameters for CBF methods.
             int combiningSchemePaperOfAuthor = 3;
             int weightingSchemePaperOfAuthor = 1;
-            int timeAwareScheme = 0;
+            int timeAwareScheme = 1;
             double gamma = 0.2;
             int combiningSchemePaperTestSet = 3;
             int weightingSchemePaperTestSet = 1;
@@ -307,7 +307,7 @@ public class PaperRecommender {
         
         // Prepare CF matrix.
         String MahoutCFFileOriginalFile = MahoutCFDir + "\\CFRatingMatrixOriginal.txt";
-        cfPrepareMatrix(fileNameAuthorCitePaper, MahoutCFFileOriginalFile);
+//        cfPrepareMatrix(fileNameAuthorCitePaper, MahoutCFFileOriginalFile);
         
         // Predict ratings.
         if ((cfMethod == 1) || (cfMethod == 2)) {
@@ -328,8 +328,8 @@ public class PaperRecommender {
             // SVD ALSWRFactorizer.
             // f features, normalize by l, i iterations.
             int f = 5;
-            double l = 0.01;
-            int i = 1;
+            double l = 0.001;
+            int i = 100;
             algorithmName = "CF SVD ALSWRFactorizer " + "n" + topNRecommend + "f" + f + "l" + l + "i" + i;
             // Recommend for authors in author test set.
             System.out.println("Begin SVD Recommend");
