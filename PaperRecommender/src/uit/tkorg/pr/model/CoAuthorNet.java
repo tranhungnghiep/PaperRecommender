@@ -29,17 +29,11 @@ public class CoAuthorNet {
     }
     
     public HashMap<Integer, HashMap<Integer, Integer>> coAuthorNet;
-    private HashMap<Integer, HashMap<Integer, Integer>> coAuthorNetNear;
-    private HashMap<Integer, HashMap<Integer, Integer>> coAuthorNetFar;
     public HashMap<Integer, HashMap<Integer, Float>> rssNet; //weighted, directed graph
     public HashMap<Integer, HashMap<Integer, Float>> rtbvsNet; //weighted, directed graph
-    public HashMap<Integer, ArrayList<Integer>> nearTestingData; //non-weighted, non-directed graph <authorID, <Lis of CoAuthorID>>
-    public HashMap<Integer, ArrayList<Integer>> farTestingData; //non-weighted, non-directed graph
 
     private CoAuthorNet() {
         coAuthorNet = new HashMap<>();
-        coAuthorNetNear = new HashMap<>();
-        coAuthorNetFar = new HashMap<>();
     }
     public HashMap<Integer, Integer> paperId_year;
     public HashMap<Integer, ArrayList<Integer>> authorPaper;
@@ -114,115 +108,6 @@ public class CoAuthorNet {
     }
 
     /**
-     * Load testing data from 2 text files [NearTesting]AuthorId_PaperID.txt and
-     * [FarTesting]AuthorId_PaperID.txt put into HashMaps are: nearTestingData,
-     * farTestingData
-     *
-     * @param fileNearTestingData
-     * @param fileFarTestingData
-     */
-    public void LoadTestingData(String fileNearTestingData, String fileFarTestingData) {
-        HashMap<Integer, ArrayList<Integer>> paperAuthorTmp = new HashMap<>();
-        try {
-            nearTestingData = new HashMap<>();
-            FileInputStream fis = new FileInputStream(fileNearTestingData);
-            Reader reader = new InputStreamReader(fis, "UTF8");
-            BufferedReader bufferReader = new BufferedReader(reader);
-            bufferReader.readLine();
-            String line = null;
-            String[] tokens;
-            int authorId;
-            int paperId;
-            while ((line = bufferReader.readLine()) != null) {
-                tokens = line.split("\t");
-                if (tokens.length != 2) {
-                    continue;
-                }
-
-                authorId = Integer.parseInt(tokens[0]);
-                paperId = Integer.parseInt(tokens[1]);
-
-                ArrayList<Integer> listAuthor = paperAuthorTmp.get(paperId);
-                if (listAuthor == null) {
-                    listAuthor = new ArrayList<>();
-                }
-                listAuthor.add(authorId);
-                paperAuthorTmp.put(paperId, listAuthor);
-            }
-            bufferReader.close();
-        } catch (Exception e) {
-        }
-
-        for (int paperId : paperAuthorTmp.keySet()) {
-            ArrayList<Integer> listAuthorId = paperAuthorTmp.get(paperId);
-            for (int authorId1 : listAuthorId) {
-                for (int authorId2 : listAuthorId) {
-                    if (authorId2 > authorId1) {
-                        ArrayList<Integer> listCollaboration = nearTestingData.get(authorId1);
-                        if (listCollaboration == null) {
-                            listCollaboration = new ArrayList<>();
-                        }
-                        if (!listCollaboration.contains(authorId2)) {
-                            listCollaboration.add(authorId2);
-                            nearTestingData.put(authorId1, listCollaboration);
-                        }
-                    }
-                }
-            }
-        }
-
-        // Loading for the FarFuture Network
-        paperAuthorTmp.clear();
-        try {
-            farTestingData = new HashMap<>();
-            FileInputStream fis = new FileInputStream(fileFarTestingData);
-            Reader reader = new InputStreamReader(fis, "UTF8");
-            BufferedReader bufferReader = new BufferedReader(reader);
-            bufferReader.readLine();
-            String line = null;
-            String[] tokens;
-            int authorId;
-            int paperId;
-            while ((line = bufferReader.readLine()) != null) {
-                tokens = line.split("\t");
-                if (tokens.length != 2) {
-                    continue;
-                }
-
-                authorId = Integer.parseInt(tokens[0]);
-                paperId = Integer.parseInt(tokens[1]);
-
-                ArrayList<Integer> listAuthor = paperAuthorTmp.get(paperId);
-                if (listAuthor == null) {
-                    listAuthor = new ArrayList<>();
-                }
-                listAuthor.add(authorId);
-                paperAuthorTmp.put(paperId, listAuthor);
-            }
-            bufferReader.close();
-        } catch (Exception e) {
-        }
-
-        for (int paperId : paperAuthorTmp.keySet()) {
-            ArrayList<Integer> listAuthorId = paperAuthorTmp.get(paperId);
-            for (int authorId1 : listAuthorId) {
-                for (int authorId2 : listAuthorId) {
-                    if (authorId2 > authorId1) {
-                        ArrayList<Integer> listCollaboration = farTestingData.get(authorId1);
-                        if (listCollaboration == null) {
-                            listCollaboration = new ArrayList<>();
-                        }
-                        if (!listCollaboration.contains(authorId2)) {
-                            listCollaboration.add(authorId2);
-                            farTestingData.put(authorId1, listCollaboration);
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    /**
      * Building all graphs
      *
      * @param k
@@ -230,9 +115,7 @@ public class CoAuthorNet {
      */
     public void BuildAllGraph(float k, int year) {
         BuildCoAuthorGraph();
-        BuildNearFarCoAuthorGraph(year);
         BuildingRSSGraph();
-        BuildingTrendGraph(k, year);
     }
 
     /**
@@ -260,62 +143,6 @@ public class CoAuthorNet {
                             numofPaper++;
                             collaboration.put(author2, numofPaper);
                             coAuthorNet.put(author1, collaboration);
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    /**
-     * Building Near and Far Collaboration for the training CoAuthorGraph
-     *
-     * @param year
-     */
-    public void BuildNearFarCoAuthorGraph(int year) {
-        for (int pubId : paperAuthor.keySet()) {
-            ArrayList<Integer> listAuthors = paperAuthor.get(pubId);
-            if (listAuthors.size() == 1 && !coAuthorNet.containsKey(listAuthors.get(0))) {
-                coAuthorNetNear.put(listAuthors.get(0), new HashMap<Integer, Integer>());
-                coAuthorNetFar.put(listAuthors.get(0), new HashMap<Integer, Integer>());
-            } else {
-                for (int author1 : listAuthors) {
-                    for (int author2 : listAuthors) {
-                        if (author1 != author2) {
-                            if (paperId_year.get(pubId) >= year) {
-                                HashMap<Integer, Integer> collaboratorsNear;
-                                collaboratorsNear = coAuthorNetNear.get(author1);
-                                if (collaboratorsNear == null) {
-                                    collaboratorsNear = new HashMap<>();
-                                }
-
-                                Integer numberOfPaper;
-                                numberOfPaper = collaboratorsNear.get(author2);
-                                if (numberOfPaper == null) {
-                                    numberOfPaper = 0;
-                                }
-                                numberOfPaper++;
-                                collaboratorsNear.put(author2, numberOfPaper);
-                                coAuthorNetNear.put(author1, collaboratorsNear);
-                            }
-
-                            if (paperId_year.get(pubId) < year) {
-                                HashMap<Integer, Integer> collaboratorsFar;
-                                collaboratorsFar = coAuthorNetFar.get(author1);
-                                if (collaboratorsFar == null) {
-                                    collaboratorsFar = new HashMap<>();
-                                }
-
-                                Integer numberOfPaper;
-                                numberOfPaper = collaboratorsFar.get(author2);
-                                if (numberOfPaper == null) {
-                                    numberOfPaper = 0;
-                                }
-                                numberOfPaper++;
-                                collaboratorsFar.put(author2, numberOfPaper);
-                                coAuthorNetFar.put(author1, collaboratorsFar);
-                            }
-
                         }
                     }
                 }
@@ -355,90 +182,6 @@ public class CoAuthorNet {
         }
     }
 
-    public void BuildingTrendGraph(float k, int year) {
-        rtbvsNet = new HashMap<>();
-        for (int authorId1 : coAuthorNet.keySet()) {
-            if (coAuthorNet.get(authorId1).size() == 0) {
-                rtbvsNet.put(authorId1, new HashMap<Integer, Float>());
-            } else {
-                int totalPaperOfAuthor1 = 0;
-                for (int authorId2 : coAuthorNet.get(authorId1).keySet()) {
-                    totalPaperOfAuthor1 += coAuthorNet.get(authorId1).get(authorId2);
-                }
-
-                float m = 0;
-                boolean isContainKey1 = coAuthorNetNear.containsKey(authorId1);
-                boolean isContainKey2 = coAuthorNetFar.containsKey(authorId1);
-                if (isContainKey1) {
-                    for (int authorId2 : coAuthorNetNear.get(authorId1).keySet()) {
-                        m += k * coAuthorNetNear.get(authorId1).get(authorId2);
-                    }
-                }
-                if (isContainKey2) {
-                    for (int authorId2 : coAuthorNetFar.get(authorId1).keySet()) {
-                        m += (1 - k) * coAuthorNetFar.get(authorId1).get(authorId2);
-                    }
-                }
-
-                for (int authorId2 : coAuthorNet.get(authorId1).keySet()) {
-                    if (authorId1 != authorId2) {
-                        float t = 0;
-                        if (isContainKey1 && coAuthorNetNear.get(authorId1).containsKey(authorId2)) {
-                            t += k * coAuthorNetNear.get(authorId1).get(authorId2);
-                        }
-                        if (isContainKey2 && coAuthorNetFar.get(authorId1).containsKey(authorId2)) {
-                            t += (1 - k) * coAuthorNetFar.get(authorId1).get(authorId2);
-                        }
-
-                        float weight = t / m;
-                        HashMap<Integer, Float> rtbvsWeight = rtbvsNet.get(authorId1);
-                        if (rtbvsWeight == null) {
-                            rtbvsWeight = new HashMap<>();
-                        }
-
-                        Float _weight = rtbvsWeight.get(authorId2);
-                        if (_weight == null) {
-                            _weight = weight;
-                            rtbvsWeight.put(authorId2, _weight);
-                        }
-                        rtbvsNet.put(authorId1, rtbvsWeight);
-                    }
-                }
-            }
-        }
-    }
-
-    public HashSet<Integer> GetAllAuthorNearTest() {
-        HashSet<Integer> listAuthor = new HashSet<>();
-
-        for (int aid : nearTestingData.keySet()) {
-            if (!listAuthor.contains(aid)) {
-                listAuthor.add(aid);
-            }
-            for (int aid2 : nearTestingData.get(aid)) {
-                if (!listAuthor.contains(aid2)) {
-                    listAuthor.add(aid2);
-                }
-            }
-        }
-        return listAuthor;
-    }
-
-    public HashSet<Integer> GetAllAuthorFarTest() {
-        HashSet<Integer> listAuthor = new HashSet<>();
-        for (int aid : farTestingData.keySet()) {
-            if (!listAuthor.contains(aid)) {
-                listAuthor.add(aid);
-            }
-            for (int aid2 : farTestingData.get(aid)) {
-                if (!listAuthor.contains(aid2)) {
-                    listAuthor.add(aid2);
-                }
-            }
-        }
-        return listAuthor;
-    }
-    
     public boolean isLinkExistInRSSGraph(HashMap<Integer, HashMap<Integer, Float>> rssGraph, int authorID1, int authorID2) {
         boolean found = false;
         if (rssGraph.containsKey(authorID1)) {
