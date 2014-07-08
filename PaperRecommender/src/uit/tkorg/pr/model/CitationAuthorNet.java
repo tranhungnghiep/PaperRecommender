@@ -1,5 +1,5 @@
 /*
-    CiteAuthorNet will be built from 2 files: 
+    CitationAuthorNet will be built from 2 files: 
         AuthorID_PaperID.txt ("idAuthor", "idPaper"); 
         PaperID_Year_ReferenceID.txt ("idPaper", "Year", "idPaperRef")
 
@@ -22,7 +22,7 @@ import uit.tkorg.utility.general.TextFileUtility;
  *
  * @author Huynh Ngoc Tin
  */
-public class CiteAuthorNet {
+public class CitationAuthorNet {
      // <AuthorID, <AuthorID_RefTo, NumberOfRef>>
     private HashMap<Integer, HashMap<Integer, Integer>> _referenceNumberNet;
     private HashMap<Integer, HashMap<Integer, Float>> _referenceRSSNet;
@@ -33,7 +33,7 @@ public class CiteAuthorNet {
     private String _file_All_AuthorID_PaperID;
     private String _file_PaperID_RefID;
 
-    public CiteAuthorNet(String file_All_AuthorID_PaperID, String file_PaperID_RefID){
+    public CitationAuthorNet(String file_All_AuthorID_PaperID, String file_PaperID_RefID){
         _file_All_AuthorID_PaperID = file_All_AuthorID_PaperID;
         _file_PaperID_RefID = file_PaperID_RefID;
     }
@@ -209,7 +209,7 @@ public class CiteAuthorNet {
     public static void main(String args[]) {
 //        try {
 //            System.out.println("START...");
-//            CiteAuthorNet citedGraph = new CiteAuthorNet(
+//            CitationAuthorNet citedGraph = new CitationAuthorNet(
 //                    "C:\\2.CRS-Experiment\\Sample Data\\[TrainingData]AuthorID_PaperID.txt",
 //                    "C:\\2.CRS-Experiment\\Sample Data\\[TrainingData]PaperID_Year_ReferenceID.txt"
 //                    );
