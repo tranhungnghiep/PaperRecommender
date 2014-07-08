@@ -6,7 +6,6 @@
     private HashMap<Integer, HashMap<Integer, Integer>> _referenceNumberNet;
     private HashMap<Integer, HashMap<Integer, Float>> _referenceRSSNet;
  */
-
 package uit.tkorg.pr.model;
 
 import java.io.BufferedReader;
