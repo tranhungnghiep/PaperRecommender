@@ -86,8 +86,8 @@ public class NUSDataset1 {
             paper.setPaperId(paperid);//set PaperId for paper
             paper.setYear(paperYear(paperid));//set Year for paper
             paper.setTfidfVector(readFilePaper(file.getAbsoluteFile()));//set Content for paper
-            paper.setCitation(addCitation(paperid));//set Citation for paper
-            paper.setReference(addReference(paperid));//set Reference for paper
+            paper.setCitationList(addCitation(paperid));//set Citation for paper
+            paper.setReferenceList(addReference(paperid));//set Reference for paper
             papers.put(paperid, paper);
         }
         return papers;
@@ -280,7 +280,7 @@ public class NUSDataset1 {
             paper.setPaperType("Paper of junior");
 
             String refPath = dir.getAbsolutePath() + "\\" + authorId + "RefsFV";
-            paper.setReference(findRefOfPaper(new File(refPath)));
+            paper.setReferenceList(findRefOfPaper(new File(refPath)));
 
             // ten duong dan den vector dac trung cua paper
             String pathVectorFv = dir.getAbsolutePath() + "\\" + authorId + "-1" + "_fv.txt";
@@ -299,10 +299,10 @@ public class NUSDataset1 {
                     paper.setPaperType("Paper of senior");
 
                     String citePath = file.getAbsolutePath() + "\\" + paperId + "CitsFV";
-                    paper.setCitation(findCitOfPaper(new File(citePath))); // set List cit cua  paper i
+                    paper.setCitationList(findCitOfPaper(new File(citePath))); // set List cit cua  paper i
 
                     String refPath = file.getAbsolutePath() + "\\" + paperId + "RefsFV";
-                    paper.setReference(findRefOfPaper(new File(refPath))); // set List ref cua paper i
+                    paper.setReferenceList(findRefOfPaper(new File(refPath))); // set List ref cua paper i
 
                     String pathVectorFv = file.getAbsolutePath() + "\\" + file.getName() + "_fv.txt";
                     paper.setTfidfVector(readFilePaper(new File(pathVectorFv)));// set content cho paper i
@@ -336,7 +336,7 @@ public class NUSDataset1 {
                             author.setAuthorId(junior.getName());
                             author.setAuthorType("Junior");
                             author.setGroundTruth(findGroundTruth(junior));
-                            author.setPaper(findPaperOfAuthor(junior));
+                            author.setPaperList(findPaperOfAuthor(junior));
 
                             authors.put(junior.getName(), author);
                         }
@@ -348,7 +348,7 @@ public class NUSDataset1 {
                             author.setAuthorId(senior.getName());
                             author.setAuthorType("Senior");
                             author.setGroundTruth(findGroundTruth(senior));
-                            author.setPaper(findPaperOfAuthor(senior));
+                            author.setPaperList(findPaperOfAuthor(senior));
 
                             authors.put(senior.getName(), author);
                         }
@@ -362,7 +362,7 @@ public class NUSDataset1 {
                             author.setAuthorId(junior.getName());
                             author.setAuthorType("Junior");
                             author.setGroundTruth(findGroundTruth(junior));
-                            author.setPaper(findPaperOfAuthor(junior));
+                            author.setPaperList(findPaperOfAuthor(junior));
 
                             authors.put(junior.getName(), author);
                         }
@@ -376,7 +376,7 @@ public class NUSDataset1 {
                             author.setAuthorId(senior.getName());
                             author.setAuthorType("Senior");
                             author.setGroundTruth(findGroundTruth(senior));
-                            author.setPaper(findPaperOfAuthor(senior));
+                            author.setPaperList(findPaperOfAuthor(senior));
 
                             authors.put(senior.getName(), author);
                         }

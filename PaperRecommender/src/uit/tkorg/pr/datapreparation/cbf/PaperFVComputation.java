@@ -175,30 +175,30 @@ public class PaperFVComputation {
         // weighting scheme
         if (weightingScheme == 0) {
             if (combiningScheme == 1) {
-                sumFVLinear(papers, paperId, papers.get(paperId).getReference(), pruning);
+                sumFVLinear(papers, paperId, papers.get(paperId).getReferenceList(), pruning);
             } else if (combiningScheme == 2) {
-                sumFVLinear(papers, paperId, papers.get(paperId).getCitation(), pruning);
+                sumFVLinear(papers, paperId, papers.get(paperId).getCitationList(), pruning);
             } else if (combiningScheme == 3) {
-                sumFVLinear(papers, paperId, papers.get(paperId).getReference(), pruning);
-                sumFVLinear(papers, paperId, papers.get(paperId).getCitation(), pruning);
+                sumFVLinear(papers, paperId, papers.get(paperId).getReferenceList(), pruning);
+                sumFVLinear(papers, paperId, papers.get(paperId).getCitationList(), pruning);
             }
         } else if (weightingScheme == 1) {
             if (combiningScheme == 1) {
-                sumFVCosine(papers, paperId, papers.get(paperId).getReference(), pruning);
+                sumFVCosine(papers, paperId, papers.get(paperId).getReferenceList(), pruning);
             } else if (combiningScheme == 2) {
-                sumFVCosine(papers, paperId, papers.get(paperId).getCitation(), pruning);
+                sumFVCosine(papers, paperId, papers.get(paperId).getCitationList(), pruning);
             } else if (combiningScheme == 3) {
-                sumFVCosine(papers, paperId, papers.get(paperId).getReference(), pruning);
-                sumFVCosine(papers, paperId, papers.get(paperId).getCitation(), pruning);
+                sumFVCosine(papers, paperId, papers.get(paperId).getReferenceList(), pruning);
+                sumFVCosine(papers, paperId, papers.get(paperId).getCitationList(), pruning);
             }
         } else if (weightingScheme == 2) {
             if (combiningScheme == 1) {
-                sumFVRPY(papers, paperId, papers.get(paperId).getReference(), pruning);
+                sumFVRPY(papers, paperId, papers.get(paperId).getReferenceList(), pruning);
             } else if (combiningScheme == 2) {
-                sumFVRPY(papers, paperId, papers.get(paperId).getCitation(), pruning);
+                sumFVRPY(papers, paperId, papers.get(paperId).getCitationList(), pruning);
             } else if (combiningScheme == 3) {
-                sumFVRPY(papers, paperId, papers.get(paperId).getReference(), pruning);
-                sumFVRPY(papers, paperId, papers.get(paperId).getCitation(), pruning);
+                sumFVRPY(papers, paperId, papers.get(paperId).getReferenceList(), pruning);
+                sumFVRPY(papers, paperId, papers.get(paperId).getCitationList(), pruning);
             }
         }
     }

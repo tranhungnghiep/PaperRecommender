@@ -15,14 +15,14 @@ import java.util.List;
  *
  * @author THNghiep
  * This class represents the author in general.
- * Data: author id, author type, list of ground-truth papers to recommend (List<String> of paper ids), 
- * list of papers of author (List<Paper>), each paper in list of papers of author has list of citation and reference papers.
+ * Data: author id, author type, list of ground-truth papers to recommend (List<String> of paperList ids), 
+ * list of papers of author (List<Paper>), each paperList in list of papers of author has list of citation and reference papers.
  */
 public class Author implements Serializable {
     private String authorId;
     private String authorName;
     private String authorType;
-    private List paper;
+    private List paperList;
     private HashMapVector featureVector;
     private List groundTruth; // List string.
     private List recommendationList; // List string.
@@ -54,7 +54,7 @@ public class Author implements Serializable {
         this.authorId = null;
         this.authorName = null;
         this.authorType = null;
-        this.paper = new ArrayList();
+        this.paperList = new ArrayList();
         this.featureVector = new HashMapVector();
         this.groundTruth = new ArrayList();
         this.recommendationList = new ArrayList();
@@ -123,17 +123,17 @@ public class Author implements Serializable {
     }
 
     /**
-     * @return the paper
+     * @return the paperList
      */
-    public List getPaper() {
-        return paper;
+    public List getPaperList() {
+        return paperList;
     }
 
     /**
-     * @param paper the paper to set
+     * @param paperList the paperList to set
      */
-    public void setPaper(List paper) {
-        this.paper = paper;
+    public void setPaperList(List paperList) {
+        this.paperList = paperList;
     }
 
     /**

@@ -32,7 +32,7 @@ public class AuthorFVComputation {
         HashSet<String> paperIds = new HashSet<>();
         
         for (String authorId : authors.keySet()) {
-            paperIds.addAll(authors.get(authorId).getPaper());
+            paperIds.addAll(authors.get(authorId).getPaperList());
         }
         
         return paperIds;
@@ -60,7 +60,7 @@ public class AuthorFVComputation {
         HashMap<String, Paper> allPapers = new HashMap<>();
         
         for (String authorId : authors.keySet()) {
-            authors.get(authorId).setPaper(convertPaperListToPaperIdList(allPapers, authors.get(authorId).getPaper()));
+            authors.get(authorId).setPaperList(convertPaperListToPaperIdList(allPapers, authors.get(authorId).getPaperList()));
         }
         
         return allPapers;
@@ -82,11 +82,11 @@ public class AuthorFVComputation {
             paperIdList.add(paper.getPaperId());
             if(!allPapers.containsKey(paper.getPaperId())) {
                 allPapers.put(paper.getPaperId(), paper); // Note: because of exploiting ref type parameter in recursion, need to put paper into allPapers right after checking for existence, before call recursion, to avoid re-put duplicating Paper.
-                if ((paper.getReference() != null) && (paper.getReference().size() > 0)) {
-                    paper.setReference(convertPaperListToPaperIdList(allPapers, paper.getReference()));
+                if ((paper.getReferenceList() != null) && (paper.getReferenceList().size() > 0)) {
+                    paper.setReferenceList(convertPaperListToPaperIdList(allPapers, paper.getReferenceList()));
                 }
-                if ((paper.getCitation() != null) && (paper.getCitation().size() > 0)) {
-                    paper.setCitation(convertPaperListToPaperIdList(allPapers, paper.getCitation())); // Exploiting mutable object paper.
+                if ((paper.getCitationList() != null) && (paper.getCitationList().size() > 0)) {
+                    paper.setCitationList(convertPaperListToPaperIdList(allPapers, paper.getCitationList())); // Exploiting mutable object paper.
                 }
             }
         }
@@ -120,7 +120,7 @@ public class AuthorFVComputation {
         
         Author author = authors.get(authorId);
         
-        List<String> paperIds = author.getPaper();
+        List<String> paperIds = author.getPaperList();
         
         if (timeAwareScheme == 0) {
             for (String paperId : paperIds) {
