@@ -22,52 +22,144 @@ import uit.tkorg.utility.general.TextFileUtility;
  * @author Huynh Ngoc Tin
  */
 public class CitationAuthorNet {
-     // <AuthorID, <AuthorID_RefTo, NumberOfRef>>
-    private HashMap<Integer, HashMap<Integer, Integer>> _referenceNumberNet;
-    private HashMap<Integer, HashMap<Integer, Float>> _referenceRSSNet;
-    private HashMap<Integer, ArrayList<Integer>> _paperID_RefID_List;
-    private HashMap<Integer, ArrayList<Integer>> _paperID_CitedID_List;
-    private HashMap<Integer, ArrayList<Integer>> _paperID_AuthorID_List;
-    private HashMap<Integer, ArrayList<Integer>> _authorID_PaperID_List;
-    private String _file_All_AuthorID_PaperID;
-    private String _file_PaperID_RefID;
 
-    public CitationAuthorNet(String file_All_AuthorID_PaperID, String file_PaperID_RefID){
-        _file_All_AuthorID_PaperID = file_All_AuthorID_PaperID;
-        _file_PaperID_RefID = file_PaperID_RefID;
+    /**
+     * @param aInstance the _instance to set
+     */
+    public static void setInstance(CitationAuthorNet aInstance) {
+        _instance = aInstance;
+    }
+     // <AuthorID, <AuthorID_RefTo, NumberOfRef>>
+    private HashMap<String, HashMap<String, Integer>> _referenceNumberNet;
+    private HashMap<String, HashMap<String, Float>> _referenceRSSNet;
+    private HashMap<String, ArrayList<String>> _paperID_RefID_List;
+    private HashMap<String, ArrayList<String>> _paperID_CitedID_List;
+    private HashMap<String, ArrayList<String>> _paperID_AuthorID_List;
+    private HashMap<String, ArrayList<String>> _authorID_PaperID_List;
+
+    private static CitationAuthorNet _instance;
+    public static CitationAuthorNet getInstance() {
+        if (_instance == null) {
+            _instance = new CitationAuthorNet();
+        }
+        return _instance;
     }
 
-    private void load_AuthorID_PaperID() throws Exception {
+    /**
+     * @return the _referenceNumberNet
+     */
+    public HashMap<String, HashMap<String, Integer>> getReferenceNumberNet() {
+        return _referenceNumberNet;
+    }
+
+    /**
+     * @param referenceNumberNet the _referenceNumberNet to set
+     */
+    public void setReferenceNumberNet(HashMap<String, HashMap<String, Integer>> referenceNumberNet) {
+        this._referenceNumberNet = referenceNumberNet;
+    }
+
+    /**
+     * @return the _referenceRSSNet
+     */
+    public HashMap<String, HashMap<String, Float>> getReferenceRSSNet() {
+        return _referenceRSSNet;
+    }
+
+    /**
+     * @param referenceRSSNet the _referenceRSSNet to set
+     */
+    public void setReferenceRSSNet(HashMap<String, HashMap<String, Float>> referenceRSSNet) {
+        this._referenceRSSNet = referenceRSSNet;
+    }
+
+    /**
+     * @return the _paperID_RefID_List
+     */
+    public HashMap<String, ArrayList<String>> getPaperID_RefID_List() {
+        return _paperID_RefID_List;
+    }
+
+    /**
+     * @param paperID_RefID_List the _paperID_RefID_List to set
+     */
+    public void setPaperID_RefID_List(HashMap<String, ArrayList<String>> paperID_RefID_List) {
+        this._paperID_RefID_List = paperID_RefID_List;
+    }
+
+    /**
+     * @return the _paperID_CitedID_List
+     */
+    public HashMap<String, ArrayList<String>> getPaperID_CitedID_List() {
+        return _paperID_CitedID_List;
+    }
+
+    /**
+     * @param paperID_CitedID_List the _paperID_CitedID_List to set
+     */
+    public void setPaperID_CitedID_List(HashMap<String, ArrayList<String>> paperID_CitedID_List) {
+        this._paperID_CitedID_List = paperID_CitedID_List;
+    }
+
+    /**
+     * @return the _paperID_AuthorID_List
+     */
+    public HashMap<String, ArrayList<String>> getPaperID_AuthorID_List() {
+        return _paperID_AuthorID_List;
+    }
+
+    /**
+     * @param paperID_AuthorID_List the _paperID_AuthorID_List to set
+     */
+    public void setPaperID_AuthorID_List(HashMap<String, ArrayList<String>> paperID_AuthorID_List) {
+        this._paperID_AuthorID_List = paperID_AuthorID_List;
+    }
+
+    /**
+     * @return the _authorID_PaperID_List
+     */
+    public HashMap<String, ArrayList<String>> getAuthorID_PaperID_List() {
+        return _authorID_PaperID_List;
+    }
+
+    /**
+     * @param authorID_PaperID_List the _authorID_PaperID_List to set
+     */
+    public void setAuthorID_PaperID_List(HashMap<String, ArrayList<String>> authorID_PaperID_List) {
+        this._authorID_PaperID_List = authorID_PaperID_List;
+    }
+    
+    public void load_AuthorID_PaperID(String file_All_AuthorID_PaperID) throws Exception {
         try {
             _authorID_PaperID_List = new HashMap<>();
             _paperID_AuthorID_List = new HashMap<>();
-            FileInputStream fis = new FileInputStream(_file_All_AuthorID_PaperID);
+            FileInputStream fis = new FileInputStream(file_All_AuthorID_PaperID);
             Reader reader = new InputStreamReader(fis, "UTF8");
             BufferedReader bufferReader = new BufferedReader(reader);
             bufferReader.readLine();
             String line = null;
             String[] tokens;
-            int authorId;
-            int paperId;
+            String authorId;
+            String paperId;
             while ((line = bufferReader.readLine()) != null) {
                 tokens = line.split(",");
                 if (tokens.length == 2) {
-                    authorId = Integer.parseInt(tokens[0].trim());
-                    paperId = Integer.parseInt(tokens[1].trim());
+                    authorId = tokens[0].trim();
+                    paperId = tokens[1].trim();
 
-                    ArrayList<Integer> listPaper = _authorID_PaperID_List.get(authorId);
+                    ArrayList<String> listPaper = getAuthorID_PaperID_List().get(authorId);
                     if (listPaper == null) {
                         listPaper = new ArrayList<>();
                     }
                     listPaper.add(paperId);
-                    _authorID_PaperID_List.put(authorId, listPaper);
+                    getAuthorID_PaperID_List().put(authorId, listPaper);
 
-                    ArrayList<Integer> listAuthor = _paperID_AuthorID_List.get(paperId);
+                    ArrayList<String> listAuthor = getPaperID_AuthorID_List().get(paperId);
                     if (listAuthor == null) {
                         listAuthor = new ArrayList<>();
                     }
                     listAuthor.add(authorId);
-                    _paperID_AuthorID_List.put(paperId, listAuthor);
+                    getPaperID_AuthorID_List().put(paperId, listAuthor);
                 }
             }
         } catch (Exception e) {
@@ -75,40 +167,40 @@ public class CitationAuthorNet {
         }
     }
 
-    private void load_PaperID_RefID() throws Exception {
+    public void load_PaperID_RefID(String file_PaperID_RefID) throws Exception {
         try {
             _paperID_RefID_List = new HashMap<>();
             _paperID_CitedID_List = new HashMap<>();
 
-            FileInputStream fis = new FileInputStream(_file_PaperID_RefID);
+            FileInputStream fis = new FileInputStream(file_PaperID_RefID);
             Reader reader = new InputStreamReader(fis, "UTF8");
             BufferedReader bufferReader = new BufferedReader(reader);
             bufferReader.readLine();
             String line = null;
             String[] tokens;
-            int paperId;
+            String paperId;
             int year;
-            int refId;
+            String refId;
             while ((line = bufferReader.readLine()) != null) {
                 tokens = line.split(",");
                 if (tokens.length == 3) {
-                    paperId = Integer.parseInt(tokens[0].trim());
+                    paperId = tokens[0].trim();
                     year = Integer.parseInt(tokens[1].trim());
-                    refId = Integer.parseInt(tokens[2].trim());
+                    refId = tokens[2].trim();
 
-                    ArrayList<Integer> refIDList = _paperID_RefID_List.get(paperId);
+                    ArrayList<String> refIDList = getPaperID_RefID_List().get(paperId);
                     if (refIDList == null) {
                         refIDList = new ArrayList<>();
                     }
                     refIDList.add(refId);
-                    _paperID_RefID_List.put(paperId, refIDList);
+                    getPaperID_RefID_List().put(paperId, refIDList);
 
-                    ArrayList<Integer> citedIDList = _paperID_CitedID_List.get(refId);
+                    ArrayList<String> citedIDList = getPaperID_CitedID_List().get(refId);
                     if (citedIDList == null) {
                         citedIDList = new ArrayList<>();
                     }
                     citedIDList.add(paperId);
-                    _paperID_CitedID_List.put(refId, citedIDList);
+                    getPaperID_CitedID_List().put(refId, citedIDList);
                 }
             }
         } catch (Exception ex) {
@@ -116,24 +208,24 @@ public class CitationAuthorNet {
         }
     }
 
-    private void buildRefGraph() throws Exception {
+    public void buildRefGraph() throws Exception {
         try {
             _referenceNumberNet = new HashMap<>();
-            for (int paperID : _paperID_RefID_List.keySet()) {
-                if (_paperID_AuthorID_List.containsKey(paperID)) {
-                    ArrayList<Integer> refIDList = _paperID_RefID_List.get(paperID);
-                    ArrayList<Integer> authorIDList = _paperID_AuthorID_List.get(paperID);
+            for (String paperID : getPaperID_RefID_List().keySet()) {
+                if (getPaperID_AuthorID_List().containsKey(paperID)) {
+                    ArrayList<String> refIDList = getPaperID_RefID_List().get(paperID);
+                    ArrayList<String> authorIDList = getPaperID_AuthorID_List().get(paperID);
                     if (refIDList != null && refIDList.size() > 0) {
-                        for (int paperIDRef : refIDList) {
-                            if (_paperID_AuthorID_List.containsKey(paperIDRef)) {
-                                ArrayList<Integer> refAuthorIDList = _paperID_AuthorID_List.get(paperIDRef);
-                                for (int authorID : authorIDList) {
-                                    HashMap<Integer, Integer> refHM = _referenceNumberNet.get(authorID);
+                        for (String paperIDRef : refIDList) {
+                            if (getPaperID_AuthorID_List().containsKey(paperIDRef)) {
+                                ArrayList<String> refAuthorIDList = getPaperID_AuthorID_List().get(paperIDRef);
+                                for (String authorID : authorIDList) {
+                                    HashMap<String, Integer> refHM = getReferenceNumberNet().get(authorID);
                                     if (refHM == null) {
                                         refHM = new HashMap<>();
                                     }
 
-                                    for (int refAuthorID : refAuthorIDList) {
+                                    for (String refAuthorID : refAuthorIDList) {
                                         int numberOfRef = 0;
                                         if (refHM.containsKey(refAuthorID)) {
                                             numberOfRef = refHM.get(refAuthorID);
@@ -143,7 +235,7 @@ public class CitationAuthorNet {
                                         refHM.put(refAuthorID, numberOfRef);
                                     }
 
-                                    _referenceNumberNet.put(authorID, refHM);
+                                    getReferenceNumberNet().put(authorID, refHM);
                                 }
                             }
                         }
@@ -151,9 +243,9 @@ public class CitationAuthorNet {
                 }
             }
             
-            for (int authorID : _authorID_PaperID_List.keySet()) {
+            for (String authorID : getAuthorID_PaperID_List().keySet()) {
                 if (!_referenceNumberNet.containsKey(authorID)) {
-                    _referenceNumberNet.put(authorID, new HashMap<Integer, Integer>());
+                    getReferenceNumberNet().put(authorID, new HashMap<String, Integer>());
                 }
             }
         } catch (Exception ex) {
@@ -161,27 +253,28 @@ public class CitationAuthorNet {
         }
     }
 
-    private HashMap<Integer, HashMap<Integer, Float>> buildRefRSSGraph() throws Exception {
+    public HashMap<String, HashMap<String, Float>> buildRefRSSGraph() throws Exception {
         _referenceRSSNet = new HashMap<>();
-        for (int authorID : _referenceNumberNet.keySet()) {
-            HashMap<Integer, Integer> refIDHM = _referenceNumberNet.get(authorID);
+        for (String authorID : getReferenceNumberNet().keySet()) {
+            HashMap<String, Integer> refIDHM = getReferenceNumberNet().get(authorID);
             int TotalNumberOfRef = 0;
-            for (int refID : refIDHM.keySet()) {
+            for (String refID : refIDHM.keySet()) {
                 TotalNumberOfRef += refIDHM.get(refID);
             }
 
             float refRSSValue = 0f;
-            HashMap<Integer, Float> rssRefIDHM = new HashMap<>();
-            for (int refID : refIDHM.keySet()) {
+            HashMap<String, Float> rssRefIDHM = new HashMap<>();
+            for (String refID : refIDHM.keySet()) {
                 refRSSValue = (float) refIDHM.get(refID) / (float) TotalNumberOfRef;
                 rssRefIDHM.put(refID, refRSSValue);
             }
-            _referenceRSSNet.put(authorID, rssRefIDHM);
+            getReferenceRSSNet().put(authorID, rssRefIDHM);
         }
 
-        return _referenceRSSNet;
+        return getReferenceRSSNet();
     }
 
+    /*
     public void calculateImportantRate(String outputFile) {
         try {
             load_AuthorID_PaperID();
@@ -203,7 +296,7 @@ public class CitationAuthorNet {
         } catch (Exception ex) {
             ex.printStackTrace();
         }    
-    }
+    }*/
     
     public static void main(String args[]) {
 //        try {

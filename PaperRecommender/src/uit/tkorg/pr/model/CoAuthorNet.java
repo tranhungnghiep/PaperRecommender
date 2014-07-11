@@ -15,12 +15,19 @@ import java.util.HashSet;
  * @author Huynh Ngoc Tin
  */
 public class CoAuthorNet {
-    public HashMap<Integer, HashMap<Integer, Integer>> _coAuthorNet;
-    public HashMap<Integer, HashMap<Integer, Float>> _rssNet; //weighted, directed graph
-    public HashMap<Integer, HashMap<Integer, Float>> _rtbvsNet; //weighted, directed graph
-    public HashMap<Integer, Integer> _paperID_Year;
-    public HashMap<Integer, ArrayList<Integer>> _authorID_PaperID;
-    public HashMap<Integer, ArrayList<Integer>> _paperID_AuthorID;
+
+    /**
+     * @param aInstance the _instance to set
+     */
+    public static void setInstance(CoAuthorNet aInstance) {
+        _instance = aInstance;
+    }
+    private HashMap<String, HashMap<String, Integer>> _coAuthorNet;
+    private HashMap<String, HashMap<String, Float>> _rssNet; //weighted, directed graph
+    private HashMap<String, HashMap<String, Float>> _rtbvsNet; //weighted, directed graph
+    private HashMap<String, Integer> _paperID_Year;
+    private HashMap<String, ArrayList<String>> _authorID_PaperID;
+    private HashMap<String, ArrayList<String>> _paperID_AuthorID;
     
     private static CoAuthorNet _instance;
     public static CoAuthorNet getInstance() {
@@ -50,17 +57,17 @@ public class CoAuthorNet {
             bufferReader.readLine();
             String line = null;
             String[] tokens;
-            int paperId;
+            String paperId;
             Integer year;
             while ((line = bufferReader.readLine()) != null) {
                 tokens = line.split("\t");
-                paperId = Integer.parseInt(tokens[0]);
+                paperId = tokens[0].trim();
                 if (tokens.length <= 1) {
                     year = 0;
                 } else {
-                    year = Integer.parseInt(tokens[1]);
+                    year = Integer.parseInt(tokens[3]);
                 }
-                _paperID_Year.put(paperId, year);
+                getPaperID_Year().put(paperId, year);
             }
             bufferReader.close();
         } catch (Exception e) {
@@ -75,26 +82,26 @@ public class CoAuthorNet {
             bufferReader.readLine();
             String line = null;
             String[] tokens;
-            int authorId;
-            int paperId;
+            String authorId;
+            String paperId;
             while ((line = bufferReader.readLine()) != null) {
                 tokens = line.split("\t");
-                authorId = Integer.parseInt(tokens[0]);
-                paperId = Integer.parseInt(tokens[1]);
+                authorId = tokens[0].trim();
+                paperId = tokens[1].trim();
 
-                ArrayList<Integer> listPaper = _authorID_PaperID.get(authorId);
+                ArrayList<String> listPaper = getAuthorID_PaperID().get(authorId);
                 if (listPaper == null) {
                     listPaper = new ArrayList<>();
                 }
                 listPaper.add(paperId);
-                _authorID_PaperID.put(authorId, listPaper);
+                getAuthorID_PaperID().put(authorId, listPaper);
 
-                ArrayList<Integer> listAuthor = _paperID_AuthorID.get(paperId);
+                ArrayList<String> listAuthor = getPaperID_AuthorID().get(paperId);
                 if (listAuthor == null) {
                     listAuthor = new ArrayList<>();
                 }
                 listAuthor.add(authorId);
-                _paperID_AuthorID.put(paperId, listAuthor);
+                getPaperID_AuthorID().put(paperId, listAuthor);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -115,16 +122,16 @@ public class CoAuthorNet {
      * Build graphs coAuthorGraph (weight is number of collations), rssGraph
      */
     public void BuildCoAuthorGraph() {
-        for (int pubId : _paperID_AuthorID.keySet()) {
-            ArrayList<Integer> listAuthors = _paperID_AuthorID.get(pubId);
+        for (String paperId : getPaperID_AuthorID().keySet()) {
+            ArrayList<String> listAuthors = getPaperID_AuthorID().get(paperId);
             if (listAuthors.size() == 1 && !_coAuthorNet.containsKey(listAuthors.get(0))) {
-                _coAuthorNet.put(listAuthors.get(0), new HashMap<Integer, Integer>());
+                getCoAuthorNet().put(listAuthors.get(0), new HashMap<String, Integer>());
             } else {
-                for (int author1 : listAuthors) {
-                    for (int author2 : listAuthors) {
-                        if (author1 != author2) {
-                            HashMap<Integer, Integer> collaboration;
-                            collaboration = _coAuthorNet.get(author1);
+                for (String author1 : listAuthors) {
+                    for (String author2 : listAuthors) {
+                        if (!author1.equalsIgnoreCase(author2)) {
+                            HashMap<String, Integer> collaboration;
+                            collaboration = getCoAuthorNet().get(author1);
                             if (collaboration == null) {
                                 collaboration = new HashMap<>();
                             }
@@ -135,7 +142,7 @@ public class CoAuthorNet {
                             }
                             numofPaper++;
                             collaboration.put(author2, numofPaper);
-                            _coAuthorNet.put(author1, collaboration);
+                            getCoAuthorNet().put(author1, collaboration);
                         }
                     }
                 }
@@ -145,20 +152,20 @@ public class CoAuthorNet {
 
     public void BuildingRSSGraph() {
         _rssNet = new HashMap<>();
-        for (int authorId1 : _coAuthorNet.keySet()) {
-            if (_coAuthorNet.get(authorId1).size() == 0) {
-                _rssNet.put(authorId1, new HashMap<Integer, Float>());
+        for (String authorId1 : getCoAuthorNet().keySet()) {
+            if (getCoAuthorNet().get(authorId1).size() == 0) {
+                getRssNet().put(authorId1, new HashMap<String, Float>());
             } else {
                 int totalPaperOfAuthor1 = 0;
-                for (int authorId2 : _coAuthorNet.get(authorId1).keySet()) {
-                    totalPaperOfAuthor1 += _coAuthorNet.get(authorId1).get(authorId2);
+                for (String authorId2 : getCoAuthorNet().get(authorId1).keySet()) {
+                    totalPaperOfAuthor1 += getCoAuthorNet().get(authorId1).get(authorId2);
                 }
 
-                for (int authorId2 : _coAuthorNet.get(authorId1).keySet()) {
-                    if (authorId1 != authorId2) {
+                for (String authorId2 : getCoAuthorNet().get(authorId1).keySet()) {
+                    if (!authorId1.equalsIgnoreCase(authorId2)) {
                         float t = 0;
-                        float weight = ((float) _coAuthorNet.get(authorId1).get(authorId2)) / ((float) totalPaperOfAuthor1);
-                        HashMap<Integer, Float> rssWeight = _rssNet.get(authorId1);
+                        float weight = ((float) getCoAuthorNet().get(authorId1).get(authorId2)) / ((float) totalPaperOfAuthor1);
+                        HashMap<String, Float> rssWeight = getRssNet().get(authorId1);
                         if (rssWeight == null) {
                             rssWeight = new HashMap<>();
                         }
@@ -168,7 +175,7 @@ public class CoAuthorNet {
                             _weight = weight;
                             rssWeight.put(authorId2, _weight);
                         }
-                        _rssNet.put(authorId1, rssWeight);
+                        getRssNet().put(authorId1, rssWeight);
                     }
                 }
             }
@@ -235,4 +242,88 @@ public class CoAuthorNet {
 //        
 //        System.out.println("DONE");
 //    }
+
+    /**
+     * @return the _coAuthorNet
+     */
+    public HashMap<String, HashMap<String, Integer>> getCoAuthorNet() {
+        return _coAuthorNet;
+    }
+
+    /**
+     * @param coAuthorNet the _coAuthorNet to set
+     */
+    public void setCoAuthorNet(HashMap<String, HashMap<String, Integer>> coAuthorNet) {
+        this._coAuthorNet = coAuthorNet;
+    }
+
+    /**
+     * @return the _rssNet
+     */
+    public HashMap<String, HashMap<String, Float>> getRssNet() {
+        return _rssNet;
+    }
+
+    /**
+     * @param rssNet the _rssNet to set
+     */
+    public void setRssNet(HashMap<String, HashMap<String, Float>> rssNet) {
+        this._rssNet = rssNet;
+    }
+
+    /**
+     * @return the _rtbvsNet
+     */
+    public HashMap<String, HashMap<String, Float>> getRtbvsNet() {
+        return _rtbvsNet;
+    }
+
+    /**
+     * @param rtbvsNet the _rtbvsNet to set
+     */
+    public void setRtbvsNet(HashMap<String, HashMap<String, Float>> rtbvsNet) {
+        this._rtbvsNet = rtbvsNet;
+    }
+
+    /**
+     * @return the _paperID_Year
+     */
+    public HashMap<String, Integer> getPaperID_Year() {
+        return _paperID_Year;
+    }
+
+    /**
+     * @param paperID_Year the _paperID_Year to set
+     */
+    public void setPaperID_Year(HashMap<String, Integer> paperID_Year) {
+        this._paperID_Year = paperID_Year;
+    }
+
+    /**
+     * @return the _authorID_PaperID
+     */
+    public HashMap<String, ArrayList<String>> getAuthorID_PaperID() {
+        return _authorID_PaperID;
+    }
+
+    /**
+     * @param authorID_PaperID the _authorID_PaperID to set
+     */
+    public void setAuthorID_PaperID(HashMap<String, ArrayList<String>> authorID_PaperID) {
+        this._authorID_PaperID = authorID_PaperID;
+    }
+
+    /**
+     * @return the _paperID_AuthorID
+     */
+    public HashMap<String, ArrayList<String>> getPaperID_AuthorID() {
+        return _paperID_AuthorID;
+    }
+
+    /**
+     * @param paperID_AuthorID the _paperID_AuthorID to set
+     */
+    public void setPaperID_AuthorID(HashMap<String, ArrayList<String>> paperID_AuthorID) {
+        this._paperID_AuthorID = paperID_AuthorID;
+    }
 }
