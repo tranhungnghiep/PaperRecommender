@@ -7,6 +7,7 @@ package uit.tkorg.pr.model;
 import ir.vsr.HashMapVector;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -25,7 +26,7 @@ public class Author implements Serializable {
     private HashMapVector featureVector;
     private List groundTruth; // List string.
     private List recommendationList; // List string.
-    private LinkedHashMap<String, Double> recommendationValue;
+    private LinkedHashMap<String, Float> recommendationValue;
     private double precision10;
     private double precision20;
     private double precision30;
@@ -42,6 +43,9 @@ public class Author implements Serializable {
     private double ndcg5;
     private double ndcg10;
     private double rr;
+    private HashMap<String, Float> cbfSimHM;
+    private HashMap<String, Float> cfRatingHM;
+    private HashMap<String, Float> cbfcfHybridHM;
 
     /**
      * Default constructor used for serializable.
@@ -71,6 +75,9 @@ public class Author implements Serializable {
         this.ndcg5 = 0;
         this.ndcg10 = 0;
         this.rr = 0;
+        this.cbfSimHM = new HashMap<>();
+        this.cfRatingHM = new HashMap<>();
+        this.cbfcfHybridHM = new HashMap<>();
     }
 
     /**
@@ -275,14 +282,14 @@ public class Author implements Serializable {
     /**
      * @return the recommendationValue
      */
-    public LinkedHashMap<String, Double> getRecommendationValue() {
+    public LinkedHashMap<String, Float> getRecommendationValue() {
         return recommendationValue;
     }
 
     /**
      * @param recommendationValue the recommendationValue to set
      */
-    public void setRecommendationValue(LinkedHashMap<String, Double> recommendationValue) {
+    public void setRecommendationValue(LinkedHashMap<String, Float> recommendationValue) {
         this.setRecommendationValue(recommendationValue);
     }
 
@@ -410,5 +417,47 @@ public class Author implements Serializable {
      */
     public void setAp50(double ap50) {
         this.ap50 = ap50;
+    }
+
+    /**
+     * @return the cbfSimHM
+     */
+    public HashMap<String, Float> getCbfSimHM() {
+        return cbfSimHM;
+    }
+
+    /**
+     * @param cbfSimHM the cbfSimHM to set
+     */
+    public void setCbfSimHM(HashMap<String, Float> cbfSimHM) {
+        this.cbfSimHM = cbfSimHM;
+    }
+
+    /**
+     * @return the cfRatingHM
+     */
+    public HashMap<String, Float> getCfRatingHM() {
+        return cfRatingHM;
+    }
+
+    /**
+     * @param cfRatingHM the cfRatingHM to set
+     */
+    public void setCfRatingHM(HashMap<String, Float> cfRatingHM) {
+        this.cfRatingHM = cfRatingHM;
+    }
+
+    /**
+     * @return the cbfcfHybridHM
+     */
+    public HashMap<String, Float> getCbfcfHybridHM() {
+        return cbfcfHybridHM;
+    }
+
+    /**
+     * @param cbfcfHybridHM the cbfcfHybridHM to set
+     */
+    public void setCbfcfHybridHM(HashMap<String, Float> cbfcfHybridHM) {
+        this.cbfcfHybridHM = cbfcfHybridHM;
     }
 }

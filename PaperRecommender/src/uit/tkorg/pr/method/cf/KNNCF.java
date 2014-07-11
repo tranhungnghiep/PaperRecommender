@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import org.apache.commons.io.FileUtils;
 import org.apache.mahout.cf.taste.common.TasteException;
@@ -24,7 +25,9 @@ import org.apache.mahout.cf.taste.neighborhood.UserNeighborhood;
 import org.apache.mahout.cf.taste.recommender.RecommendedItem;
 import org.apache.mahout.cf.taste.recommender.Recommender;
 import org.apache.mahout.cf.taste.similarity.UserSimilarity;
+import uit.tkorg.pr.method.GenericRecommender;
 import uit.tkorg.pr.model.Author;
+import uit.tkorg.pr.model.Paper;
 
 /**
  *
@@ -105,74 +108,56 @@ public class KNNCF {
         bw.close();
     }
 
-    public static void CoPearsonRecommendToAuthorList(String inputFile, int k, int n, HashMap<String, Author> authorTestSet, String outputFile) throws IOException, TasteException {
-        File userPreferencesFile = new File(inputFile);
-        DataModel dataModel = new FileDataModel(userPreferencesFile);
+    /**
+     * 
+     * @param inputFile
+     * @param similarityScheme: 0: CoPearson, 1: Cosine.
+     * @param k
+     * @param authorTestSet
+     * @param outputFile
+     * @throws IOException
+     * @throws TasteException 
+     */
+    public static void computeCFRatingAndPutIntoModelForAuthorList(String inputFile, int similarityScheme, 
+            int k, HashMap<String, Author> authorTestSet, HashSet<String> paperIdsInTestSet, 
+            String outputFile) throws IOException, TasteException {
+        DataModel dataModel = new FileDataModel(new File(inputFile));
 
-        UserSimilarity userSimilarity = new PearsonCorrelationSimilarity(dataModel);
+        UserSimilarity userSimilarity = null;
+        if (similarityScheme == 0) {
+            userSimilarity = new PearsonCorrelationSimilarity(dataModel);
+        } else if (similarityScheme == 1) {
+            userSimilarity = new UncenteredCosineSimilarity(dataModel);
+        }
         UserNeighborhood userNeighborhood = new NearestNUserNeighborhood(k, userSimilarity, dataModel);
 
         // Create a generic user based recommender with the dataModel, the userNeighborhood and the userSimilarity
         Recommender genericRecommender = new GenericUserBasedRecommender(dataModel, userNeighborhood, userSimilarity);
-        StringBuilder strBuilder = new StringBuilder();
-        //BufferedWriter bw = new BufferedWriter(new FileWriter(outputFile));
-
-        // Recommend n items for each user
-        int count = 0;
-        System.out.println("Number of users:" + authorTestSet.size());
-        for (LongPrimitiveIterator iterator = dataModel.getUserIDs(); iterator.hasNext();) {
-            long userId = iterator.nextLong();
-            // Generate a list of n recommendations for the user
-            if (authorTestSet.containsKey(String.valueOf(userId))) {
-                System.out.println("Generate a list of n recommendations for the user no. " + count);
-                List<RecommendedItem> itemRecommendations = genericRecommender.recommend(userId, n);
-                if (!itemRecommendations.isEmpty()) {
-                    // Display the list of recommendations
-                    for (RecommendedItem recommendedItem : itemRecommendations) {
-                        authorTestSet.get(String.valueOf(userId)).getRecommendationList().add(String.valueOf(recommendedItem.getItemID()));
-                        authorTestSet.get(String.valueOf(userId)).getRecommendationValue().put(String.valueOf(recommendedItem.getItemID()), Double.valueOf(recommendedItem.getValue()));
-                        strBuilder.append(userId + "," + recommendedItem.getItemID() + "," + recommendedItem.getValue() + "\r\n");
-                        //bw.write(userId + "," + recommendedItem.getItemID() + "," + recommendedItem.getValue() + "\r\n");
+        FileUtils.deleteQuietly(new File(outputFile));
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(outputFile))) {
+            int count = 0;
+            System.out.println("Number of users:" + authorTestSet.size());
+            for (LongPrimitiveIterator iterator = dataModel.getUserIDs(); iterator.hasNext();) {
+                long userId = iterator.nextLong();
+                // Generate a list of n recommendations for the user
+                if (authorTestSet.containsKey(String.valueOf(userId).trim())) {
+                    System.out.println("Generate a list of n recommendations for the user no. " + count);
+                    List<RecommendedItem> recommendationList = genericRecommender.recommend(userId, dataModel.getNumItems());
+                    if (!recommendationList.isEmpty()) {
+                        // Display the list of recommendations
+                        for (RecommendedItem recommendedItem : recommendationList) {
+                            String authorId = String.valueOf(userId).trim();
+                            String paperId = String.valueOf(recommendedItem.getItemID()).trim();
+                            if (paperIdsInTestSet.contains(paperId)) {
+                                authorTestSet.get(authorId).getCfRatingHM()
+                                        .put(paperId, Float.valueOf(recommendedItem.getValue()));
+                                bw.write(userId + "," + recommendedItem.getItemID() + "," + recommendedItem.getValue() + "\r\n");
+                            }
+                        }
                     }
+                    count++;
                 }
-                count++;
             }
         }
-        //bw.close();
-        FileUtils.writeStringToFile(new File(outputFile), strBuilder.toString(), "UTF8", true);
-    }
-
-    public static void CosineRecommendToAuthorList(String inputFile, int k, int n, HashMap<String, Author> authorTestSet, String outputFile) throws IOException, TasteException {
-        File userPreferencesFile = new File(inputFile);
-        DataModel dataModel = new FileDataModel(userPreferencesFile);
-
-        UserSimilarity userSimilarity = new UncenteredCosineSimilarity(dataModel);
-        UserNeighborhood userNeighborhood = new NearestNUserNeighborhood(k, userSimilarity, dataModel);
-
-        // Create a generic user based recommender with the dataModel, the userNeighborhood and the userSimilarity
-        Recommender genericRecommender = new GenericUserBasedRecommender(dataModel, userNeighborhood, userSimilarity);
-        BufferedWriter bw = new BufferedWriter(new FileWriter(outputFile));
-
-        // Recommend n items for each user
-        int count = 0;
-        System.out.println("Number of users:" + authorTestSet.size());
-        for (LongPrimitiveIterator iterator = dataModel.getUserIDs(); iterator.hasNext();) {
-            long userId = iterator.nextLong();
-            // Generate a list of n recommendations for the user
-            if (authorTestSet.containsKey(String.valueOf(userId))) {
-                System.out.println("Generate a list of n recommendations for the user no. " + count);
-                List<RecommendedItem> itemRecommendations = genericRecommender.recommend(userId, n);
-                if (!itemRecommendations.isEmpty()) {
-                    // Display the list of recommendations
-                    for (RecommendedItem recommendedItem : itemRecommendations) {
-                            authorTestSet.get(String.valueOf(userId)).getRecommendationList().add(String.valueOf(recommendedItem.getItemID()));
-                            authorTestSet.get(String.valueOf(userId)).getRecommendationValue().put(String.valueOf(recommendedItem.getItemID()), Double.valueOf(recommendedItem.getValue()));
-                            bw.write(userId + "," + recommendedItem.getItemID() + "," + recommendedItem.getValue() + "\r\n");
-                    }
-                }
-                count++;
-            }
-        }
-        bw.close();
     }
 }
