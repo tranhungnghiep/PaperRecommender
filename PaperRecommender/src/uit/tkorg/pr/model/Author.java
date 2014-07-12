@@ -83,6 +83,11 @@ public class Author implements Serializable {
         this.cbfSimHM = new HashMap<>();
         this.cfRatingHM = new HashMap<>();
         this.cbfcfHybridHM = new HashMap<>();
+        this.coAuthorRSSHM = new HashMap<>();
+        this.citationAuthorRSSHM = new HashMap<>();
+        this.trustedAuthorHM = new HashMap<>();
+        this.trustedPaperHM = new HashMap<>();
+        this.finalRecommendingScoreHM = new HashMap<>();
     }
 
     /**

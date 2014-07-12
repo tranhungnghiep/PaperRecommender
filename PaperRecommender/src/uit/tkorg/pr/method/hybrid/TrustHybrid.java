@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -18,19 +17,18 @@ import org.apache.mahout.cf.taste.common.TasteException;
 import uit.tkorg.pr.method.GenericRecommender;
 import uit.tkorg.pr.method.cbf.FeatureVectorSimilarity;
 import uit.tkorg.pr.model.Author;
-import uit.tkorg.utility.general.HashMapUtility;
 
 /**
  *
  * @author Administrator
  */
-public class CBFCF {
+public class TrustHybrid {
     
     public static Integer count = 0;
 
-    private CBFCF() {}
+    private TrustHybrid() {}
     
-    public static void computeCBFCFLinearCombinationAndPutIntoModelForAuthorList(HashMap<String, Author> authors, 
+    public static void computeTrustedAuthorHMLinearCombinationAndPutIntoModelForAuthorList(HashMap<String, Author> authors, 
             final float alpha) throws Exception {
         Runtime runtime = Runtime.getRuntime();
         int numOfProcessors = runtime.availableProcessors();
@@ -44,7 +42,7 @@ public class CBFCF {
                 @Override
                 public void run() {
                     try {
-                        computeCBFCFLinearCombination(authorObj, alpha);
+                        computeTrustedAuthorHMLinearCombination(authorObj, alpha);
                     } catch (Exception ex) {
                         Logger.getLogger(FeatureVectorSimilarity.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -57,22 +55,22 @@ public class CBFCF {
         }
     }
 
-    private static void computeCBFCFLinearCombination(Author author, float alpha) throws Exception {
+    private static void computeTrustedAuthorHMLinearCombination(Author author, float alpha) throws Exception {
 
-        Set<String> paperIds = new HashSet<> (author.getCbfSimHM().keySet());
-        paperIds.addAll(new HashSet<> (author.getCfRatingHM().keySet()));
-        for (String paperId : paperIds) {
-            Float cbfScore = author.getCbfSimHM().get(paperId);
-            if (cbfScore == null) {
-                cbfScore = Float.valueOf(0);
+        Set<String> authorIds = new HashSet<> (author.getCoAuthorRSSHM().keySet());
+        authorIds.addAll(new HashSet<> (author.getCitationAuthorRSSHM().keySet()));
+        for (String authorId : authorIds) {
+            Float citationAuthorScore = author.getCoAuthorRSSHM().get(authorId);
+            if (citationAuthorScore == null) {
+                citationAuthorScore = Float.valueOf(0);
             }
-            Float cfScore = author.getCfRatingHM().get(paperId);
-            if (cfScore == null) {
-                cfScore = Float.valueOf(0);
+            Float coAuthorScore = author.getCitationAuthorRSSHM().get(authorId);
+            if (coAuthorScore == null) {
+                coAuthorScore = Float.valueOf(0);
             }
             
-            Float cbfcfCombinationScore = cbfScore * alpha + cfScore * (1 - alpha);
-            author.getCbfcfHybridHM().put(paperId, cbfcfCombinationScore);
+            Float trustedAuthorScore = coAuthorScore * alpha + citationAuthorScore * (1 - alpha);
+            author.getTrustedAuthorHM().put(authorId, trustedAuthorScore);
         }
 
         synchronized (count) {
@@ -80,7 +78,7 @@ public class CBFCF {
         }
     }
     
-    public static void cbfcfHybridRecommendToAuthorList(HashMap<String, Author> authorTestSet, int topNRecommend) throws IOException, TasteException, Exception {
-        GenericRecommender.generateRecommendationForAuthorList(authorTestSet, topNRecommend, 2);
+    public static void trustHybridRecommendToAuthorList(HashMap<String, Author> authorTestSet, int topNRecommend) throws IOException, TasteException, Exception {
+        GenericRecommender.generateRecommendationForAuthorList(authorTestSet, topNRecommend, 3);
     }
 }

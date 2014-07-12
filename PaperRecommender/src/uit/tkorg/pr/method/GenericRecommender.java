@@ -29,7 +29,7 @@ public class GenericRecommender {
      * 
      * @param authors
      * @param topNRecommend
-     * @param method: 0: cbf, 1: cf, 2: cbfcf linear combination, 3: trust hybrid
+     * @param method: 0: cbf, 1: cf, 2: cbf and cf linear combination, 3: cbf, cf, and trust hybrid
      * @throws Exception 
      */
     public static void generateRecommendationForAuthorList(final HashMap<String, Author> authors, 
