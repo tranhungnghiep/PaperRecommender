@@ -26,8 +26,6 @@ import uit.tkorg.utility.general.HashMapUtility;
  */
 public class CBFCF {
     
-    public static Integer count = 0;
-
     private CBFCF() {}
     
     public static void computeCBFCFLinearCombinationAndPutIntoModelForAuthorList(HashMap<String, Author> authors, 
@@ -38,13 +36,17 @@ public class CBFCF {
 
         System.out.println("NUM OF AUTHOR: " + authors.size());
 
+        HashMapUtility.setCountThread(0);
         for (String authorId : authors.keySet()) {
             final Author authorObj = authors.get(authorId);
             executor.submit(new Runnable() {
                 @Override
                 public void run() {
                     try {
-                        computeCBFCFLinearCombination(authorObj, alpha);
+                        HashMapUtility.linearCombineTwoHashMap(authorObj.getCbfSimHM(), 
+                                authorObj.getCfRatingHM(), 
+                                alpha, 
+                                authorObj.getCbfCfHybridHM());
                     } catch (Exception ex) {
                         Logger.getLogger(FeatureVectorSimilarity.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -57,29 +59,6 @@ public class CBFCF {
         }
     }
 
-    private static void computeCBFCFLinearCombination(Author author, float alpha) throws Exception {
-
-        Set<String> paperIds = new HashSet<> (author.getCbfSimHM().keySet());
-        paperIds.addAll(new HashSet<> (author.getCfRatingHM().keySet()));
-        for (String paperId : paperIds) {
-            Float cbfScore = author.getCbfSimHM().get(paperId);
-            if (cbfScore == null) {
-                cbfScore = Float.valueOf(0);
-            }
-            Float cfScore = author.getCfRatingHM().get(paperId);
-            if (cfScore == null) {
-                cfScore = Float.valueOf(0);
-            }
-            
-            Float cbfcfCombinationScore = cbfScore * alpha + cfScore * (1 - alpha);
-            author.getCbfcfHybridHM().put(paperId, cbfcfCombinationScore);
-        }
-
-        synchronized (count) {
-            System.out.println(count++ + ". " + (new Date(System.currentTimeMillis()).toString()) + " DONE for authorId: " + author.getAuthorId());
-        }
-    }
-    
     public static void cbfcfHybridRecommendToAuthorList(HashMap<String, Author> authorTestSet, int topNRecommend) throws IOException, TasteException, Exception {
         GenericRecommender.generateRecommendationForAuthorList(authorTestSet, topNRecommend, 2);
     }

@@ -50,6 +50,9 @@ public class FeatureVectorSimilarity {
                 @Override
                 public void run() {
                     try {
+                        // When return from this method call, may be the loop is different.
+                        // So may be the authorId and authorObj are different.
+                        // So may be can not set value outside of method call.
                         computeCBFSim(authorObj, papers, similarityScheme);
                     } catch (Exception ex) {
                         Logger.getLogger(FeatureVectorSimilarity.class.getName()).log(Level.SEVERE, null, ex);

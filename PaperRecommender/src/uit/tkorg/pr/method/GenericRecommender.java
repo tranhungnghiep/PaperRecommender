@@ -68,9 +68,9 @@ public class GenericRecommender {
         } else if (method == 1) {
             recommendingScoreHM = author.getCfRatingHM();
         } else if (method == 2) {
-            recommendingScoreHM = author.getCbfcfHybridHM();
+            recommendingScoreHM = author.getCbfCfHybridHM();
         } else if (method == 3) {
-            
+            recommendingScoreHM = author.getCbfCfTrustHybridHM();
         }
 
         // Sort papers descending based on recommending score.

@@ -45,11 +45,12 @@ public class Author implements Serializable {
     private double rr;
     private HashMap<String, Float> cbfSimHM;
     private HashMap<String, Float> cfRatingHM;
-    private HashMap<String, Float> cbfcfHybridHM;
+    private HashMap<String, Float> cbfCfHybridHM;
     private HashMap<String, Float> coAuthorRSSHM;
     private HashMap<String, Float> citationAuthorRSSHM;
     private HashMap<String, Float> trustedAuthorHM;
     private HashMap<String, Float> trustedPaperHM;
+    private HashMap<String, Float> cbfCfTrustHybridHM;
     private HashMap<String, Float> finalRecommendingScoreHM;
 
     /**
@@ -82,11 +83,12 @@ public class Author implements Serializable {
         this.rr = 0;
         this.cbfSimHM = new HashMap<>();
         this.cfRatingHM = new HashMap<>();
-        this.cbfcfHybridHM = new HashMap<>();
+        this.cbfCfHybridHM = new HashMap<>();
         this.coAuthorRSSHM = new HashMap<>();
         this.citationAuthorRSSHM = new HashMap<>();
         this.trustedAuthorHM = new HashMap<>();
         this.trustedPaperHM = new HashMap<>();
+        this.cbfCfTrustHybridHM = new HashMap<>();
         this.finalRecommendingScoreHM = new HashMap<>();
     }
 
@@ -458,17 +460,17 @@ public class Author implements Serializable {
     }
 
     /**
-     * @return the cbfcfHybridHM
+     * @return the cbfCfHybridHM
      */
-    public HashMap<String, Float> getCbfcfHybridHM() {
-        return cbfcfHybridHM;
+    public HashMap<String, Float> getCbfCfHybridHM() {
+        return cbfCfHybridHM;
     }
 
     /**
-     * @param cbfcfHybridHM the cbfcfHybridHM to set
+     * @param cbfCfHybridHM the cbfCfHybridHM to set
      */
-    public void setCbfcfHybridHM(HashMap<String, Float> cbfcfHybridHM) {
-        this.setCbfcfHybridHM(cbfcfHybridHM);
+    public void setCbfCfHybridHM(HashMap<String, Float> cbfCfHybridHM) {
+        this.setCbfCfHybridHM(cbfCfHybridHM);
     }
 
     /**
@@ -482,7 +484,7 @@ public class Author implements Serializable {
      * @param coAuthorRSSHM the coAuthorRSSHM to set
      */
     public void setCoAuthorRSSHM(HashMap<String, Float> coAuthorRSSHM) {
-        this.coAuthorRSSHM = coAuthorRSSHM;
+        this.setCoAuthorRSSHM(coAuthorRSSHM);
     }
 
     /**
@@ -496,7 +498,7 @@ public class Author implements Serializable {
      * @param citationAuthorRSSHM the citationAuthorRSSHM to set
      */
     public void setCitationAuthorRSSHM(HashMap<String, Float> citationAuthorRSSHM) {
-        this.citationAuthorRSSHM = citationAuthorRSSHM;
+        this.setCitationAuthorRSSHM(citationAuthorRSSHM);
     }
 
     /**
@@ -510,7 +512,7 @@ public class Author implements Serializable {
      * @param trustedAuthorHM the trustedAuthorHM to set
      */
     public void setTrustedAuthorHM(HashMap<String, Float> trustedAuthorHM) {
-        this.trustedAuthorHM = trustedAuthorHM;
+        this.setTrustedAuthorHM(trustedAuthorHM);
     }
 
     /**
@@ -524,7 +526,7 @@ public class Author implements Serializable {
      * @param trustedPaperHM the trustedPaperHM to set
      */
     public void setTrustedPaperHM(HashMap<String, Float> trustedPaperHM) {
-        this.trustedPaperHM = trustedPaperHM;
+        this.setTrustedPaperHM(trustedPaperHM);
     }
 
     /**
@@ -538,6 +540,20 @@ public class Author implements Serializable {
      * @param finalRecommendingScoreHM the finalRecommendingScoreHM to set
      */
     public void setFinalRecommendingScoreHM(HashMap<String, Float> finalRecommendingScoreHM) {
-        this.finalRecommendingScoreHM = finalRecommendingScoreHM;
+        this.setFinalRecommendingScoreHM(finalRecommendingScoreHM);
+    }
+
+    /**
+     * @return the cbfCfTrustHybridHM
+     */
+    public HashMap<String, Float> getCbfCfTrustHybridHM() {
+        return cbfCfTrustHybridHM;
+    }
+
+    /**
+     * @param cbfCfTrustHybridHM the cbfCfTrustHybridHM to set
+     */
+    public void setCbfCfTrustHybridHM(HashMap<String, Float> cbfCfTrustHybridHM) {
+        this.cbfCfTrustHybridHM = cbfCfTrustHybridHM;
     }
 }
