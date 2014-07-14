@@ -357,12 +357,12 @@ public class PaperRecommender {
         System.out.println("End computing FV for all papers.");
 
         // Step 3: compute CBF score.
-        System.out.println("Begin CBF Recommending...");
+        System.out.println("Computing CBF Score and put into DataModel ...");
         startTime = System.nanoTime();
         FeatureVectorSimilarity.computeCBFSimAndPutIntoModelForAuthorList(authorTestSet, paperTestSet, similarityScheme);
         estimatedTime = System.nanoTime() - startTime;
         System.out.println("CBF Recommending elapsed time: " + estimatedTime / 1000000000 + " seconds");
-        System.out.println("End CBF Recommending.");
+        System.out.println("End Computing CBF Score and put into DataModel ...");
         
         return algorithmName;
     }
