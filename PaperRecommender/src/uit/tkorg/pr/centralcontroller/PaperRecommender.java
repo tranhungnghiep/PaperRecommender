@@ -22,6 +22,7 @@ import uit.tkorg.pr.method.cf.CF;
 import uit.tkorg.pr.method.cf.KNNCF;
 import uit.tkorg.pr.method.cf.SVDCF;
 import uit.tkorg.pr.method.hybrid.CBFCF;
+import uit.tkorg.pr.method.hybrid.TrustHybrid;
 import uit.tkorg.pr.model.Author;
 import uit.tkorg.pr.model.Paper;
 import uit.tkorg.utility.general.BinaryFileUtility;
@@ -53,7 +54,7 @@ public class PaperRecommender {
                     PRConstant.FOLDER_MAS_DATASET1 + "Vector",
                     PRConstant.FOLDER_MAS_DATASET1 + "MahoutCF",
                     "EvaluationResult\\EvaluationResult_Maintain_OldCitation.xls",
-                    3);
+                    5);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -168,7 +169,7 @@ public class PaperRecommender {
         int similarityScheme = 0;
         double pruning = 0.2;
 
-        // cf method: 1: KNN Pearson, 2: KNN Cosine, 3: KNN SVD
+        // cf method: 1: KNN Pearson, 2: KNN Cosine, 3: SVD
         int cfMethod = 1;
         
         // Recommendation.
@@ -218,6 +219,41 @@ public class PaperRecommender {
             float alpha = (float) 0.9;
             CBFCF.computeCBFCFLinearCombinationAndPutIntoModelForAuthorList(authorTestSet, alpha);
             CBFCF.cbfcfHybridRecommendToAuthorList(authorTestSet, topNRecommend);
+            //</editor-fold>
+        } else if (recommendationMethod == 4) {
+            //<editor-fold defaultstate="collapsed" desc="TRUST BASED">
+            cbfComputeRecommendingScore(authorTestSet, papers, 
+                    paperIdsOfAuthorTestSet, paperIdsInTestSet, 
+                    topNRecommend, 
+                    combiningSchemePaperOfAuthor, weightingSchemePaperOfAuthor, 
+                    timeAwareScheme, gamma, 
+                    combiningSchemePaperTestSet, weightingSchemePaperTestSet, similarityScheme, 
+                    pruning);
+            cfComputeRecommendingScore(fileNameAuthorCitePaper, MahoutCFDir, 
+                    cfMethod, authorTestSet, paperIdsInTestSet, topNRecommend);
+            float alpha = (float) 0.9;
+            CBFCF.computeCBFCFLinearCombinationAndPutIntoModelForAuthorList(authorTestSet, alpha);
+            TrustHybrid.computeTrustedAuthorHMLinearCombinationAndPutIntoModelForAuthorList(authorTestSet, alpha);
+            TrustHybrid.computeTrustedPaperHMAndPutIntoModelForAuthorList(authorTestSet);
+            // ...
+            //</editor-fold>
+        } else if (recommendationMethod == 5) {
+            //<editor-fold defaultstate="collapsed" desc="TRUST BASED LINEAR COMBINATION">
+            cbfComputeRecommendingScore(authorTestSet, papers, 
+                    paperIdsOfAuthorTestSet, paperIdsInTestSet, 
+                    topNRecommend, 
+                    combiningSchemePaperOfAuthor, weightingSchemePaperOfAuthor, 
+                    timeAwareScheme, gamma, 
+                    combiningSchemePaperTestSet, weightingSchemePaperTestSet, similarityScheme, 
+                    pruning);
+            cfComputeRecommendingScore(fileNameAuthorCitePaper, MahoutCFDir, 
+                    cfMethod, authorTestSet, paperIdsInTestSet, topNRecommend);
+            float alpha = (float) 0.9;
+            CBFCF.computeCBFCFLinearCombinationAndPutIntoModelForAuthorList(authorTestSet, alpha);
+            TrustHybrid.computeTrustedAuthorHMLinearCombinationAndPutIntoModelForAuthorList(authorTestSet, alpha);
+            TrustHybrid.computeTrustedPaperHMAndPutIntoModelForAuthorList(authorTestSet);
+            TrustHybrid.computeCBFCFTrustLinearCombinationAndPutIntoModelForAuthorList(authorTestSet, alpha);
+            TrustHybrid.trustHybridRecommendToAuthorList(authorTestSet, topNRecommend);
             //</editor-fold>
         }
 
@@ -336,7 +372,9 @@ public class PaperRecommender {
      * @param topNRecommend
      * @throws Exception 
      */
-    public static String cfComputeRecommendingScore(String fileNameAuthorCitePaper, String MahoutCFDir, 
+    public static String cfComputeRecommendingScore(
+            String fileNameAuthorCitePaper, 
+            String MahoutCFDir, 
             int cfMethod,
             HashMap<String, Author> authorTestSet, HashSet<String> paperIdsInTestSet,
             int topNRecommend) throws Exception {
