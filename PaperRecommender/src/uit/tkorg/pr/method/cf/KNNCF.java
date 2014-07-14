@@ -111,7 +111,7 @@ public class KNNCF {
     /**
      * 
      * @param inputFile
-     * @param similarityScheme: 0: CoPearson, 1: Cosine.
+     * @param similarityScheme: 1: CoPearson, 2: Cosine.
      * @param k
      * @param authorTestSet
      * @param outputFile
@@ -124,9 +124,9 @@ public class KNNCF {
         DataModel dataModel = new FileDataModel(new File(inputFile));
 
         UserSimilarity userSimilarity = null;
-        if (similarityScheme == 0) {
+        if (similarityScheme == 1) {
             userSimilarity = new PearsonCorrelationSimilarity(dataModel);
-        } else if (similarityScheme == 1) {
+        } else if (similarityScheme == 2) {
             userSimilarity = new UncenteredCosineSimilarity(dataModel);
         }
         UserNeighborhood userNeighborhood = new NearestNUserNeighborhood(k, userSimilarity, dataModel);

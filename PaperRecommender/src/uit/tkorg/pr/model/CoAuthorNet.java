@@ -9,6 +9,7 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import uit.tkorg.utility.general.NumericUtility;
 
 /**
  *
@@ -60,12 +61,19 @@ public class CoAuthorNet {
             String paperId;
             Integer year;
             while ((line = bufferReader.readLine()) != null) {
-                tokens = line.split("\t");
+                if ((line == null) || (line.equals(""))) {
+                    continue;
+                }
+                tokens = line.split("\\|\\|\\|");
                 paperId = tokens[0].trim();
                 if (tokens.length <= 1) {
                     year = 0;
                 } else {
-                    year = Integer.parseInt(tokens[3]);
+                    if (NumericUtility.isNum(tokens[3])) {
+                        year = Integer.parseInt(tokens[3]);
+                    } else {
+                        year = 0;
+                    }
                 }
                 getPaperID_Year().put(paperId, year);
             }
@@ -85,7 +93,10 @@ public class CoAuthorNet {
             String authorId;
             String paperId;
             while ((line = bufferReader.readLine()) != null) {
-                tokens = line.split("\t");
+                if ((line == null) || (line.equals(""))) {
+                    continue;
+                }
+                tokens = line.split("\\|\\|\\|");
                 authorId = tokens[0].trim();
                 paperId = tokens[1].trim();
 

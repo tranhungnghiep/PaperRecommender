@@ -142,8 +142,11 @@ public class CitationAuthorNet {
             String authorId;
             String paperId;
             while ((line = bufferReader.readLine()) != null) {
-                tokens = line.split(",");
-                if (tokens.length == 2) {
+                if ((line == null) || (line.equals(""))) {
+                    continue;
+                }
+                tokens = line.split("\\|\\|\\|");
+                if (tokens.length >= 2) {
                     authorId = tokens[0].trim();
                     paperId = tokens[1].trim();
 
@@ -182,11 +185,14 @@ public class CitationAuthorNet {
             int year;
             String refId;
             while ((line = bufferReader.readLine()) != null) {
-                tokens = line.split(",");
-                if (tokens.length == 3) {
+                if ((line == null) || (line.equals(""))) {
+                    continue;
+                }
+                tokens = line.split("\\|\\|\\|");
+                if (tokens.length >= 2) {
                     paperId = tokens[0].trim();
-                    year = Integer.parseInt(tokens[1].trim());
-                    refId = tokens[2].trim();
+//                    year = Integer.parseInt(tokens[1].trim());
+                    refId = tokens[1].trim();
 
                     ArrayList<String> refIDList = getPaperID_RefID_List().get(paperId);
                     if (refIDList == null) {

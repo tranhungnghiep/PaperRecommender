@@ -16,7 +16,8 @@ import uit.tkorg.pr.model.Author;
  * @author nghiepth
  */
 public class ErrorAnalysis {
-    public static void printEachAuthorEvaluationResults(HashMap<String, Author> authors, String fileNameEachAuthorEvaluationResults) throws Exception {
+    public static void printEachAuthorEvaluationResults(HashMap<String, Author> authors, 
+            String fileNameEachAuthorEvaluationResults) throws Exception {
         FileUtils.deleteQuietly(new File(fileNameEachAuthorEvaluationResults));
         StringBuilder content = new StringBuilder();
         content.append("Author ID").append("\t")
@@ -60,7 +61,8 @@ public class ErrorAnalysis {
         FileUtils.writeStringToFile(new File(fileNameEachAuthorEvaluationResults), content.toString(), "UTF8", true);
     }
 
-    public static void printFalseNegativeTopN(HashMap<String, Author> authors, String fileNameFalseNegativeTopN, int method, int topN) throws Exception {
+    public static void printFalseNegativeTopN(HashMap<String, Author> authors, 
+            String fileNameFalseNegativeTopN, int method, int topN) throws Exception {
         FileUtils.deleteQuietly(new File(fileNameFalseNegativeTopN));
         StringBuilder content = new StringBuilder();
         content.append("Author ID").append("\t")
@@ -70,6 +72,9 @@ public class ErrorAnalysis {
             .append("Ranking value").append("\t")
             .append("\r\n");
         for (String authorId : authors.keySet()) {
+            if (topN > authors.get(authorId).getRecommendationList().size()) {
+                topN = authors.get(authorId).getRecommendationList().size();
+            }
             for (String paperId : (List<String>) authors.get(authorId).getGroundTruth()) {
                 if (!authors.get(authorId).getRecommendationList().subList(0, topN).contains(paperId)) {
                     content.append(authorId).append("\t")
@@ -94,6 +99,9 @@ public class ErrorAnalysis {
             .append("Ranking value").append("\t")
             .append("\r\n");
         for (String authorId : authors.keySet()) {
+            if (topN > authors.get(authorId).getRecommendationList().size()) {
+                topN = authors.get(authorId).getRecommendationList().size();
+            }
             for (String paperId : (List<String>) authors.get(authorId).getRecommendationList().subList(0, topN)) {
                 if (!authors.get(authorId).getGroundTruth().contains(paperId)) {
                     content.append(authorId).append("\t")

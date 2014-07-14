@@ -45,7 +45,7 @@ public class MASDataset1 {
             String line;
             while ((line = br.readLine()) != null) {
                 if ((line == null) || (line.equals(""))) {
-                    break;
+                    continue;
                 }
                 String[] str = line.split("\\|\\|\\|");
                 String paperId = getAcceptedFieldValue(str[0]);
@@ -82,7 +82,7 @@ public class MASDataset1 {
             
             while ((line = br.readLine()) != null) {
                 if ((line == null) || (line.equals(""))) {
-                    break;
+                    continue;
                 }
                 String[] str = line.split("\\|\\|\\|");
                 String paperId1 = getAcceptedFieldValue(str[0]);
@@ -134,7 +134,7 @@ public class MASDataset1 {
             
             while ((line = br.readLine()) != null) {
                 if ((line == null) || (line.equals(""))) {
-                    break;
+                    continue;
                 }
                 String[] str = line.split("\\|\\|\\|");
                 String authorId = getAcceptedFieldValue(str[0]);
@@ -172,7 +172,7 @@ public class MASDataset1 {
             
             while ((line = br.readLine()) != null) {
                 if ((line == null) || (line.equals(""))) {
-                    break;
+                    continue;
                 }
                 String[] str = line.split("\\|\\|\\|");
                 String authorId = getAcceptedFieldValue(str[0]);
@@ -211,7 +211,7 @@ public class MASDataset1 {
             
             while ((line = br.readLine()) != null) {
                 if ((line == null) || (line.equals(""))) {
-                    break;
+                    continue;
                 }
                 String[] str = line.split("\\|\\|\\|");
                 String authorId = getAcceptedFieldValue(str[0]);
@@ -248,7 +248,7 @@ public class MASDataset1 {
             
             while ((line = br.readLine()) != null) {
                 if ((line == null) || (line.equals(""))) {
-                    break;
+                    continue;
                 }
                 String[] str = line.split("\\|\\|\\|");
                 String authorId = getAcceptedFieldValue(str[0]);
