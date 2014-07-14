@@ -399,9 +399,9 @@ public class PaperRecommender {
                 // kNNCF cosine.
                 algorithmName = "CF KNN Cosine " + "k" + k;
             }
-            System.out.println("Begin KNN");
+            System.out.println("Begin calculating CF-KNN Recommending Score");
             cfKNNComputeRecommendingScore(MahoutCFDir, MahoutCFFileOriginalFile, cfMethod, authorTestSet, paperIdsInTestSet, topNRecommend, k);
-            System.out.println("End KNN");
+            System.out.println("End calculating CF-KNN Recommending Score");
         } else if (cfMethod == 3) {
             // SVD ALSWRFactorizer.
             // f features, normalize by l, i iterations.
@@ -410,9 +410,9 @@ public class PaperRecommender {
             int i = 100;
             algorithmName = "CF SVD ALSWRFactorizer " + "n" + topNRecommend + "f" + f + "l" + l + "i" + i;
             // Recommend for authors in author test set.
-            System.out.println("Begin SVD Recommend");
+            System.out.println("Begin calculating CF-SVD Recommending Score");
             cfSVDComputeRecommendingScore(MahoutCFDir, MahoutCFFileOriginalFile, authorTestSet, paperIdsInTestSet, topNRecommend, f, l, i);
-            System.out.println("End SVD Recommend");
+            System.out.println("End calculating CF-SVD Recommending Score");
         }
         
         return algorithmName;
