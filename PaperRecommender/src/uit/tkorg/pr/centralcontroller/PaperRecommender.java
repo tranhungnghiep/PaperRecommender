@@ -55,7 +55,7 @@ public class PaperRecommender {
                     PRConstant.FOLDER_MAS_DATASET1 + "Vector",
                     PRConstant.FOLDER_MAS_DATASET1 + "MahoutCF",
                     "EvaluationResult\\EvaluationResult_Maintain_OldCitation.xls",
-                    5);
+                    1);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -147,7 +147,7 @@ public class PaperRecommender {
                 System.out.println("End reading paper list.");
                 // Step 3: 
                 // Compute TF-IDF for MAS papers.
-                PaperFVComputation.computeTFIDFFromPaperAbstract(papers, dirPapers, dirPreProcessedPaper, sequenceDir, vectorDir);
+                //PaperFVComputation.computeTFIDFFromPaperAbstract(papers, dirPapers, dirPreProcessedPaper, sequenceDir, vectorDir);
                 PaperFVComputation.readTFIDFFromMahoutFile(papers, vectorDir);
                 // Clear no longer in use objects.
                 // Always clear abstract.
@@ -219,6 +219,7 @@ public class PaperRecommender {
             float alpha = (float) 0.9;
             CBFCF.computeCBFCFLinearCombinationAndPutIntoModelForAuthorList(authorTestSet, alpha);
             CBFCF.cbfcfHybridRecommendToAuthorList(authorTestSet, topNRecommend);
+            algorithmName = "LINEAR COMBINATION";
             //</editor-fold>
         } else if (recommendationMethod == 4) {
             //<editor-fold defaultstate="collapsed" desc="TRUST BASED">
@@ -258,6 +259,7 @@ public class PaperRecommender {
             TrustHybrid.computeTrustedPaperHMAndPutIntoModelForAuthorList(authorTestSet);
             TrustHybrid.computeCBFCFTrustLinearCombinationAndPutIntoModelForAuthorList(authorTestSet, alpha);
             TrustHybrid.trustHybridRecommendToAuthorList(authorTestSet, topNRecommend);
+            algorithmName = "TRUST BASED LINEAR COMBINATION";
             //</editor-fold>
         }
 
@@ -386,7 +388,7 @@ public class PaperRecommender {
         
         // Step 1: Prepare CF matrix.
         String MahoutCFFileOriginalFile = MahoutCFDir + "\\CFRatingMatrixOriginal.txt";
-        cfPrepareMatrix(fileNameAuthorCitePaper, MahoutCFFileOriginalFile);
+        //cfPrepareMatrix(fileNameAuthorCitePaper, MahoutCFFileOriginalFile);
         
         // Step 2: Predict ratings.
         if ((cfMethod == 1) || (cfMethod == 2)) {
