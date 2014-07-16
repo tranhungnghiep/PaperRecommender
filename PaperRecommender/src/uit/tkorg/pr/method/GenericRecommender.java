@@ -71,6 +71,8 @@ public class GenericRecommender {
             recommendingScoreHM = author.getCbfCfHybridHM();
         } else if (method == 3) {
             recommendingScoreHM = author.getCbfCfTrustHybridHM();
+        } else if (method == 4) {
+            recommendingScoreHM = author.getTrustedPaperHM();
         }
 
         // Sort papers descending based on recommending score.

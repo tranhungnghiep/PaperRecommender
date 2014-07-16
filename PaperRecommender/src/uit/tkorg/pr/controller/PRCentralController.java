@@ -35,7 +35,56 @@ import uit.tkorg.utility.textvectorization.TextVectorizationByMahoutTerminalUtil
  * @author THNghiep Central controller. Main entry class used for testing. Also
  * control all traffic from gui.
  */
-public class PaperRecommenderCentralController {
+public class PRCentralController {
+
+    //<editor-fold defaultstate="collapsed" desc="Parameters for PRCentralController">
+    int _DatasetToUse; // 1: NUS Dataset 1, 2: NUS Dataset 2, 3: MAS Dataset.
+    int _DatasetByResearcherType; // 0: Both, 1: Junior, 2: Senior.
+    String _NUSDataset1Dir;
+    String _NUSDataset2Dir;
+    String _fileNamePapers;
+    String _fileNamePaperCitePaper;
+    String _fileNameAuthorTestSet;
+    String _fileNameGroundTruth;
+    String _fileNameAuthorship;
+    String _fileNameAuthorCitePaper;
+    String _dirPapers;
+    String _dirPreProcessedPaper;
+    String _sequenceDir;
+    String _vectorDir;
+    String _MahoutCFDir;
+    String _fileNameEvaluationResult;
+    int _recommendationMethod;
+    //</editor-fold>
+
+    public PRCentralController(){
+    }
+    
+    public PRCentralController(int DatasetToUse, int DatasetByResearcherType,
+            String NUSDataset1Dir, String NUSDataset2Dir,
+            String fileNamePapers, String fileNamePaperCitePaper, String fileNameAuthorTestSet,
+            String fileNameGroundTruth, String fileNameAuthorship, String fileNameAuthorCitePaper,
+            String dirPapers, String dirPreProcessedPaper, String sequenceDir, String vectorDir,
+            String MahoutCFDir, String fileNameEvaluationResult,
+            int recommendationMethod) {
+        _DatasetToUse = DatasetToUse;
+        _DatasetByResearcherType = DatasetByResearcherType;
+        _NUSDataset1Dir = NUSDataset1Dir;
+        _NUSDataset2Dir = NUSDataset2Dir;
+        _fileNamePapers = fileNamePapers;
+        _fileNamePaperCitePaper = fileNamePaperCitePaper;
+        _fileNameAuthorTestSet = fileNameAuthorTestSet;
+        _fileNameGroundTruth = fileNameGroundTruth;
+        _fileNameAuthorship = fileNameAuthorship;
+        _fileNameAuthorCitePaper = fileNameAuthorCitePaper;
+        _dirPapers = dirPapers;
+        _dirPreProcessedPaper = dirPreProcessedPaper;
+        _sequenceDir = sequenceDir;
+        _vectorDir = vectorDir;
+        _MahoutCFDir = MahoutCFDir;
+        _fileNameEvaluationResult = fileNameEvaluationResult;
+        _recommendationMethod = recommendationMethod;
+    }
 
     public static void main(String[] args) {
         try {
@@ -46,7 +95,7 @@ public class PaperRecommenderCentralController {
                     PRConstant.FOLDER_MAS_DATASET1 + "[Training] Paper_Cite_Paper_Before_2006.csv",
                     PRConstant.FOLDER_MAS_DATASET1 + "[Testing] 1000Authors.csv",
                     PRConstant.FOLDER_MAS_DATASET1 + "[Testing] Ground_Truth_2006_2008.csv",
-//                    PRConstant.FOLDER_MAS_DATASET1 + "[Testing] Ground_Truth_2006_2008_New_Citation.csv",
+                    //                    PRConstant.FOLDER_MAS_DATASET1 + "[Testing] Ground_Truth_2006_2008_New_Citation.csv",
                     PRConstant.FOLDER_MAS_DATASET1 + "[Training] Author_Paper_Before_2006.csv",
                     PRConstant.FOLDER_MAS_DATASET1 + "[Training] Author_Cite_Paper_Before_2006.csv",
                     PRConstant.FOLDER_MAS_DATASET1 + "Text",
@@ -60,9 +109,9 @@ public class PaperRecommenderCentralController {
             e.printStackTrace();
         }
     }
-    
+
     /**
-     * 
+     *
      * @param DatasetToUse : 1: NUS Dataset 1, 2: NUS Dataset 2, 3: MAS Dataset.
      * @param DatasetByResearcherType 0: Both, 1: Junior, 2: Senior.
      * @param fileNamePapers
@@ -77,8 +126,9 @@ public class PaperRecommenderCentralController {
      * @param vectorDir
      * @param MahoutCFDir
      * @param fileNameEvaluationResult
-     * @param recommendationMethod: 1: CBF, 2: CF, 3: CBF CF Hybrid Linear Combination.
-     * @throws Exception 
+     * @param recommendationMethod: 1: CBF, 2: CF, 3: CBF CF Hybrid Linear
+     * Combination.
+     * @throws Exception
      */
     public static void recommendationFlowController(int DatasetToUse, int DatasetByResearcherType,
             String NUSDataset1Dir, String NUSDataset2Dir,
@@ -92,16 +142,16 @@ public class PaperRecommenderCentralController {
         long startRecommendationFlowTime = System.nanoTime();
         long startTime;
         long estimatedTime;
-        
+
         int topNRecommend = 1000;
         String datasetName = null;
         String algorithmName = null;
-        
+
         HashMap<String, Author> authorTestSet = new HashMap<>();
         HashMap<String, Paper> papers = new HashMap<>();
         HashSet<String> paperIdsOfAuthorTestSet = new HashSet<>();
         HashSet<String> paperIdsInTestSet = new HashSet<>();
-        
+
         //<editor-fold defaultstate="collapsed" desc="Read and Prepare Data (TFIDF)">
         if (DatasetToUse == 1) {
             datasetName = "NUS Dataset 1";
@@ -172,18 +222,18 @@ public class PaperRecommenderCentralController {
 
         // parameter for cf method: 1: KNN Pearson, 2: KNN Cosine, 3: SVD
         int cfMethod = 1;
-        
+
         // Recommendation.
         if (recommendationMethod == 1) {
             //<editor-fold defaultstate="collapsed" desc="CONTENT BASED METHOD">
             System.out.println("Begin CBF recommendation...");
             startTime = System.nanoTime();
-            
-            algorithmName = CBFController.cbfComputeRecommendingScore(authorTestSet, papers, 
-                    paperIdsOfAuthorTestSet, paperIdsInTestSet, 
-                    topNRecommend, 
-                    combiningSchemePaperOfAuthor, weightingSchemePaperOfAuthor, 
-                    timeAwareScheme, gamma, 
+
+            algorithmName = CBFController.cbfComputeRecommendingScore(authorTestSet, papers,
+                    paperIdsOfAuthorTestSet, paperIdsInTestSet,
+                    topNRecommend,
+                    combiningSchemePaperOfAuthor, weightingSchemePaperOfAuthor,
+                    timeAwareScheme, gamma,
                     combiningSchemePaperTestSet, weightingSchemePaperTestSet, similarityScheme,
                     pruning);
             FeatureVectorSimilarity.generateRecommendationForAuthorList(authorTestSet, topNRecommend);
@@ -196,25 +246,25 @@ public class PaperRecommenderCentralController {
             //<editor-fold defaultstate="collapsed" desc="CF METHODS">
             System.out.println("Begin CF recommendation...");
             startTime = System.nanoTime();
-            
-            algorithmName = CFController.cfComputeRecommendingScore(fileNameAuthorCitePaper, MahoutCFDir, cfMethod, 
+
+            algorithmName = CFController.cfComputeRecommendingScore(fileNameAuthorCitePaper, MahoutCFDir, cfMethod,
                     authorTestSet, paperIdsInTestSet, topNRecommend);
             CF.cfRecommendToAuthorList(authorTestSet, topNRecommend);
-        
+
             estimatedTime = System.nanoTime() - startTime;
             System.out.println("CF recommendation elapsed time: " + estimatedTime / 1000000000 + " seconds");
             System.out.println("End CF recommendation.");
             //</editor-fold>
         } else if (recommendationMethod == 3) {
             //<editor-fold defaultstate="collapsed" desc="LINEAR COMBINATION">
-            CBFController.cbfComputeRecommendingScore(authorTestSet, papers, 
-                    paperIdsOfAuthorTestSet, paperIdsInTestSet, 
-                    topNRecommend, 
-                    combiningSchemePaperOfAuthor, weightingSchemePaperOfAuthor, 
-                    timeAwareScheme, gamma, 
-                    combiningSchemePaperTestSet, weightingSchemePaperTestSet, similarityScheme, 
+            CBFController.cbfComputeRecommendingScore(authorTestSet, papers,
+                    paperIdsOfAuthorTestSet, paperIdsInTestSet,
+                    topNRecommend,
+                    combiningSchemePaperOfAuthor, weightingSchemePaperOfAuthor,
+                    timeAwareScheme, gamma,
+                    combiningSchemePaperTestSet, weightingSchemePaperTestSet, similarityScheme,
                     pruning);
-            CFController.cfComputeRecommendingScore(fileNameAuthorCitePaper, MahoutCFDir, 
+            CFController.cfComputeRecommendingScore(fileNameAuthorCitePaper, MahoutCFDir,
                     cfMethod, authorTestSet, paperIdsInTestSet, topNRecommend);
             float alpha = (float) 0.9;
             CBFCF.computeCBFCFLinearCombinationAndPutIntoModelForAuthorList(authorTestSet, alpha);
@@ -223,14 +273,14 @@ public class PaperRecommenderCentralController {
             //</editor-fold>
         } else if (recommendationMethod == 4) {
             //<editor-fold defaultstate="collapsed" desc="TRUST BASED">
-            CBFController.cbfComputeRecommendingScore(authorTestSet, papers, 
-                    paperIdsOfAuthorTestSet, paperIdsInTestSet, 
-                    topNRecommend, 
-                    combiningSchemePaperOfAuthor, weightingSchemePaperOfAuthor, 
-                    timeAwareScheme, gamma, 
-                    combiningSchemePaperTestSet, weightingSchemePaperTestSet, similarityScheme, 
+            CBFController.cbfComputeRecommendingScore(authorTestSet, papers,
+                    paperIdsOfAuthorTestSet, paperIdsInTestSet,
+                    topNRecommend,
+                    combiningSchemePaperOfAuthor, weightingSchemePaperOfAuthor,
+                    timeAwareScheme, gamma,
+                    combiningSchemePaperTestSet, weightingSchemePaperTestSet, similarityScheme,
                     pruning);
-            CFController.cfComputeRecommendingScore(fileNameAuthorCitePaper, MahoutCFDir, 
+            CFController.cfComputeRecommendingScore(fileNameAuthorCitePaper, MahoutCFDir,
                     cfMethod, authorTestSet, paperIdsInTestSet, topNRecommend);
             float alpha = (float) 0.9;
             CBFCF.computeCBFCFLinearCombinationAndPutIntoModelForAuthorList(authorTestSet, alpha);
@@ -238,18 +288,19 @@ public class PaperRecommenderCentralController {
             TrustHybridDataModelPreparation.computeCitationAuthorRSSHM(authorTestSet, fileNameAuthorship, fileNamePaperCitePaper);
             TrustHybrid.computeTrustedAuthorHMLinearCombinationAndPutIntoModelForAuthorList(authorTestSet, alpha);
             TrustHybrid.computeTrustedPaperHMAndPutIntoModelForAuthorList(authorTestSet);
-            // ...
+            TrustHybrid.trustRecommendToAuthorList(authorTestSet, topNRecommend);
+            algorithmName = "Trust Based Method";
             //</editor-fold>
         } else if (recommendationMethod == 5) {
             //<editor-fold defaultstate="collapsed" desc="TRUST BASED LINEAR COMBINATION">           
-            CBFController.cbfComputeRecommendingScore(authorTestSet, papers, 
-                    paperIdsOfAuthorTestSet, paperIdsInTestSet, 
-                    topNRecommend, 
-                    combiningSchemePaperOfAuthor, weightingSchemePaperOfAuthor, 
-                    timeAwareScheme, gamma, 
-                    combiningSchemePaperTestSet, weightingSchemePaperTestSet, similarityScheme, 
+            CBFController.cbfComputeRecommendingScore(authorTestSet, papers,
+                    paperIdsOfAuthorTestSet, paperIdsInTestSet,
+                    topNRecommend,
+                    combiningSchemePaperOfAuthor, weightingSchemePaperOfAuthor,
+                    timeAwareScheme, gamma,
+                    combiningSchemePaperTestSet, weightingSchemePaperTestSet, similarityScheme,
                     pruning);
-            CFController.cfComputeRecommendingScore(fileNameAuthorCitePaper, MahoutCFDir, 
+            CFController.cfComputeRecommendingScore(fileNameAuthorCitePaper, MahoutCFDir,
                     cfMethod, authorTestSet, paperIdsInTestSet, topNRecommend);
             float alpha = (float) 0.9;
             CBFCF.computeCBFCFLinearCombinationAndPutIntoModelForAuthorList(authorTestSet, alpha);
@@ -259,7 +310,7 @@ public class PaperRecommenderCentralController {
             TrustHybrid.computeTrustedPaperHMAndPutIntoModelForAuthorList(authorTestSet);
             TrustHybrid.computeCBFCFTrustLinearCombinationAndPutIntoModelForAuthorList(authorTestSet, alpha);
             TrustHybrid.trustHybridRecommendToAuthorList(authorTestSet, topNRecommend);
-            algorithmName = "TRUST BASED LINEAR COMBINATION";
+            algorithmName = "Trust Based combined with CBFCF";
             //</editor-fold>
         }
 
@@ -279,23 +330,23 @@ public class PaperRecommenderCentralController {
         startTime = System.nanoTime();
 
         // EachAuthorEvaluationResults
-        String fileNameEachAuthorEvaluationResults = PRConstant.FOLDER_MAS_DATASET1 
-                + "ErrorAnalysis\\EachAuthorEvaluationResults Method" + recommendationMethod 
+        String fileNameEachAuthorEvaluationResults = PRConstant.FOLDER_MAS_DATASET1
+                + "ErrorAnalysis\\EachAuthorEvaluationResults Method" + recommendationMethod
                 + " Customed file name ending" + ".xls";
         ErrorAnalysis.printEachAuthorEvaluationResults(authorTestSet, fileNameEachAuthorEvaluationResults);
 
         // FalseNegativeTopN
         int topNErrorAnalysis = 10;
-        String fileNameFalseNegativeTopN = PRConstant.FOLDER_MAS_DATASET1 
+        String fileNameFalseNegativeTopN = PRConstant.FOLDER_MAS_DATASET1
                 + "ErrorAnalysis\\FalseNegativeTop" + topNErrorAnalysis
-                + " Method" + recommendationMethod 
+                + " Method" + recommendationMethod
                 + " Customed file name ending" + ".xls";
         ErrorAnalysis.printFalseNegativeTopN(authorTestSet, fileNameFalseNegativeTopN, recommendationMethod, topNErrorAnalysis);
 
         // FalsePositveTopN
-        String fileNameFalsePositiveTopN = PRConstant.FOLDER_MAS_DATASET1 
+        String fileNameFalsePositiveTopN = PRConstant.FOLDER_MAS_DATASET1
                 + "ErrorAnalysis\\FalsePositiveTop" + topNErrorAnalysis
-                + " Method" + recommendationMethod 
+                + " Method" + recommendationMethod
                 + " Customed file name ending" + ".xls";
         ErrorAnalysis.printFalsePositiveTopN(authorTestSet, fileNameFalsePositiveTopN, recommendationMethod, topNErrorAnalysis);
 
@@ -308,7 +359,7 @@ public class PaperRecommenderCentralController {
         System.out.println("Recommendation elapsed time: " + estimatedRecommendationFlowTime / 1000000000 + " seconds");
         System.out.println("End recommendation flow.");
     }
-       
+
     public static void evaluation(String datasetName, String algorithmName, long startRecommendationFlowTime,
             HashMap<String, Author> authorTestSet, String fileNameEvaluationResult) throws Exception {
 

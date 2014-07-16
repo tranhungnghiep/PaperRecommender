@@ -151,4 +151,8 @@ public class TrustHybrid {
     public static void trustHybridRecommendToAuthorList(HashMap<String, Author> authorTestSet, int topNRecommend) throws IOException, TasteException, Exception {
         GenericRecommender.generateRecommendationForAuthorList(authorTestSet, topNRecommend, 3);
     }
+    
+    public static void trustRecommendToAuthorList(HashMap<String, Author> authorTestSet, int topNRecommend) throws IOException, TasteException, Exception {
+        GenericRecommender.generateRecommendationForAuthorList(authorTestSet, topNRecommend, 4);
+    }
 }
