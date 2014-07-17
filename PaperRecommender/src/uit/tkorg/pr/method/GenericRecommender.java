@@ -70,7 +70,7 @@ public class GenericRecommender {
         } else if (method == 2) {
             recommendingScoreHM = author.getCbfCfHybridHM();
         } else if (method == 3) {
-            recommendingScoreHM = author.getCbfCfTrustHybridHM();
+            recommendingScoreHM = author.getCbfTrustHybridHM();
         } else if (method == 4) {
             recommendingScoreHM = author.getTrustedPaperHM();
         }

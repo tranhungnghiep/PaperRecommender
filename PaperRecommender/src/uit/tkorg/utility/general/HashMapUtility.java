@@ -73,7 +73,15 @@ public class HashMapUtility {
         return result;
     }
     
-    public static void linearCombineTwoHashMap(HashMap<String, Float> inputHM1, 
+    /**
+     * Linear combine: result = alpha * x + (1 - alpha) * y.
+     * @param inputHM1
+     * @param inputHM2
+     * @param alpha
+     * @param outputHM
+     * @throws Exception 
+     */
+    public static void combineLinearTwoHashMap(HashMap<String, Float> inputHM1, 
             HashMap<String, Float> inputHM2, 
             float alpha, 
             HashMap<String, Float> outputHM) throws Exception {
@@ -90,8 +98,63 @@ public class HashMapUtility {
                 value2 = Float.valueOf(0);
             }
             
-            Float linearCombinationValue = value1 * alpha + value2 * (1 - alpha);
-            outputHM.put(key, linearCombinationValue);
+            Float combinedValue = value1 * alpha + value2 * (1 - alpha);
+            outputHM.put(key, combinedValue);
+        }
+
+        synchronized (getCountThread()) {
+            System.out.println("Thread No. " + countThread++ + " Done. " + (new Date(System.currentTimeMillis()).toString()));
+        }
+    }
+
+    public static void combineBasedOnConfidenceTwoHashMap(HashMap<String, Float> inputHM1, 
+            HashMap<String, Float> inputHM2, 
+            HashMap<String, Float> outputHM) throws Exception {
+
+        Set<String> keys = new HashSet<> (inputHM1.keySet());
+        keys.addAll(new HashSet<> (inputHM2.keySet()));
+        for (String key : keys) {
+            Float value1 = inputHM1.get(key);
+            if (value1 == null) {
+                value1 = Float.valueOf(0);
+            }
+            Float value2 = inputHM2.get(key);
+            if (value2 == null) {
+                value2 = Float.valueOf(0);
+            }
+            
+            Float combinedValue = 
+                    (value1 * value1 + value2 * value2) 
+                    / (value1 + value2);
+            outputHM.put(key, combinedValue);
+        }
+
+        synchronized (getCountThread()) {
+            System.out.println("Thread No. " + countThread++ + " Done. " + (new Date(System.currentTimeMillis()).toString()));
+        }
+    }
+
+    public static void combineBasedOnConfidenceAndLinearTwoHashMap(HashMap<String, Float> inputHM1, 
+            HashMap<String, Float> inputHM2, 
+            float alpha, 
+            HashMap<String, Float> outputHM) throws Exception {
+
+        Set<String> keys = new HashSet<> (inputHM1.keySet());
+        keys.addAll(new HashSet<> (inputHM2.keySet()));
+        for (String key : keys) {
+            Float value1 = inputHM1.get(key);
+            if (value1 == null) {
+                value1 = Float.valueOf(0);
+            }
+            Float value2 = inputHM2.get(key);
+            if (value2 == null) {
+                value2 = Float.valueOf(0);
+            }
+            
+            Float combinedValue = 
+                    (value1 * value1 * alpha + value2 * value2 * (1 - alpha)) 
+                    / (value1 + value2);
+            outputHM.put(key, combinedValue);
         }
 
         synchronized (getCountThread()) {

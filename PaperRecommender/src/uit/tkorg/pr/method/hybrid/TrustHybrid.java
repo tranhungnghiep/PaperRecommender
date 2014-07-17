@@ -30,8 +30,15 @@ public class TrustHybrid {
 
     private TrustHybrid() {}
     
+    /**
+     * 
+     * @param authors
+     * @param alpha
+     * @param combinationScheme 1: linear, 2: basedOnConfidence, 3: basedOnConfidence and linear.
+     * @throws Exception 
+     */
     public static void computeTrustedAuthorHMLinearCombinationAndPutIntoModelForAuthorList(HashMap<String, Author> authors, 
-            final float alpha) throws Exception {
+            final float alpha, final int combinationScheme) throws Exception {
         Runtime runtime = Runtime.getRuntime();
         int numOfProcessors = runtime.availableProcessors();
         ExecutorService executor = Executors.newFixedThreadPool(numOfProcessors - 1);
@@ -45,10 +52,21 @@ public class TrustHybrid {
                 @Override
                 public void run() {
                     try {
-                        HashMapUtility.linearCombineTwoHashMap(authorObj.getCoAuthorRSSHM(), 
-                                authorObj.getCitationAuthorRSSHM(), 
-                                alpha, 
-                                authorObj.getTrustedAuthorHM());
+                        if (combinationScheme == 1) {
+                            HashMapUtility.combineLinearTwoHashMap(authorObj.getCoAuthorRSSHM(), 
+                                    authorObj.getCitationAuthorRSSHM(), 
+                                    alpha, 
+                                    authorObj.getTrustedAuthorHM());
+                        } else if (combinationScheme == 2) {
+                            HashMapUtility.combineBasedOnConfidenceTwoHashMap(authorObj.getCoAuthorRSSHM(), 
+                                    authorObj.getCitationAuthorRSSHM(), 
+                                    authorObj.getTrustedAuthorHM());
+                        } else if (combinationScheme == 3) {
+                            HashMapUtility.combineBasedOnConfidenceAndLinearTwoHashMap(authorObj.getCoAuthorRSSHM(), 
+                                    authorObj.getCitationAuthorRSSHM(), 
+                                    alpha, 
+                                    authorObj.getTrustedAuthorHM());
+                        }
                     } catch (Exception ex) {
                         Logger.getLogger(FeatureVectorSimilarity.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -117,8 +135,15 @@ public class TrustHybrid {
         }
     }
     
-    public static void computeCBFCFTrustLinearCombinationAndPutIntoModelForAuthorList(HashMap<String, Author> authors, 
-            final float alpha) throws Exception {
+    /**
+     * 
+     * @param authors
+     * @param alpha
+     * @param combinationScheme 1: linear, 2: basedOnConfidence, 3: basedOnConfidence and linear.
+     * @throws Exception 
+     */
+    public static void computeCBFTrustLinearCombinationAndPutIntoModelForAuthorList(HashMap<String, Author> authors, 
+            final float alpha, final int combinationScheme) throws Exception {
         Runtime runtime = Runtime.getRuntime();
         int numOfProcessors = runtime.availableProcessors();
         ExecutorService executor = Executors.newFixedThreadPool(numOfProcessors - 1);
@@ -132,10 +157,21 @@ public class TrustHybrid {
                 @Override
                 public void run() {
                     try {
-                        HashMapUtility.linearCombineTwoHashMap(authorObj.getCbfCfHybridHM(), 
-                                authorObj.getTrustedPaperHM(), 
-                                alpha, 
-                                authorObj.getCbfCfTrustHybridHM());
+                        if (combinationScheme == 1) {
+                            HashMapUtility.combineLinearTwoHashMap(authorObj.getCbfSimHM(), 
+                                    authorObj.getTrustedPaperHM(), 
+                                    alpha, 
+                                    authorObj.getCbfTrustHybridHM());
+                        } else if (combinationScheme == 2) {
+                            HashMapUtility.combineBasedOnConfidenceTwoHashMap(authorObj.getCbfSimHM(), 
+                                    authorObj.getTrustedPaperHM(), 
+                                    authorObj.getCbfTrustHybridHM());
+                        } else if (combinationScheme == 3) {
+                            HashMapUtility.combineBasedOnConfidenceAndLinearTwoHashMap(authorObj.getCbfSimHM(), 
+                                    authorObj.getTrustedPaperHM(), 
+                                    alpha, 
+                                    authorObj.getCbfTrustHybridHM());
+                        }
                     } catch (Exception ex) {
                         Logger.getLogger(FeatureVectorSimilarity.class.getName()).log(Level.SEVERE, null, ex);
                     }
