@@ -67,6 +67,7 @@ public class PRCentralController {
             String dirPapers, String dirPreProcessedPaper, String sequenceDir, String vectorDir,
             String MahoutCFDir, String fileNameEvaluationResult,
             int recommendationMethod) {
+        
         _DatasetToUse = DatasetToUse;
         _DatasetByResearcherType = DatasetByResearcherType;
         _NUSDataset1Dir = NUSDataset1Dir;
@@ -88,14 +89,14 @@ public class PRCentralController {
 
     public static void main(String[] args) {
         try {
-            recommendationFlowController(3, 0,
+            recommendationFlowController(1, 2,
                     PRConstant.FOLDER_NUS_DATASET1,
                     PRConstant.FOLDER_NUS_DATASET2,
                     PRConstant.FOLDER_MAS_DATASET1 + "[Training] Paper_Before_2006.csv",
                     PRConstant.FOLDER_MAS_DATASET1 + "[Training] Paper_Cite_Paper_Before_2006.csv",
                     PRConstant.FOLDER_MAS_DATASET1 + "[Testing] 1000Authors.csv",
-                    PRConstant.FOLDER_MAS_DATASET1 + "[Testing] Ground_Truth_2006_2008.csv",
-                    //                    PRConstant.FOLDER_MAS_DATASET1 + "[Testing] Ground_Truth_2006_2008_New_Citation.csv",
+                    //PRConstant.FOLDER_MAS_DATASET1 + "[Testing] Ground_Truth_2006_2008.csv",
+                    PRConstant.FOLDER_MAS_DATASET1 + "[Testing] Ground_Truth_2006_2008_New_Citation.csv",
                     PRConstant.FOLDER_MAS_DATASET1 + "[Training] Author_Paper_Before_2006.csv",
                     PRConstant.FOLDER_MAS_DATASET1 + "[Training] Author_Cite_Paper_Before_2006.csv",
                     PRConstant.FOLDER_MAS_DATASET1 + "Text",
@@ -103,7 +104,7 @@ public class PRCentralController {
                     PRConstant.FOLDER_MAS_DATASET1 + "Sequence",
                     PRConstant.FOLDER_MAS_DATASET1 + "Vector",
                     PRConstant.FOLDER_MAS_DATASET1 + "MahoutCF",
-                    "EvaluationResult\\EvaluationResult_Maintain_OldCitation.xls",
+                    "EvaluationResult\\EvaluationResult_Maintain_NewCitation.xls",
                     1);
         } catch (Exception e) {
             e.printStackTrace();
@@ -213,12 +214,12 @@ public class PRCentralController {
         // parameters for CBF methods.
         int combiningSchemePaperOfAuthor = 3;
         int weightingSchemePaperOfAuthor = 1;
-        int timeAwareScheme = 1;
+        int timeAwareScheme = 0;
         double gamma = 0.2;
         int combiningSchemePaperTestSet = 3;
         int weightingSchemePaperTestSet = 1;
         int similarityScheme = 0;
-        double pruning = 0.2;
+        double pruning = 0.4;
 
         // parameter for cf method: 1: KNN Pearson, 2: KNN Cosine, 3: SVD
         int cfMethod = 1;
@@ -269,21 +270,11 @@ public class PRCentralController {
             float alpha = (float) 0.9;
             CBFCF.computeCBFCFLinearCombinationAndPutIntoModelForAuthorList(authorTestSet, alpha);
             CBFCF.cbfcfHybridRecommendToAuthorList(authorTestSet, topNRecommend);
-            algorithmName = "LINEAR COMBINATION";
+            algorithmName = "LINEAR COMBINATION, alpha = " + alpha;
             //</editor-fold>
         } else if (recommendationMethod == 4) {
             //<editor-fold defaultstate="collapsed" desc="TRUST BASED">
-            CBFController.cbfComputeRecommendingScore(authorTestSet, papers,
-                    paperIdsOfAuthorTestSet, paperIdsInTestSet,
-                    topNRecommend,
-                    combiningSchemePaperOfAuthor, weightingSchemePaperOfAuthor,
-                    timeAwareScheme, gamma,
-                    combiningSchemePaperTestSet, weightingSchemePaperTestSet, similarityScheme,
-                    pruning);
-            CFController.cfComputeRecommendingScore(fileNameAuthorCitePaper, MahoutCFDir,
-                    cfMethod, authorTestSet, paperIdsInTestSet, topNRecommend);
-            float alpha = (float) 0.9;
-            CBFCF.computeCBFCFLinearCombinationAndPutIntoModelForAuthorList(authorTestSet, alpha);
+            float alpha = (float) 0.5;
             TrustHybridDataModelPreparation.computeCoAuthorRSSHM(authorTestSet, fileNameAuthorship, fileNamePapers);
             TrustHybridDataModelPreparation.computeCitationAuthorRSSHM(authorTestSet, fileNameAuthorship, fileNamePaperCitePaper);
             TrustHybrid.computeTrustedAuthorHMLinearCombinationAndPutIntoModelForAuthorList(authorTestSet, alpha);
@@ -306,11 +297,13 @@ public class PRCentralController {
             CBFCF.computeCBFCFLinearCombinationAndPutIntoModelForAuthorList(authorTestSet, alpha);
             TrustHybridDataModelPreparation.computeCoAuthorRSSHM(authorTestSet, fileNameAuthorship, fileNamePapers);
             TrustHybridDataModelPreparation.computeCitationAuthorRSSHM(authorTestSet, fileNameAuthorship, fileNamePaperCitePaper);
+            alpha = (float) 0.5;
             TrustHybrid.computeTrustedAuthorHMLinearCombinationAndPutIntoModelForAuthorList(authorTestSet, alpha);
             TrustHybrid.computeTrustedPaperHMAndPutIntoModelForAuthorList(authorTestSet);
+            alpha = (float) 0.5;
             TrustHybrid.computeCBFCFTrustLinearCombinationAndPutIntoModelForAuthorList(authorTestSet, alpha);
             TrustHybrid.trustHybridRecommendToAuthorList(authorTestSet, topNRecommend);
-            algorithmName = "Trust Based combined with CBFCF";
+            algorithmName = "Trust Based combined with CBFCF, alpha = " + alpha;
             //</editor-fold>
         }
 
@@ -329,27 +322,36 @@ public class PRCentralController {
         System.out.println("Begin error analysis...");
         startTime = System.nanoTime();
 
-        // EachAuthorEvaluationResults
-        String fileNameEachAuthorEvaluationResults = PRConstant.FOLDER_MAS_DATASET1
-                + "ErrorAnalysis\\EachAuthorEvaluationResults Method" + recommendationMethod
+        String partFileNameWithDataset = PRConstant.FOLDER_MAS_DATASET1
+                + "ErrorAnalysis\\Dataset" + DatasetToUse;
+        String partFileNameWithMethod = " Method" + recommendationMethod
                 + " Customed file name ending" + ".xls";
-        ErrorAnalysis.printEachAuthorEvaluationResults(authorTestSet, fileNameEachAuthorEvaluationResults);
 
+        // EachAuthorEvaluationResults
+        String fileNameErrorAnalysis = partFileNameWithDataset
+                + " EachAuthorEvaluationResults " 
+                + partFileNameWithMethod;
+        ErrorAnalysis.printEachAuthorEvaluationResults(authorTestSet, fileNameErrorAnalysis);
+
+        int topNErrorAnalysis = 50;
         // FalseNegativeTopN
-        int topNErrorAnalysis = 10;
-        String fileNameFalseNegativeTopN = PRConstant.FOLDER_MAS_DATASET1
-                + "ErrorAnalysis\\FalseNegativeTop" + topNErrorAnalysis
-                + " Method" + recommendationMethod
-                + " Customed file name ending" + ".xls";
-        ErrorAnalysis.printFalseNegativeTopN(authorTestSet, fileNameFalseNegativeTopN, recommendationMethod, topNErrorAnalysis);
+        fileNameErrorAnalysis = partFileNameWithDataset
+                + " FalseNegative Top" + topNErrorAnalysis
+                + partFileNameWithMethod;
+        ErrorAnalysis.printFalseNegativeTopN(authorTestSet, fileNameErrorAnalysis, recommendationMethod, topNErrorAnalysis);
 
         // FalsePositveTopN
-        String fileNameFalsePositiveTopN = PRConstant.FOLDER_MAS_DATASET1
-                + "ErrorAnalysis\\FalsePositiveTop" + topNErrorAnalysis
-                + " Method" + recommendationMethod
-                + " Customed file name ending" + ".xls";
-        ErrorAnalysis.printFalsePositiveTopN(authorTestSet, fileNameFalsePositiveTopN, recommendationMethod, topNErrorAnalysis);
+        fileNameErrorAnalysis = partFileNameWithDataset
+                + " FalsePositive Top" + topNErrorAnalysis
+                + partFileNameWithMethod;
+        ErrorAnalysis.printFalsePositiveTopN(authorTestSet, fileNameErrorAnalysis, recommendationMethod, topNErrorAnalysis);
 
+        // TruePositveTopN
+        fileNameErrorAnalysis = partFileNameWithDataset
+                + " TruePositive Top" + topNErrorAnalysis
+                + partFileNameWithMethod;
+        ErrorAnalysis.printTruePositiveTopN(authorTestSet, fileNameErrorAnalysis, recommendationMethod, topNErrorAnalysis);
+        
         estimatedTime = System.nanoTime() - startTime;
         System.out.println("Error analysis elapsed time: " + estimatedTime / 1000000000 + " seconds");
         System.out.println("End error analysis.");

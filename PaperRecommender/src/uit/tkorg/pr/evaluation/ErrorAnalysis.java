@@ -62,7 +62,7 @@ public class ErrorAnalysis {
     }
 
     public static void printFalseNegativeTopN(HashMap<String, Author> authors, 
-            String fileNameFalseNegativeTopN, int method, int topN) throws Exception {
+            String fileNameFalseNegativeTopN, int method, int topNErrorAnalysis) throws Exception {
         FileUtils.deleteQuietly(new File(fileNameFalseNegativeTopN));
         StringBuilder content = new StringBuilder();
         content.append("Author ID").append("\t")
@@ -72,11 +72,14 @@ public class ErrorAnalysis {
             .append("Ranking value").append("\t")
             .append("\r\n");
         for (String authorId : authors.keySet()) {
-            if (topN > authors.get(authorId).getRecommendationList().size()) {
-                topN = authors.get(authorId).getRecommendationList().size();
+            int currentTopNErrorAnalysis = 0;
+            if (topNErrorAnalysis > authors.get(authorId).getRecommendationList().size()) {
+                currentTopNErrorAnalysis = authors.get(authorId).getRecommendationList().size();
+            } else {
+                currentTopNErrorAnalysis = topNErrorAnalysis;
             }
             for (String paperId : (List<String>) authors.get(authorId).getGroundTruth()) {
-                if (!authors.get(authorId).getRecommendationList().subList(0, topN).contains(paperId)) {
+                if (!authors.get(authorId).getRecommendationList().subList(0, currentTopNErrorAnalysis).contains(paperId)) {
                     content.append(authorId).append("\t")
                         .append(paperId).append("\t")
                         .append(authors.get(authorId).getRecommendationList().indexOf(paperId) + 1).append("\t")
@@ -89,7 +92,8 @@ public class ErrorAnalysis {
         FileUtils.writeStringToFile(new File(fileNameFalseNegativeTopN), content.toString(), "UTF8", true);
     }
 
-    public static void printFalsePositiveTopN(HashMap<String, Author> authors, String fileNameFalsePositiveTopN, int method, int topN) throws Exception {
+    public static void printFalsePositiveTopN(HashMap<String, Author> authors, 
+            String fileNameFalsePositiveTopN, int method, int topNErrorAnalysis) throws Exception {
         FileUtils.deleteQuietly(new File(fileNameFalsePositiveTopN));
         StringBuilder content = new StringBuilder();
         content.append("Author ID").append("\t")
@@ -99,10 +103,13 @@ public class ErrorAnalysis {
             .append("Ranking value").append("\t")
             .append("\r\n");
         for (String authorId : authors.keySet()) {
-            if (topN > authors.get(authorId).getRecommendationList().size()) {
-                topN = authors.get(authorId).getRecommendationList().size();
+            int currentTopNErrorAnalysis = 0;
+            if (topNErrorAnalysis > authors.get(authorId).getRecommendationList().size()) {
+                currentTopNErrorAnalysis = authors.get(authorId).getRecommendationList().size();
+            } else {
+                currentTopNErrorAnalysis = topNErrorAnalysis;
             }
-            for (String paperId : (List<String>) authors.get(authorId).getRecommendationList().subList(0, topN)) {
+            for (String paperId : (List<String>) authors.get(authorId).getRecommendationList().subList(0, currentTopNErrorAnalysis)) {
                 if (!authors.get(authorId).getGroundTruth().contains(paperId)) {
                     content.append(authorId).append("\t")
                         .append(paperId).append("\t")
@@ -114,5 +121,36 @@ public class ErrorAnalysis {
             }
         }
         FileUtils.writeStringToFile(new File(fileNameFalsePositiveTopN), content.toString(), "UTF8", true);
+    }
+
+    public static void printTruePositiveTopN(HashMap<String, Author> authors, 
+            String fileNameTruePositiveTopN, int method, int topNErrorAnalysis) throws Exception {
+        FileUtils.deleteQuietly(new File(fileNameTruePositiveTopN));
+        StringBuilder content = new StringBuilder();
+        content.append("Author ID").append("\t")
+            .append("Paper ID True Positive").append("\t")
+            .append("Rank").append("\t")
+            .append("Method").append("\t")
+            .append("Ranking value").append("\t")
+            .append("\r\n");
+        for (String authorId : authors.keySet()) {
+            int currentTopNErrorAnalysis = 0;
+            if (topNErrorAnalysis > authors.get(authorId).getRecommendationList().size()) {
+                currentTopNErrorAnalysis = authors.get(authorId).getRecommendationList().size();
+            } else {
+                currentTopNErrorAnalysis = topNErrorAnalysis;
+            }
+            for (String paperId : (List<String>) authors.get(authorId).getRecommendationList().subList(0, currentTopNErrorAnalysis)) {
+                if (authors.get(authorId).getGroundTruth().contains(paperId)) {
+                    content.append(authorId).append("\t")
+                        .append(paperId).append("\t")
+                        .append(authors.get(authorId).getRecommendationList().indexOf(paperId) + 1).append("\t")
+                        .append(method).append("\t")
+                        .append(authors.get(authorId).getRecommendationValue().get(paperId))
+                        .append("\r\n");
+                }
+            }
+        }
+        FileUtils.writeStringToFile(new File(fileNameTruePositiveTopN), content.toString(), "UTF8", true);
     }
 }
