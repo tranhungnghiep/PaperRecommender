@@ -89,7 +89,7 @@ public class PRCentralController {
 
     public static void main(String[] args) {
         try {
-            recommendationFlowController(1, 2,
+            recommendationFlowController(3, 0,
                     PRConstant.FOLDER_NUS_DATASET1,
                     PRConstant.FOLDER_NUS_DATASET2,
                     PRConstant.FOLDER_MAS_DATASET1 + "[Training] Paper_Before_2006.csv",
@@ -105,7 +105,7 @@ public class PRCentralController {
                     PRConstant.FOLDER_MAS_DATASET1 + "Vector",
                     PRConstant.FOLDER_MAS_DATASET1 + "MahoutCF",
                     "EvaluationResult\\EvaluationResult_Maintain_NewCitation.xls",
-                    1);
+                    5);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -214,19 +214,20 @@ public class PRCentralController {
         // parameters for CBF methods.
         int combiningSchemePaperOfAuthor = 3;
         int weightingSchemePaperOfAuthor = 1;
-        int timeAwareScheme = 0;
-        double gamma = 0.2;
+        int timeAwareScheme = 1;
+        double gamma = 0.5;
         int combiningSchemePaperTestSet = 3;
         int weightingSchemePaperTestSet = 1;
         int similarityScheme = 0;
-        double pruning = 0.4;
+        double pruning = 0.2;
 
         // parameters for cf method: 1: KNN Pearson, 2: KNN Cosine, 3: SVD
         int cfMethod = 1;
         
         // parameters for hybrid method: 1: combine linear, 2: combine based on confidence, 
         // 3: combine based on confidence and linear
-        int combinationScheme = 1;
+        int combinationScheme = 2;
+        float alpha;
 
         // Recommendation.
         if (recommendationMethod == 1) {
@@ -271,14 +272,14 @@ public class PRCentralController {
                     pruning);
             CFController.cfComputeRecommendingScore(fileNameAuthorCitePaper, MahoutCFDir,
                     cfMethod, authorTestSet, paperIdsInTestSet, topNRecommend);
-            float alpha = (float) 0.9;
+            alpha = (float) 0.9;
             CBFCF.computeCBFCFCombinationAndPutIntoModelForAuthorList(authorTestSet, alpha, combinationScheme);
             CBFCF.cbfcfHybridRecommendToAuthorList(authorTestSet, topNRecommend);
             algorithmName = "LINEAR COMBINATION, alpha = " + alpha + " combinationScheme = " + combinationScheme;
             //</editor-fold>
         } else if (recommendationMethod == 4) {
             //<editor-fold defaultstate="collapsed" desc="TRUST BASED">
-            float alpha = (float) 0.5;
+            alpha = (float) 0.5;
             TrustHybridDataModelPreparation.computeCoAuthorRSSHM(authorTestSet, fileNameAuthorship, fileNamePapers);
             TrustHybridDataModelPreparation.computeCitationAuthorRSSHM(authorTestSet, fileNameAuthorship, fileNamePaperCitePaper);
             TrustHybrid.computeTrustedAuthorHMLinearCombinationAndPutIntoModelForAuthorList(authorTestSet, alpha, combinationScheme);
@@ -298,7 +299,7 @@ public class PRCentralController {
                     pruning);
             TrustHybridDataModelPreparation.computeCoAuthorRSSHM(authorTestSet, fileNameAuthorship, fileNamePapers);
             TrustHybridDataModelPreparation.computeCitationAuthorRSSHM(authorTestSet, fileNameAuthorship, fileNamePaperCitePaper);
-            float alpha = (float) 0.5;
+            alpha = (float) 0.5;
             TrustHybrid.computeTrustedAuthorHMLinearCombinationAndPutIntoModelForAuthorList(authorTestSet, alpha, combinationScheme);
             TrustHybrid.computeTrustedPaperHMAndPutIntoModelForAuthorList(authorTestSet);
 
