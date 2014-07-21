@@ -45,12 +45,15 @@ public class TrustHybridDataModelPreparation {
     }
     
     public static void computeCitationAuthorRSSHM(HashMap<String, Author> authors, 
-            String file_All_AuthorID_PaperID, String file_PaperID_RefID) throws Exception {
+            String file_All_AuthorID_PaperID, String file_PaperID_RefID,
+            HashMap<String, HashMap<String, Float>> referenceRSSNet) throws Exception {
         CitationAuthorNet.getInstance().load_AuthorID_PaperID(file_All_AuthorID_PaperID);
         CitationAuthorNet.getInstance().load_PaperID_RefID(file_PaperID_RefID);
         CitationAuthorNet.getInstance().buildRefGraph();
         CitationAuthorNet.getInstance().buildRefRSSGraph();
 
+        referenceRSSNet = CitationAuthorNet.getInstance().getReferenceRSSNet();
+        
         for (String authorId : CitationAuthorNet.getInstance().getReferenceRSSNet().keySet()) {
             if (authors.containsKey(authorId)) {
                 authors.get(authorId).setCitationAuthorRSSHM(

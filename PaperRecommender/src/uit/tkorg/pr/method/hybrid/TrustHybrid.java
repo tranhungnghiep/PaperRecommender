@@ -102,7 +102,8 @@ public class TrustHybrid {
         }
     }
 
-    public static void computeMetaTrustedAuthorHMAndPutIntoModelForAuthorList(final HashMap<String, Author> authors, 
+    public static void computeMetaTrustedAuthorHMAndPutIntoModelForAuthorList(HashMap<String, Author> authors, 
+            final HashMap<String, HashMap<String, Float>> referenceRSSNet, 
             final float alpha) throws Exception {
         Runtime runtime = Runtime.getRuntime();
         int numOfProcessors = runtime.availableProcessors();
@@ -118,8 +119,9 @@ public class TrustHybrid {
                 public void run() {
                     try {
                         final HashMap<String, Float> metaTrustAuthorHM = new HashMap<>();
-                        computeMetaTrustedAuthorsForOneAuthor(authors, authorObj, metaTrustAuthorHM);
-                        HashMapUtility.combineLinearTwoHashMap(authorObj.getCitationAuthorRSSHM(), metaTrustAuthorHM, alpha, authorObj.getTrustedAuthorHM());
+                        computeMetaTrustedAuthorsForOneAuthor(referenceRSSNet, authorObj, metaTrustAuthorHM);
+                        HashMapUtility.combineLinearTwoHashMap(authorObj.getCitationAuthorRSSHM(), 
+                                metaTrustAuthorHM, alpha, authorObj.getTrustedAuthorHM());
                     } catch (Exception ex) {
                         Logger.getLogger(FeatureVectorSimilarity.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -132,13 +134,14 @@ public class TrustHybrid {
         }
     }
 
-    public static void computeMetaTrustedAuthorsForOneAuthor(HashMap<String, Author> authors, Author ai, 
+    public static void computeMetaTrustedAuthorsForOneAuthor(HashMap<String, HashMap<String, Float>> referenceRSSNet, 
+            Author ai, 
             HashMap<String, Float> outputHM) throws Exception {
 
         for (String au : ai.getCoAuthorRSSHM().keySet()) {
-            if (authors.containsKey(au)) {
-                for (String aj : authors.get(au).getCitationAuthorRSSHM().keySet()) {
-                    Float combinedValue = ai.getCoAuthorRSSHM().get(au) * authors.get(au).getCitationAuthorRSSHM().get(aj);
+            if (referenceRSSNet.containsKey(au)) {
+                for (String aj : referenceRSSNet.get(au).keySet()) {
+                    Float combinedValue = ai.getCoAuthorRSSHM().get(au) * referenceRSSNet.get(au).get(aj);
                     if (outputHM.containsKey(aj)) {
                         outputHM.put(aj, outputHM.get(aj) + combinedValue);
                     } else {
