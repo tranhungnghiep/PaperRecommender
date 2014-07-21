@@ -64,6 +64,15 @@ public class CBFCF {
                                     authorObj.getCfRatingHM(), 
                                     alpha, 
                                     authorObj.getCbfCfHybridHM());
+                        } else if (combinationScheme == 4) {
+                            HashMapUtility.combineBasedOnConfidenceTwoHashMapV2(authorObj.getCbfSimHM(), 
+                                    authorObj.getCfRatingHM(), 
+                                    authorObj.getCbfCfHybridHM());
+                        } else if (combinationScheme == 5) {
+                            HashMapUtility.combineBasedOnConfidenceAndLinearTwoHashMapV2(authorObj.getCbfSimHM(), 
+                                    authorObj.getCfRatingHM(), 
+                                    alpha, 
+                                    authorObj.getCbfCfHybridHM());
                         }
                     } catch (Exception ex) {
                         Logger.getLogger(FeatureVectorSimilarity.class.getName()).log(Level.SEVERE, null, ex);

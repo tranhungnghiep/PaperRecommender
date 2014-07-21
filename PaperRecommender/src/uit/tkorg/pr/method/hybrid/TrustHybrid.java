@@ -66,6 +66,15 @@ public class TrustHybrid {
                                     authorObj.getCitationAuthorRSSHM(), 
                                     alpha, 
                                     authorObj.getTrustedAuthorHM());
+                        } else if (combinationScheme == 4) {
+                            HashMapUtility.combineBasedOnConfidenceTwoHashMapV2(authorObj.getCoAuthorRSSHM(), 
+                                    authorObj.getCitationAuthorRSSHM(), 
+                                    authorObj.getTrustedAuthorHM());
+                        } else if (combinationScheme == 5) {
+                            HashMapUtility.combineBasedOnConfidenceAndLinearTwoHashMapV2(authorObj.getCoAuthorRSSHM(), 
+                                    authorObj.getCitationAuthorRSSHM(), 
+                                    alpha, 
+                                    authorObj.getTrustedAuthorHM());
                         }
                     } catch (Exception ex) {
                         Logger.getLogger(FeatureVectorSimilarity.class.getName()).log(Level.SEVERE, null, ex);
@@ -183,6 +192,15 @@ public class TrustHybrid {
                                     authorObj.getCbfTrustHybridHM());
                         } else if (combinationScheme == 3) {
                             HashMapUtility.combineBasedOnConfidenceAndLinearTwoHashMap(authorObj.getCbfSimHM(), 
+                                    authorObj.getTrustedPaperHM(), 
+                                    alpha, 
+                                    authorObj.getCbfTrustHybridHM());
+                        } else if (combinationScheme == 4) {
+                            HashMapUtility.combineBasedOnConfidenceTwoHashMapV2(authorObj.getCbfSimHM(), 
+                                    authorObj.getTrustedPaperHM(), 
+                                    authorObj.getCbfTrustHybridHM());
+                        } else if (combinationScheme == 5) {
+                            HashMapUtility.combineBasedOnConfidenceAndLinearTwoHashMapV2(authorObj.getCbfSimHM(), 
                                     authorObj.getTrustedPaperHM(), 
                                     alpha, 
                                     authorObj.getCbfTrustHybridHM());
