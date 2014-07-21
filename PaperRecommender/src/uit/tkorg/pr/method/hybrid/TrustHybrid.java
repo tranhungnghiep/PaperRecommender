@@ -79,7 +79,7 @@ public class TrustHybrid {
         }
     }
 
-    public static void computeTrustedPaperHMAndPutIntoModelForAuthorList(final HashMap<String, Author> authors) throws Exception {
+    public static void computeTrustedPaperHMAndPutIntoModelForAuthorList(final HashMap<String, Author> authors, final int howToTrust) throws Exception {
         Runtime runtime = Runtime.getRuntime();
         int numOfProcessors = runtime.availableProcessors();
         ExecutorService executor = Executors.newFixedThreadPool(numOfProcessors - 1);
@@ -92,7 +92,7 @@ public class TrustHybrid {
                 @Override
                 public void run() {
                     try {
-                        computeTrustedPaperHM(authors, authorObj);
+                        computeTrustedPaperHM(authors, authorObj, howToTrust);
                     } catch (Exception ex) {
                         Logger.getLogger(FeatureVectorSimilarity.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -105,7 +105,14 @@ public class TrustHybrid {
         }
     }
 
-    private static void computeTrustedPaperHM(HashMap<String, Author> authors, Author author) throws Exception {
+    /**
+     * 
+     * @param authors
+     * @param author
+     * @param howToTrust 1: average trusted author, 2: max trusted author.
+     * @throws Exception 
+     */
+    private static void computeTrustedPaperHM(HashMap<String, Author> authors, Author author, int howToTrust) throws Exception {
 
         HashMap<String, Integer> paperTrustedAuthorCount = new HashMap<>();
         
@@ -113,10 +120,16 @@ public class TrustHybrid {
             if (authors.containsKey(authorId)) {
                 for (String paperId : (List<String>) authors.get(authorId).getPaperList()) {
                     if (author.getTrustedPaperHM().containsKey(paperId)) {
-                        author.getTrustedPaperHM().put(paperId, 
-                                author.getTrustedPaperHM().get(paperId) + author.getTrustedAuthorHM().get(authorId));
-                        paperTrustedAuthorCount.put(paperId, 
-                                paperTrustedAuthorCount.get(paperId) + 1);
+                        if (howToTrust == 1) {
+                            author.getTrustedPaperHM().put(paperId, 
+                                    author.getTrustedPaperHM().get(paperId) + author.getTrustedAuthorHM().get(authorId));
+                            paperTrustedAuthorCount.put(paperId, 
+                                    paperTrustedAuthorCount.get(paperId) + 1);
+                        } else if (howToTrust == 2) {
+                            if (author.getTrustedPaperHM().get(paperId) < author.getTrustedAuthorHM().get(authorId)) {
+                                author.getTrustedPaperHM().put(paperId, author.getTrustedAuthorHM().get(authorId));
+                            }
+                        }
                     } else {
                         author.getTrustedPaperHM().put(paperId, author.getTrustedAuthorHM().get(authorId));
                         paperTrustedAuthorCount.put(paperId, 1);
@@ -125,9 +138,11 @@ public class TrustHybrid {
             }
         }
         
-        for (String paperId : author.getTrustedPaperHM().keySet()) {
-            author.getTrustedPaperHM().put(paperId, 
-                    author.getTrustedPaperHM().get(paperId) / paperTrustedAuthorCount.get(paperId));
+        if (howToTrust == 1) {
+            for (String paperId : author.getTrustedPaperHM().keySet()) {
+                author.getTrustedPaperHM().put(paperId, 
+                        author.getTrustedPaperHM().get(paperId) / paperTrustedAuthorCount.get(paperId));
+            }
         }
 
         synchronized (count) {
