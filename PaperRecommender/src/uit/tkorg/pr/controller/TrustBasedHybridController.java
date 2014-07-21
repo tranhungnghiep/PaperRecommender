@@ -8,7 +8,7 @@ package uit.tkorg.pr.controller;
 
 import java.util.HashMap;
 import java.util.HashSet;
-import uit.tkorg.pr.datapreparation.hybrid.TrustHybridDataModelPreparation;
+import uit.tkorg.pr.datapreparation.TrustDataModelPreparation;
 import uit.tkorg.pr.method.hybrid.CBFCF;
 import uit.tkorg.pr.method.hybrid.TrustHybrid;
 import uit.tkorg.pr.model.Author;

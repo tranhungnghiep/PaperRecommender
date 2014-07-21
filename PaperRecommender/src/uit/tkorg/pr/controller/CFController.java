@@ -9,7 +9,7 @@ package uit.tkorg.pr.controller;
 import java.util.HashMap;
 import java.util.HashSet;
 import uit.tkorg.pr.dataimex.MASDataset1;
-import uit.tkorg.pr.datapreparation.cf.CFRatingMatrixComputation;
+import uit.tkorg.pr.datapreparation.CFRatingMatrixComputation;
 import uit.tkorg.pr.method.cf.KNNCF;
 import uit.tkorg.pr.method.cf.SVDCF;
 import uit.tkorg.pr.model.Author;
@@ -32,8 +32,7 @@ public class CFController {
             String fileNameAuthorCitePaper, 
             String MahoutCFDir, 
             int cfMethod,
-            HashMap<String, Author> authorTestSet, HashSet<String> paperIdsInTestSet,
-            int topNRecommend) throws Exception {
+            HashMap<String, Author> authorTestSet, HashSet<String> paperIdsInTestSet) throws Exception {
         String algorithmName = null;
         
         // Step 1: Prepare CF matrix.
@@ -52,7 +51,7 @@ public class CFController {
                 algorithmName = "CF KNN Cosine " + "k" + k;
             }
             System.out.println("Begin calculating CF-KNN Recommending Score");
-            cfKNNComputeRecommendingScore(MahoutCFDir, MahoutCFFileOriginalFile, cfMethod, authorTestSet, paperIdsInTestSet, topNRecommend, k);
+            cfKNNComputeRecommendingScore(MahoutCFDir, MahoutCFFileOriginalFile, cfMethod, authorTestSet, paperIdsInTestSet, k);
             System.out.println("End calculating CF-KNN Recommending Score");
         } else if (cfMethod == 3) {
             // SVD ALSWRFactorizer.
@@ -60,10 +59,10 @@ public class CFController {
             int f = 5;
             double l = 0.001;
             int i = 100;
-            algorithmName = "CF SVD ALSWRFactorizer " + "n" + topNRecommend + "f" + f + "l" + l + "i" + i;
+            algorithmName = "CF SVD ALSWRFactorizer " + "f" + f + "l" + l + "i" + i;
             // Recommend for authors in author test set.
             System.out.println("Begin calculating CF-SVD Recommending Score");
-            cfSVDComputeRecommendingScore(MahoutCFDir, MahoutCFFileOriginalFile, authorTestSet, paperIdsInTestSet, topNRecommend, f, l, i);
+            cfSVDComputeRecommendingScore(MahoutCFDir, MahoutCFFileOriginalFile, authorTestSet, paperIdsInTestSet, f, l, i);
             System.out.println("End calculating CF-SVD Recommending Score");
         }
         
@@ -101,9 +100,9 @@ public class CFController {
      */
     public static void cfKNNComputeRecommendingScore(String MahoutCFDir, String MahoutCFFileOriginalFile, int similarityMethod,
             HashMap<String, Author> authorTestSet, HashSet<String> paperIdsInTestSet,
-            int topNRecommend, int k) throws Exception {
+            int k) throws Exception {
 
-        String MahoutCFRatingMatrixPredictionFile = MahoutCFDir + "\\CFRatingMatrixPredictionByCoPearson" + "k" + k + "n" + topNRecommend + ".txt";
+        String MahoutCFRatingMatrixPredictionFile = MahoutCFDir + "\\CFRatingMatrixPredictionByCoPearson" + "k" + k + ".txt";
 
         // Predict ratings by kNNCF.
         KNNCF.computeCFRatingAndPutIntoModelForAuthorList(MahoutCFFileOriginalFile, similarityMethod, k, authorTestSet, paperIdsInTestSet, MahoutCFRatingMatrixPredictionFile);
@@ -111,9 +110,9 @@ public class CFController {
     
     public static void cfSVDComputeRecommendingScore(String MahoutCFDir, String MahoutCFFileOriginalFile, 
             HashMap<String, Author> authorTestSet, HashSet<String> paperIdsInTestSet, 
-            int topNRecommend, int f, double l, int i) throws Exception {
+            int f, double l, int i) throws Exception {
 
-        String MahoutCFRatingMatrixPredictionFile = MahoutCFDir + "\\CFRatingMatrixPredictionBySVD" + "n" + topNRecommend + "f" + f + "l" + l + "i" + i + ".txt";
+        String MahoutCFRatingMatrixPredictionFile = MahoutCFDir + "\\CFRatingMatrixPredictionBySVD" + "f" + f + "l" + l + "i" + i + ".txt";
 
         // Predict ratings by SVD.
         SVDCF.computeCFRatingAndPutIntoModelForAuthorList(MahoutCFFileOriginalFile, f, l, i, authorTestSet, paperIdsInTestSet, MahoutCFRatingMatrixPredictionFile);

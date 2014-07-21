@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package uit.tkorg.pr.datapreparation.hybrid;
+package uit.tkorg.pr.datapreparation;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -24,10 +24,10 @@ import uit.tkorg.utility.general.WeightingUtility;
  *
  * @author Administrator
  */
-public class TrustHybridDataModelPreparation {
+public class TrustDataModelPreparation {
 
     // Prevent instantiation.
-    private TrustHybridDataModelPreparation() {
+    private TrustDataModelPreparation() {
     }
 
     public static void computeCoAuthorRSSHM(HashMap<String, Author> authors, 

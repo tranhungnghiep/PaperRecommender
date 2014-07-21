@@ -12,10 +12,12 @@ import uit.tkorg.pr.dataimex.MASDataset1;
 import uit.tkorg.pr.dataimex.MahoutFile;
 import uit.tkorg.pr.dataimex.NUSDataset1;
 import uit.tkorg.pr.dataimex.PRGeneralFile;
-import uit.tkorg.pr.datapreparation.cbf.AuthorFVComputation;
-import uit.tkorg.pr.datapreparation.cbf.PaperFVComputation;
-import uit.tkorg.pr.datapreparation.cf.CFRatingMatrixComputation;
-import uit.tkorg.pr.datapreparation.hybrid.TrustHybridDataModelPreparation;
+import uit.tkorg.pr.datapreparation.CBFAuthorFVComputation;
+import uit.tkorg.pr.datapreparation.CBFPaperFVComputation;
+import uit.tkorg.pr.datapreparation.CFRatingMatrixComputation;
+import uit.tkorg.pr.datapreparation.MLDataPreparation;
+import uit.tkorg.pr.datapreparation.PaperQualityComputation;
+import uit.tkorg.pr.datapreparation.TrustDataModelPreparation;
 import uit.tkorg.pr.evaluation.ErrorAnalysis;
 import uit.tkorg.pr.evaluation.Evaluator;
 import uit.tkorg.pr.method.cbf.FeatureVectorSimilarity;
@@ -105,7 +107,8 @@ public class PRCentralController {
                     PRConstant.FOLDER_MAS_DATASET1 + "Vector",
                     PRConstant.FOLDER_MAS_DATASET1 + "MahoutCF",
                     "EvaluationResult\\EvaluationResult_Maintain_NewCitation.xls",
-                    5);
+                    10,
+                    PRConstant.FOLDER_MAS_DATASET1 + "ML\\MLMatrix.csv");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -127,7 +130,8 @@ public class PRCentralController {
      * @param vectorDir
      * @param MahoutCFDir
      * @param fileNameEvaluationResult
-     * @param recommendationMethod: 1: CBF, 2: CF, 3: CBF CF Hybrid Linear
+     * @param recommendationMethod: 1: CBF, 2: CF, 3: CBF CF Hybrid Linear, 
+     * 4: Trust, 5: Trust Hybrid, 10: ML Hybrid
      * Combination.
      * @throws Exception
      */
@@ -137,7 +141,8 @@ public class PRCentralController {
             String fileNameGroundTruth, String fileNameAuthorship, String fileNameAuthorCitePaper,
             String dirPapers, String dirPreProcessedPaper, String sequenceDir, String vectorDir,
             String MahoutCFDir, String fileNameEvaluationResult,
-            int recommendationMethod) throws Exception {
+            int recommendationMethod,
+            String fileNameMLMatrix) throws Exception {
 
         System.out.println("Begin recommendation flow for Dataset " + DatasetToUse + " with recommendation method " + recommendationMethod + " ...");
         long startRecommendationFlowTime = System.nanoTime();
@@ -169,9 +174,9 @@ public class PRCentralController {
             // paper id of Test set (597 papers)
             paperIdsInTestSet.addAll(papers.keySet());
             // extract papers from authors and put into the common paper map.
-            papers.putAll(AuthorFVComputation.getPapersFromAuthors(authorTestSet));
+            papers.putAll(CBFAuthorFVComputation.getPapersFromAuthors(authorTestSet));
             // paper id of authors.
-            paperIdsOfAuthorTestSet = AuthorFVComputation.getPaperIdsOfAuthors(authorTestSet);
+            paperIdsOfAuthorTestSet = CBFAuthorFVComputation.getPaperIdsOfAuthors(authorTestSet);
         } else if (DatasetToUse == 2) {
             datasetName = "NUS Dataset 2";
             // Not yet implement.
@@ -199,15 +204,15 @@ public class PRCentralController {
                 // Step 3: 
                 // Compute TF-IDF for MAS papers.
                 //PaperFVComputation.computeTFIDFFromPaperAbstract(papers, dirPapers, dirPreProcessedPaper, sequenceDir, vectorDir);
-                PaperFVComputation.readTFIDFFromMahoutFile(papers, vectorDir);
+                CBFPaperFVComputation.readTFIDFFromMahoutFile(papers, vectorDir);
                 // Clear no longer in use objects.
                 // Always clear abstract.
-                PaperFVComputation.clearPaperAbstract(papers);
+                CBFPaperFVComputation.clearPaperAbstract(papers);
             }
             // Step 4:
             // Get list of papers to process.
-            paperIdsOfAuthorTestSet = AuthorFVComputation.getPaperIdsOfAuthors(authorTestSet);
-            paperIdsInTestSet = AuthorFVComputation.getPaperIdsTestSet(authorTestSet);
+            paperIdsOfAuthorTestSet = CBFAuthorFVComputation.getPaperIdsOfAuthors(authorTestSet);
+            paperIdsInTestSet = CBFAuthorFVComputation.getPaperIdsTestSet(authorTestSet);
         }
         //</editor-fold>
 
@@ -240,7 +245,6 @@ public class PRCentralController {
 
             algorithmName = CBFController.cbfComputeRecommendingScore(authorTestSet, papers,
                     paperIdsOfAuthorTestSet, paperIdsInTestSet,
-                    topNRecommend,
                     combiningSchemePaperOfAuthor, weightingSchemePaperOfAuthor,
                     timeAwareScheme, gamma,
                     combiningSchemePaperTestSet, weightingSchemePaperTestSet, similarityScheme,
@@ -257,7 +261,7 @@ public class PRCentralController {
             startTime = System.nanoTime();
 
             algorithmName = CFController.cfComputeRecommendingScore(fileNameAuthorCitePaper, MahoutCFDir, cfMethod,
-                    authorTestSet, paperIdsInTestSet, topNRecommend);
+                    authorTestSet, paperIdsInTestSet);
             CF.cfRecommendToAuthorList(authorTestSet, topNRecommend);
 
             estimatedTime = System.nanoTime() - startTime;
@@ -268,13 +272,12 @@ public class PRCentralController {
             //<editor-fold defaultstate="collapsed" desc="LINEAR COMBINATION">
             CBFController.cbfComputeRecommendingScore(authorTestSet, papers,
                     paperIdsOfAuthorTestSet, paperIdsInTestSet,
-                    topNRecommend,
                     combiningSchemePaperOfAuthor, weightingSchemePaperOfAuthor,
                     timeAwareScheme, gamma,
                     combiningSchemePaperTestSet, weightingSchemePaperTestSet, similarityScheme,
                     pruning);
             CFController.cfComputeRecommendingScore(fileNameAuthorCitePaper, MahoutCFDir,
-                    cfMethod, authorTestSet, paperIdsInTestSet, topNRecommend);
+                    cfMethod, authorTestSet, paperIdsInTestSet);
             combinationScheme = 1;
             alpha = (float) 0.9;
             CBFCF.computeCBFCFCombinationAndPutIntoModelForAuthorList(authorTestSet, alpha, combinationScheme);
@@ -283,9 +286,9 @@ public class PRCentralController {
             //</editor-fold>
         } else if (recommendationMethod == 4) {
             //<editor-fold defaultstate="collapsed" desc="TRUST BASED">
-            TrustHybridDataModelPreparation.computeCoAuthorRSSHM(authorTestSet, fileNameAuthorship, fileNamePapers);
+            TrustDataModelPreparation.computeCoAuthorRSSHM(authorTestSet, fileNameAuthorship, fileNamePapers);
             HashMap<String, HashMap<String, Float>> referenceRSSNet = new HashMap<>();
-            TrustHybridDataModelPreparation.computeCitationAuthorRSSHM(authorTestSet, fileNameAuthorship, fileNamePaperCitePaper, referenceRSSNet);
+            TrustDataModelPreparation.computeCitationAuthorRSSHM(authorTestSet, fileNameAuthorship, fileNamePaperCitePaper, referenceRSSNet);
             combinationScheme = 1;
             alpha = (float) 0.0;
             howToTrust = 2;
@@ -300,14 +303,13 @@ public class PRCentralController {
             //<editor-fold defaultstate="collapsed" desc="TRUST BASED LINEAR COMBINATION">           
             CBFController.cbfComputeRecommendingScore(authorTestSet, papers,
                     paperIdsOfAuthorTestSet, paperIdsInTestSet,
-                    topNRecommend,
                     combiningSchemePaperOfAuthor, weightingSchemePaperOfAuthor,
                     timeAwareScheme, gamma,
                     combiningSchemePaperTestSet, weightingSchemePaperTestSet, similarityScheme,
                     pruning);
-            TrustHybridDataModelPreparation.computeCoAuthorRSSHM(authorTestSet, fileNameAuthorship, fileNamePapers);
+            TrustDataModelPreparation.computeCoAuthorRSSHM(authorTestSet, fileNameAuthorship, fileNamePapers);
             HashMap<String, HashMap<String, Float>> referenceRSSNet = new HashMap<>();
-            TrustHybridDataModelPreparation.computeCitationAuthorRSSHM(authorTestSet, fileNameAuthorship, fileNamePaperCitePaper, referenceRSSNet);
+            TrustDataModelPreparation.computeCitationAuthorRSSHM(authorTestSet, fileNameAuthorship, fileNamePaperCitePaper, referenceRSSNet);
             combinationScheme = 4;
             alpha = (float) 0.0;
             howToTrust = 2;
@@ -321,6 +323,39 @@ public class PRCentralController {
 
             TrustHybrid.trustHybridRecommendToAuthorList(authorTestSet, topNRecommend);
             algorithmName = "Trust Based combined with CBF, alpha = " + alpha + " combinationScheme = " + combinationScheme + "howToTrust = " + howToTrust;
+            //</editor-fold>
+        } else if (recommendationMethod == 5) {
+            //<editor-fold defaultstate="collapsed" desc="ML HYBRID">
+            // Compute CBF value.
+            CBFController.cbfComputeRecommendingScore(authorTestSet, papers,
+                    paperIdsOfAuthorTestSet, paperIdsInTestSet,
+                    combiningSchemePaperOfAuthor, weightingSchemePaperOfAuthor,
+                    timeAwareScheme, gamma,
+                    combiningSchemePaperTestSet, weightingSchemePaperTestSet, similarityScheme,
+                    pruning);
+            // Compute CF value
+            CFController.cfComputeRecommendingScore(fileNameAuthorCitePaper, MahoutCFDir, 
+                    cfMethod,
+                    authorTestSet, paperIdsInTestSet);
+            // Compute Trust paper value.
+            TrustDataModelPreparation.computeCoAuthorRSSHM(authorTestSet, 
+                    fileNameAuthorship, fileNamePapers);
+            HashMap<String, HashMap<String, Float>> referenceRSSNet = new HashMap<>();
+            TrustDataModelPreparation.computeCitationAuthorRSSHM(authorTestSet, 
+                    fileNameAuthorship, fileNamePaperCitePaper, referenceRSSNet);
+            combinationScheme = 1;
+            alpha = (float) 0.5;
+            howToTrust = 2; // Max of trusted author.
+            TrustHybrid.computeTrustedAuthorHMLinearCombinationAndPutIntoModelForAuthorList(authorTestSet, alpha, combinationScheme);
+            TrustHybrid.computeTrustedPaperHMAndPutIntoModelForAuthorList(authorTestSet, howToTrust);
+            // Compute paper quality.
+            HashMap<String, Paper> paperTestSet = CBFPaperFVComputation.extractPapers(papers, paperIdsInTestSet);
+            PaperQualityComputation.computeQualityValueForAllPapers(paperTestSet);
+            
+            // Export Classification matrix.
+            MLDataPreparation.exportClassificationMatrix(authorTestSet, paperTestSet, fileNameMLMatrix);
+            
+            return;
             //</editor-fold>
         }
 
@@ -488,7 +523,7 @@ public class PRCentralController {
                         Dataset1Folder = PRConstant.FOLDER_NUS_DATASET1;
                     }
                     authors = NUSDataset1.buildListOfAuthors(Dataset1Folder, 0);
-                    papersOfAuthors = AuthorFVComputation.getPapersFromAuthors(authors);
+                    papersOfAuthors = CBFAuthorFVComputation.getPapersFromAuthors(authors);
                     response[0] = "Success.";
                     break;
                 case "Save paper":
@@ -529,36 +564,36 @@ public class PRCentralController {
                         SaveDataFolder = PRConstant.SAVEDATAFOLDER;
                     }
                     authors = (HashMap<String, Author>) BinaryFileUtility.loadObjectFromFile(SaveDataFolder + "\\Authors.dat");
-                    papersOfAuthors = AuthorFVComputation.getPapersFromAuthors(authors);
+                    papersOfAuthors = CBFAuthorFVComputation.getPapersFromAuthors(authors);
                     response[0] = "Success.";
                     break;
 
                 // Dataset 1: data preparation.
                 case "Paper FV linear":
-                    PaperFVComputation.computeFeatureVectorForAllPapers(papers, null, 3, 0, 0.2);
+                    CBFPaperFVComputation.computeFeatureVectorForAllPapers(papers, null, 3, 0, 0.2);
                     response[0] = "Success.";
                     break;
                 case "Paper FV cosine":
-                    PaperFVComputation.computeFeatureVectorForAllPapers(papers, null, 3, 1, 0.2);
+                    CBFPaperFVComputation.computeFeatureVectorForAllPapers(papers, null, 3, 1, 0.2);
                     response[0] = "Success.";
                     break;
                 case "Paper FV RPY":
-                    PaperFVComputation.computeFeatureVectorForAllPapers(papers, null, 3, 2, 0.2);
+                    CBFPaperFVComputation.computeFeatureVectorForAllPapers(papers, null, 3, 2, 0.2);
                     response[0] = "Success.";
                     break;
                 case "Author FV linear":
-                    PaperFVComputation.computeFeatureVectorForAllPapers(papersOfAuthors, null, 3, 0, 0.2);
-                    AuthorFVComputation.computeFVForAllAuthors(authors, papersOfAuthors, 0, 0);
+                    CBFPaperFVComputation.computeFeatureVectorForAllPapers(papersOfAuthors, null, 3, 0, 0.2);
+                    CBFAuthorFVComputation.computeFVForAllAuthors(authors, papersOfAuthors, 0, 0);
                     response[0] = "Success.";
                     break;
                 case "Author FV cosine":
-                    PaperFVComputation.computeFeatureVectorForAllPapers(papersOfAuthors, null, 3, 1, 0.2);
-                    AuthorFVComputation.computeFVForAllAuthors(authors, papersOfAuthors, 0, 0);
+                    CBFPaperFVComputation.computeFeatureVectorForAllPapers(papersOfAuthors, null, 3, 1, 0.2);
+                    CBFAuthorFVComputation.computeFVForAllAuthors(authors, papersOfAuthors, 0, 0);
                     response[0] = "Success.";
                     break;
                 case "Author FV RPY":
-                    PaperFVComputation.computeFeatureVectorForAllPapers(papersOfAuthors, null, 3, 2, 0.2);
-                    AuthorFVComputation.computeFVForAllAuthors(authors, papersOfAuthors, 0, 0);
+                    CBFPaperFVComputation.computeFeatureVectorForAllPapers(papersOfAuthors, null, 3, 2, 0.2);
+                    CBFAuthorFVComputation.computeFVForAllAuthors(authors, papersOfAuthors, 0, 0);
                     response[0] = "Success.";
                     break;
                 case "Recommend":

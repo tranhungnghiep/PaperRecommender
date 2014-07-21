@@ -32,6 +32,7 @@ public class Paper implements Serializable {
     private List citationList; // cited by those papers.
     private List referenceList; // citing those papers.
     private HashMapVector featureVector;
+    private Float qualityValue;
 
     /**
      * Default constructor used for serializable.
@@ -46,8 +47,43 @@ public class Paper implements Serializable {
         this.citationList = new ArrayList();
         this.referenceList = new ArrayList();
         this.featureVector = new HashMapVector();
+        this.qualityValue = 0f;
     }
 
+    public Float getTemporalCitationTrendValue() {
+        int present = 2005;
+        if (year == 0) {
+            return 0f;
+        } else {
+            int deltaTime = present - year;
+            if (deltaTime == 0) {
+                return 0.2f;
+            } else if (deltaTime == 1) {
+                return 0.3f;
+            } else if (deltaTime == 2) {
+                return 0.5f;
+            } else if (deltaTime == 3) {
+                return 0.7f;
+            } else if (deltaTime == 4) {
+                return 0.9f;
+            } else if (deltaTime == 5) {
+                return 0.9f;
+            } else if (deltaTime == 6) {
+                return 0.7f;
+            } else if (deltaTime == 7) {
+                return 0.5f;
+            } else if (deltaTime == 8) {
+                return 0.3f;
+            } else if (deltaTime == 9) {
+                return 0.2f;
+            } else if (deltaTime > 9) {
+                return 0.1f;
+            }
+        }
+        
+        return 0f;
+    }
+    
     /**
      * @return the paperId
      */
@@ -178,5 +214,19 @@ public class Paper implements Serializable {
      */
     public void setPaperAbstract(String paperAbstract) {
         this.paperAbstract = paperAbstract;
+    }
+
+    /**
+     * @return the qualityValue
+     */
+    public Float getQualityValue() {
+        return qualityValue;
+    }
+
+    /**
+     * @param qualityValue the qualityValue to set
+     */
+    public void setQualityValue(Float qualityValue) {
+        this.qualityValue = qualityValue;
     }
 }

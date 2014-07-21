@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package uit.tkorg.pr.datapreparation.cbf;
+package uit.tkorg.pr.datapreparation;
 
 import ir.vsr.HashMapVector;
 import java.util.ArrayList;
@@ -22,10 +22,10 @@ import uit.tkorg.utility.general.WeightingUtility;
  *
  * @author THNghiep
  */
-public class AuthorFVComputation {
+public class CBFAuthorFVComputation {
 
     // Prevent instantiation.
-    private AuthorFVComputation() {
+    private CBFAuthorFVComputation() {
     }
 
     public static HashSet<String> getPaperIdsOfAuthors(HashMap<String, Author> authors) throws Exception {

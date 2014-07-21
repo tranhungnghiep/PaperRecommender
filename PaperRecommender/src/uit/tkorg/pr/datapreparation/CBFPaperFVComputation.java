@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package uit.tkorg.pr.datapreparation.cbf;
+package uit.tkorg.pr.datapreparation;
 
 import ir.vsr.HashMapVector;
 import java.io.File;
@@ -29,10 +29,10 @@ import uit.tkorg.utility.textvectorization.TextVectorizationByMahoutTerminalUtil
  * Method: 
  * - Compute papers' full vector: its content itself or combining its refs and cits by linear, cosine, rpy.
  */
-public class PaperFVComputation {
+public class CBFPaperFVComputation {
 
     // Prevent instantiation.
-    private PaperFVComputation() {}
+    private CBFPaperFVComputation() {}
 
 
     public static void readTFIDFFromMahoutFile(HashMap<String, Paper> papers, String vectorDir) throws Exception {
@@ -51,7 +51,7 @@ public class PaperFVComputation {
         // into HashMap<String, Paper> papers (model)
         System.out.println("Begin setting tf-idf to papers...");
         startTime = System.nanoTime();
-        PaperFVComputation.setTFIDFVectorForAllPapers(papers, vectorizedPapers);
+        CBFPaperFVComputation.setTFIDFVectorForAllPapers(papers, vectorizedPapers);
         estimatedTime = System.nanoTime() - startTime;
         System.out.println("Setting tf-idf to papers elapsed time: " + estimatedTime / 1000000000 + " seconds");
         System.out.println("End setting tf-idf to papers.");

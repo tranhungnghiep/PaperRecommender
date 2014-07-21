@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package uit.tkorg.pr.datapreparation.cf;
+package uit.tkorg.pr.datapreparation;
 
 import java.io.File;
 import java.util.HashMap;

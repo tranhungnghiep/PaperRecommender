@@ -7,8 +7,8 @@ package uit.tkorg.pr.controller;
 
 import java.util.HashMap;
 import java.util.HashSet;
-import uit.tkorg.pr.datapreparation.cbf.AuthorFVComputation;
-import uit.tkorg.pr.datapreparation.cbf.PaperFVComputation;
+import uit.tkorg.pr.datapreparation.CBFAuthorFVComputation;
+import uit.tkorg.pr.datapreparation.CBFPaperFVComputation;
 import uit.tkorg.pr.method.cbf.FeatureVectorSimilarity;
 import uit.tkorg.pr.model.Author;
 import uit.tkorg.pr.model.Paper;
@@ -23,7 +23,6 @@ public class CBFController {
             HashMap<String, Paper> papers,
             HashSet<String> paperIdsOfAuthorTestSet,
             HashSet<String> paperIdsInTestSet,
-            int topNRecommend,
             int combiningSchemePaperOfAuthor, int weightingSchemePaperOfAuthor,
             int timeAwareScheme, double gamma,
             int combiningSchemePaperTestSet, int weightingSchemePaperTestSet,
@@ -44,11 +43,11 @@ public class CBFController {
         // Step 1: compute feature vector for those all 1000 authors.
         System.out.println("Begin computing authors FV...");
         startTime = System.nanoTime();
-        PaperFVComputation.computeFeatureVectorForAllPapers(papers, paperIdsOfAuthorTestSet,
+        CBFPaperFVComputation.computeFeatureVectorForAllPapers(papers, paperIdsOfAuthorTestSet,
                 combiningSchemePaperOfAuthor, weightingSchemePaperOfAuthor, pruning);
-        AuthorFVComputation.computeFVForAllAuthors(authorTestSet, papers, timeAwareScheme, gamma);
+        CBFAuthorFVComputation.computeFVForAllAuthors(authorTestSet, papers, timeAwareScheme, gamma);
         // Clear no longer in use objects.
-        PaperFVComputation.clearFV(papers);
+        CBFPaperFVComputation.clearFV(papers);
         estimatedTime = System.nanoTime() - startTime;
         System.out.println("Computing authors FV elapsed time: " + estimatedTime / 1000000000 + " seconds");
         System.out.println("End computing authors FV.");
@@ -58,12 +57,12 @@ public class CBFController {
         // (papers, 0, 0): baseline
         System.out.println("Begin computing FV for all papers...");
         startTime = System.nanoTime();
-        PaperFVComputation.computeFeatureVectorForAllPapers(papers, paperIdsInTestSet,
+        CBFPaperFVComputation.computeFeatureVectorForAllPapers(papers, paperIdsInTestSet,
                 combiningSchemePaperTestSet, weightingSchemePaperTestSet, pruning);
-        HashMap<String, Paper> paperTestSet = PaperFVComputation.extractPapers(papers, paperIdsInTestSet);
+        HashMap<String, Paper> paperTestSet = CBFPaperFVComputation.extractPapers(papers, paperIdsInTestSet);
         // Clear no longer in use objects.
         papers = null;
-        PaperFVComputation.clearTFIDF(paperTestSet);
+        CBFPaperFVComputation.clearTFIDF(paperTestSet);
         estimatedTime = System.nanoTime() - startTime;
         System.out.println("Computing FV for all papers elapsed time: " + estimatedTime / 1000000000 + " seconds");
         System.out.println("End computing FV for all papers.");
