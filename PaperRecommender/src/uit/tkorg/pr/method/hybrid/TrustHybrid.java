@@ -26,7 +26,21 @@ import uit.tkorg.utility.general.HashMapUtility;
  */
 public class TrustHybrid {
     
-    public static Integer count = 0;
+    private static Integer countThread = 0;
+
+    /**
+     * @return the countThread
+     */
+    public static Integer getCountThread() {
+        return countThread;
+    }
+
+    /**
+     * @param aCountThread the countThread to set
+     */
+    public static void setCountThread(Integer aCountThread) {
+        countThread = aCountThread;
+    }
 
     private TrustHybrid() {}
     
@@ -85,6 +99,61 @@ public class TrustHybrid {
 
         executor.shutdown();
         while (!executor.isTerminated()) {
+        }
+    }
+
+    public static void computeMetaTrustedAuthorHMAndPutIntoModelForAuthorList(final HashMap<String, Author> authors, 
+            final float alpha) throws Exception {
+        Runtime runtime = Runtime.getRuntime();
+        int numOfProcessors = runtime.availableProcessors();
+        ExecutorService executor = Executors.newFixedThreadPool(numOfProcessors - 1);
+
+        System.out.println("NUM OF AUTHOR: " + authors.size());
+
+        HashMapUtility.setCountThread(0);
+        for (String authorId : authors.keySet()) {
+            final Author authorObj = authors.get(authorId);
+            executor.submit(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        final HashMap<String, Float> metaTrustAuthorHM = new HashMap<>();
+                        computeMetaTrustedAuthorsForOneAuthor(authors, authorObj, metaTrustAuthorHM);
+                        HashMapUtility.combineLinearTwoHashMap(authorObj.getCitationAuthorRSSHM(), metaTrustAuthorHM, alpha, authorObj.getTrustedAuthorHM());
+                    } catch (Exception ex) {
+                        Logger.getLogger(FeatureVectorSimilarity.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            });
+        }
+
+        executor.shutdown();
+        while (!executor.isTerminated()) {
+        }
+    }
+
+    public static void computeMetaTrustedAuthorsForOneAuthor(HashMap<String, Author> authors, Author ai, 
+            HashMap<String, Float> outputHM) throws Exception {
+
+        for (String au : ai.getCoAuthorRSSHM().keySet()) {
+            if (authors.containsKey(au)) {
+                for (String aj : authors.get(au).getCitationAuthorRSSHM().keySet()) {
+                    Float combinedValue = ai.getCoAuthorRSSHM().get(au) * authors.get(au).getCitationAuthorRSSHM().get(aj);
+                    if (outputHM.containsKey(aj)) {
+                        outputHM.put(aj, outputHM.get(aj) + combinedValue);
+                    } else {
+                        outputHM.put(aj, combinedValue);
+                    }
+                }
+            }
+        }
+        
+        for (String aj : outputHM.keySet()) {
+            outputHM.put(aj, outputHM.get(aj) / ai.getCoAuthorRSSHM().size());
+        }
+
+        synchronized (getCountThread()) {
+            System.out.println("Thread No. " + countThread++ + " Done. " + (new Date(System.currentTimeMillis()).toString()));
         }
     }
 
@@ -154,8 +223,8 @@ public class TrustHybrid {
             }
         }
 
-        synchronized (count) {
-            System.out.println(count++ + ". " + (new Date(System.currentTimeMillis()).toString()) + " DONE for authorId: " + author.getAuthorId());
+        synchronized (getCountThread()) {
+            System.out.println(countThread++ + ". " + (new Date(System.currentTimeMillis()).toString()) + " DONE for authorId: " + author.getAuthorId());
         }
     }
     
