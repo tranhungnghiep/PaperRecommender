@@ -34,7 +34,7 @@ public class PaperQualityComputation {
         
         for (String paperId : papers.keySet()) {
             papers.get(paperId).setQualityValue(
-                    papers.get(paperId).getQualityValue() 
+                    (papers.get(paperId).getQualityValue() - minQuality)
                     / (maxQuality - minQuality));
         }
     }

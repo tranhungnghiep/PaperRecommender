@@ -4,7 +4,9 @@
  */
 package uit.tkorg.pr.datapreparation;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.util.HashMap;
 import java.util.HashSet;
 import org.apache.commons.io.FileUtils;
@@ -20,6 +22,7 @@ import uit.tkorg.pr.method.hybrid.CBFCF;
 import uit.tkorg.pr.method.hybrid.TrustHybrid;
 import uit.tkorg.pr.model.Author;
 import uit.tkorg.pr.model.Paper;
+import uit.tkorg.utility.general.NumericUtility;
 
 /**
  *
@@ -141,6 +144,7 @@ public class MLDataPreparation {
             HashMap<String, Paper> papers,
             String fileNameMLMatrix) throws Exception {
         FileUtils.deleteQuietly(new File(fileNameMLMatrix));
+        FileUtils.write(new File(fileNameMLMatrix), "");
 
         StringBuilder content = new StringBuilder();
         content.append("AuthorId").append("\t")
@@ -150,26 +154,45 @@ public class MLDataPreparation {
                 .append("TrustPaperValue").append("\t")
                 .append("PaperQualityValue").append("\t")
                 .append("TemporalCitationTrendValue").append("\t")
-                .append("GroundTruth").append("\t")
+                .append("GroundTruth")
                 .append("\r\n");
-
-        for (String authorId : authors.keySet()) {
-            for (String paperId : authors.get(authorId).getCbfSimHM().keySet()) {
-                int groundTruth = 0;
-                if (authors.get(authorId).getGroundTruth().contains(paperId)) {
-                    groundTruth = 1;
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(fileNameMLMatrix))) {
+            bw.write(content.toString());
+            for (String authorId : authors.keySet()) {
+                for (String paperId : authors.get(authorId).getCbfSimHM().keySet()) {
+                    Float cbfSimValue = authors.get(authorId).getCbfSimHM().get(paperId);
+                    if (cbfSimValue == null) {
+                        cbfSimValue = 0f;
+                    }
+                    
+                    Float cfRatingValue = authors.get(authorId).getCfRatingHM().get(paperId);
+                    if (cfRatingValue == null) {
+                        cfRatingValue = 0f;
+                    }
+                    
+                    Float trustedPaperValue = authors.get(authorId).getTrustedPaperHM().get(paperId);
+                    if (trustedPaperValue == null) {
+                        trustedPaperValue = 0f;
+                    }
+                    
+                    int groundTruth = 0;
+                    if (authors.get(authorId).getGroundTruth().contains(paperId)) {
+                        groundTruth = 1;
+                    }
+                    
+                    content.setLength(0);
+                    content.append(authorId).append("\t")
+                            .append(paperId).append("\t")
+                            .append(String.format("%f", cbfSimValue)).append("\t")
+                            .append(String.format("%f", cfRatingValue)).append("\t")
+                            .append(String.format("%f", trustedPaperValue)).append("\t")
+                            .append(String.format("%f", papers.get(paperId).getQualityValue())).append("\t")
+                            .append(String.format("%f", papers.get(paperId).getTemporalCitationTrendValue())).append("\t")
+                            .append(groundTruth)
+                            .append("\r\n");
+                    bw.write(content.toString());
                 }
-                content.append(authorId).append("\t")
-                        .append(paperId).append("\t")
-                        .append(authors.get(authorId).getCbfSimHM().get(paperId)).append("\t")
-                        .append(authors.get(authorId).getCfRatingHM().get(paperId)).append("\t")
-                        .append(authors.get(authorId).getTrustedPaperHM().get(paperId)).append("\t")
-                        .append(papers.get(paperId).getQualityValue()).append("\t")
-                        .append(papers.get(paperId).getTemporalCitationTrendValue()).append("\t")
-                        .append(groundTruth).append("\t")
-                        .append("\r\n");
             }
         }
-        FileUtils.writeStringToFile(new File(fileNameMLMatrix), content.toString(), "UTF8", true);
     }
 }

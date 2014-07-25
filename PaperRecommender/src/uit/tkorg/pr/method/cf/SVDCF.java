@@ -85,7 +85,7 @@ public class SVDCF {
                 long userId = iterator.nextLong();
                 // Generate a list of n recommendations for the user
                 if (authorTestSet.containsKey(String.valueOf(userId).trim())) {
-                    System.out.println("Generate a list of n recommendations for the user no. " + count);
+                    System.out.println("Computing CF rating value for user no. " + count);
                     List<RecommendedItem> recommendationList = svdRecommender.recommend(userId, dataModel.getNumItems());
                     if (!recommendationList.isEmpty()) {
                         // Display the list of recommendations
