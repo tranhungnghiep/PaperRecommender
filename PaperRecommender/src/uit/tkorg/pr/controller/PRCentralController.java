@@ -107,7 +107,7 @@ public class PRCentralController {
                     PRConstant.FOLDER_MAS_DATASET1 + "Vector",
                     PRConstant.FOLDER_MAS_DATASET1 + "MahoutCF",
                     "EvaluationResult\\EvaluationResult_Maintain_NewCitation.xls",
-                    10,
+                    1,
                     PRConstant.FOLDER_MAS_DATASET1 + "ML\\MLMatrix.csv");
         } catch (Exception e) {
             e.printStackTrace();
@@ -323,39 +323,6 @@ public class PRCentralController {
 
             TrustHybrid.trustHybridRecommendToAuthorList(authorTestSet, topNRecommend);
             algorithmName = "Trust Based combined with CBF, alpha = " + alpha + " combinationScheme = " + combinationScheme + "howToTrust = " + howToTrust;
-            //</editor-fold>
-        } else if (recommendationMethod == 5) {
-            //<editor-fold defaultstate="collapsed" desc="ML HYBRID">
-            // Compute CBF value.
-            CBFController.cbfComputeRecommendingScore(authorTestSet, papers,
-                    paperIdsOfAuthorTestSet, paperIdsInTestSet,
-                    combiningSchemePaperOfAuthor, weightingSchemePaperOfAuthor,
-                    timeAwareScheme, gamma,
-                    combiningSchemePaperTestSet, weightingSchemePaperTestSet, similarityScheme,
-                    pruning);
-            // Compute CF value
-            CFController.cfComputeRecommendingScore(fileNameAuthorCitePaper, MahoutCFDir, 
-                    cfMethod,
-                    authorTestSet, paperIdsInTestSet);
-            // Compute Trust paper value.
-            TrustDataModelPreparation.computeCoAuthorRSSHM(authorTestSet, 
-                    fileNameAuthorship, fileNamePapers);
-            HashMap<String, HashMap<String, Float>> referenceRSSNet = new HashMap<>();
-            TrustDataModelPreparation.computeCitationAuthorRSSHM(authorTestSet, 
-                    fileNameAuthorship, fileNamePaperCitePaper, referenceRSSNet);
-            combinationScheme = 1;
-            alpha = (float) 0.5;
-            howToTrust = 2; // Max of trusted author.
-            TrustHybrid.computeTrustedAuthorHMLinearCombinationAndPutIntoModelForAuthorList(authorTestSet, alpha, combinationScheme);
-            TrustHybrid.computeTrustedPaperHMAndPutIntoModelForAuthorList(authorTestSet, howToTrust);
-            // Compute paper quality.
-            HashMap<String, Paper> paperTestSet = CBFPaperFVComputation.extractPapers(papers, paperIdsInTestSet);
-            PaperQualityComputation.computeQualityValueForAllPapers(paperTestSet);
-            
-            // Export Classification matrix.
-            MLDataPreparation.exportClassificationMatrix(authorTestSet, paperTestSet, fileNameMLMatrix);
-            
-            return;
             //</editor-fold>
         }
 
