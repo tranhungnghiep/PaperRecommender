@@ -48,7 +48,8 @@ public class MLDataPreparation {
                     PRConstant.FOLDER_MAS_DATASET1 + "Sequence",
                     PRConstant.FOLDER_MAS_DATASET1 + "Vector",
                     PRConstant.FOLDER_MAS_DATASET1 + "MahoutCF",
-                    PRConstant.FOLDER_MAS_DATASET1 + "ML\\MLMatrix.csv");
+                    PRConstant.FOLDER_MAS_DATASET1 + "ML\\MLMatrixTrainingSet.csv",
+                    PRConstant.FOLDER_MAS_DATASET1 + "ML\\MLMatrixTestSet.csv");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -59,7 +60,7 @@ public class MLDataPreparation {
             String fileNameGroundTruth, String fileNameAuthorship, String fileNameAuthorCitePaper,
             String dirPapers, String dirPreProcessedPaper, String sequenceDir, String vectorDir,
             String MahoutCFDir,
-            String fileNameMLMatrix) throws Exception {
+            String fileNameTraingSetMLMatrix, String fileNameTestSetMLMatrix) throws Exception {
 
         HashMap<String, Author> authorTestSet = new HashMap<>();
         HashMap<String, Paper> papers = new HashMap<>();
@@ -134,10 +135,11 @@ public class MLDataPreparation {
         // Compute paper quality.
         HashMap<String, Paper> paperTestSet = CBFPaperFVComputation.extractPapers(papers, paperIdsInTestSet);
         PaperQualityComputation.computeQualityValueForAllPapers(paperTestSet);
+        //</editor-fold>
 
         // Export Classification matrix.
-        MLDataPreparation.exportClassificationMatrix(authorTestSet, paperTestSet, fileNameMLMatrix);
-        //</editor-fold>
+//        MLDataPreparation.exportClassificationMatrix(authorTestSet, paperTestSet, fileNameTraingSetMLMatrix);
+        MLDataPreparation.exportClassificationMatrixSeparatedTestSet(authorTestSet, paperTestSet, fileNameTraingSetMLMatrix, fileNameTestSetMLMatrix);
     }
 
     public static void exportClassificationMatrix(HashMap<String, Author> authors,
@@ -191,6 +193,73 @@ public class MLDataPreparation {
                             .append(groundTruth)
                             .append("\r\n");
                     bw.write(content.toString());
+                }
+            }
+        }
+    }
+
+    public static void exportClassificationMatrixSeparatedTestSet(HashMap<String, Author> authors,
+            HashMap<String, Paper> papers,
+            String fileNameTrainingSetMLMatrix,
+            String fileNameTestSetMLMatrix) throws Exception {
+        FileUtils.deleteQuietly(new File(fileNameTrainingSetMLMatrix));
+        FileUtils.write(new File(fileNameTrainingSetMLMatrix), "");
+        FileUtils.deleteQuietly(new File(fileNameTestSetMLMatrix));
+        FileUtils.write(new File(fileNameTestSetMLMatrix), "");
+
+        StringBuilder content = new StringBuilder();
+        content.append("AuthorId").append("\t")
+                .append("PaperId").append("\t")
+                .append("CBFSimValue").append("\t")
+                .append("CFRatingValue").append("\t")
+                .append("TrustPaperValue").append("\t")
+                .append("PaperQualityValue").append("\t")
+                .append("TemporalCitationTrendValue").append("\t")
+                .append("GroundTruth")
+                .append("\r\n");
+        try (BufferedWriter bwTrain = new BufferedWriter(new FileWriter(fileNameTrainingSetMLMatrix));
+                BufferedWriter bwTest = new BufferedWriter(new FileWriter(fileNameTrainingSetMLMatrix));) {
+            bwTrain.write(content.toString());
+            bwTest.write(content.toString());
+            for (String authorId : authors.keySet()) {
+                int countTestItem = 0;
+                for (String paperId : authors.get(authorId).getCbfSimHM().keySet()) {
+                    Float cbfSimValue = authors.get(authorId).getCbfSimHM().get(paperId);
+                    if (cbfSimValue == null) {
+                        cbfSimValue = 0f;
+                    }
+                    
+                    Float cfRatingValue = authors.get(authorId).getCfRatingHM().get(paperId);
+                    if (cfRatingValue == null) {
+                        cfRatingValue = 0f;
+                    }
+                    
+                    Float trustedPaperValue = authors.get(authorId).getTrustedPaperHM().get(paperId);
+                    if (trustedPaperValue == null) {
+                        trustedPaperValue = 0f;
+                    }
+                    
+                    int groundTruth = 0;
+                    if (authors.get(authorId).getGroundTruth().contains(paperId)) {
+                        groundTruth = 1;
+                    }
+                    
+                    content.setLength(0);
+                    content.append(authorId).append("\t")
+                            .append(paperId).append("\t")
+                            .append(String.format("%f", cbfSimValue)).append("\t")
+                            .append(String.format("%f", cfRatingValue)).append("\t")
+                            .append(String.format("%f", trustedPaperValue)).append("\t")
+                            .append(String.format("%f", papers.get(paperId).getQualityValue())).append("\t")
+                            .append(String.format("%f", papers.get(paperId).getTemporalCitationTrendValue())).append("\t")
+                            .append(groundTruth)
+                            .append("\r\n");
+                    countTestItem++;
+                    if (countTestItem <= 10) {
+                        bwTest.write(content.toString());
+                    } else {
+                        bwTrain.write(content.toString());
+                    }
                 }
             }
         }
