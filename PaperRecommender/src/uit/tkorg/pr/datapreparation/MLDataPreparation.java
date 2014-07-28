@@ -254,8 +254,8 @@ public class MLDataPreparation {
                             .append(String.format("%f", papers.get(paperId).getTemporalCitationTrendValue())).append("\t")
                             .append(groundTruth)
                             .append("\r\n");
-                    countTestItem++;
-                    if (countTestItem <= 10) {
+                    if ((groundTruth == 1) && (countTestItem <= 10)) {
+                        countTestItem++;
                         bwTest.write(content.toString());
                     } else {
                         bwTrain.write(content.toString());
