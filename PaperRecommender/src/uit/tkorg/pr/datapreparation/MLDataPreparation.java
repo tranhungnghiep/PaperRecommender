@@ -139,7 +139,7 @@ public class MLDataPreparation {
 
         // Export Classification matrix.
 //        MLDataPreparation.exportClassificationMatrix(authorTestSet, paperTestSet, fileNameTraingSetMLMatrix);
-        MLDataPreparation.exportClassificationMatrixSeparatedTestSet(authorTestSet, paperTestSet, fileNameTraingSetMLMatrix, fileNameTestSetMLMatrix);
+        MLDataPreparation.exportClassificationMatrixSeparatedTestSet(authorTestSet, paperTestSet, fileNameTraingSetMLMatrix, fileNameTestSetMLMatrix, 10);
     }
 
     public static void exportClassificationMatrix(HashMap<String, Author> authors,
@@ -201,7 +201,8 @@ public class MLDataPreparation {
     public static void exportClassificationMatrixSeparatedTestSet(HashMap<String, Author> authors,
             HashMap<String, Paper> papers,
             String fileNameTrainingSetMLMatrix,
-            String fileNameTestSetMLMatrix) throws Exception {
+            String fileNameTestSetMLMatrix,
+            int numberOfItemsInTestSet) throws Exception {
         FileUtils.deleteQuietly(new File(fileNameTrainingSetMLMatrix));
         FileUtils.write(new File(fileNameTrainingSetMLMatrix), "");
         FileUtils.deleteQuietly(new File(fileNameTestSetMLMatrix));
@@ -218,7 +219,7 @@ public class MLDataPreparation {
                 .append("GroundTruth")
                 .append("\r\n");
         try (BufferedWriter bwTrain = new BufferedWriter(new FileWriter(fileNameTrainingSetMLMatrix));
-                BufferedWriter bwTest = new BufferedWriter(new FileWriter(fileNameTrainingSetMLMatrix));) {
+                BufferedWriter bwTest = new BufferedWriter(new FileWriter(fileNameTestSetMLMatrix));) {
             bwTrain.write(content.toString());
             bwTest.write(content.toString());
             for (String authorId : authors.keySet()) {
@@ -254,7 +255,7 @@ public class MLDataPreparation {
                             .append(String.format("%f", papers.get(paperId).getTemporalCitationTrendValue())).append("\t")
                             .append(groundTruth)
                             .append("\r\n");
-                    if ((groundTruth == 1) && (countTestItem <= 10)) {
+                    if ((groundTruth == 1) && (countTestItem < numberOfItemsInTestSet)) {
                         countTestItem++;
                         bwTest.write(content.toString());
                     } else {
