@@ -37,7 +37,7 @@ public class CFController {
         
         // Step 1: Prepare CF matrix.
         String MahoutCFFileOriginalFile = MahoutCFDir + "\\CFRatingMatrixOriginal.txt";
-        //cfPrepareMatrix(fileNameAuthorCitePaper, MahoutCFFileOriginalFile);
+        cfPrepareMatrix(fileNameAuthorCitePaper, MahoutCFFileOriginalFile);
         
         // Step 2: Predict ratings.
         if ((cfMethod == 1) || (cfMethod == 2)) {

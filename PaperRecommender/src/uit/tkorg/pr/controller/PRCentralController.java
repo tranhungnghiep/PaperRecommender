@@ -94,21 +94,26 @@ public class PRCentralController {
             recommendationFlowController(3, 0,
                     PRConstant.FOLDER_NUS_DATASET1,
                     PRConstant.FOLDER_NUS_DATASET2,
-                    PRConstant.FOLDER_MAS_DATASET1 + "[Training] Paper_Before_2006.csv",
-                    PRConstant.FOLDER_MAS_DATASET1 + "[Training] Paper_Cite_Paper_Before_2006.csv",
-                    PRConstant.FOLDER_MAS_DATASET1 + "[Testing] 1000Authors.csv",
-                    //PRConstant.FOLDER_MAS_DATASET1 + "[Testing] Ground_Truth_2006_2008.csv",
-                    PRConstant.FOLDER_MAS_DATASET1 + "[Testing] Ground_Truth_2006_2008_New_Citation.csv",
-                    PRConstant.FOLDER_MAS_DATASET1 + "[Training] Author_Paper_Before_2006.csv",
-                    PRConstant.FOLDER_MAS_DATASET1 + "[Training] Author_Cite_Paper_Before_2006.csv",
-                    PRConstant.FOLDER_MAS_DATASET1 + "Text",
-                    PRConstant.FOLDER_MAS_DATASET1 + "PreProcessedPaper",
-                    PRConstant.FOLDER_MAS_DATASET1 + "Sequence",
-                    PRConstant.FOLDER_MAS_DATASET1 + "Vector",
-                    PRConstant.FOLDER_MAS_DATASET1 + "MahoutCF",
+                    // For CBF
+                    PRConstant.FOLDER_MAS_DATASET1 + "T0-T1\\[Training] Paper_Before_2006.csv",
+                    PRConstant.FOLDER_MAS_DATASET1 + "T0-T1\\[Training] Paper_Cite_Paper_Before_2006.csv",
+                    // Testing data
+                    PRConstant.FOLDER_MAS_DATASET1 + "T0-T1\\[Testing] 1000Authors.csv",
+                    //PRConstant.FOLDER_MAS_DATASET1 + "T0-T1\\[Testing] Ground_Truth_2006_2008.csv",
+                    PRConstant.FOLDER_MAS_DATASET1 + "T0-T1\\[Testing] Ground_Truth_2006_2008_New_Citation.csv",
+                    // Author Profile
+                    PRConstant.FOLDER_MAS_DATASET1 + "T0-T1\\[Training] Author_Paper_Before_2006.csv",
+                    // For CF
+                    PRConstant.FOLDER_MAS_DATASET1 + "T0-T1\\[Training] Author_Cite_Paper_Before_2006.csv", 
+                    // Mahout
+                    PRConstant.FOLDER_MAS_DATASET1 + "T0-T1\\TF-IDF\\Text",
+                    PRConstant.FOLDER_MAS_DATASET1 + "T0-T1\\TF-IDF\\PreProcessedPaper",
+                    PRConstant.FOLDER_MAS_DATASET1 + "T0-T1\\TF-IDF\\Sequence",
+                    PRConstant.FOLDER_MAS_DATASET1 + "T0-T1\\TF-IDF\\Vector",
+                    PRConstant.FOLDER_MAS_DATASET1 + "T0-T1\\MahoutCF",
+                    // Result
                     "EvaluationResult\\EvaluationResult_Maintain_NewCitation.xls",
-                    1,
-                    PRConstant.FOLDER_MAS_DATASET1 + "ML\\MLMatrix.csv");
+                    1);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -141,8 +146,7 @@ public class PRCentralController {
             String fileNameGroundTruth, String fileNameAuthorship, String fileNameAuthorCitePaper,
             String dirPapers, String dirPreProcessedPaper, String sequenceDir, String vectorDir,
             String MahoutCFDir, String fileNameEvaluationResult,
-            int recommendationMethod,
-            String fileNameMLMatrix) throws Exception {
+            int recommendationMethod) throws Exception {
 
         System.out.println("Begin recommendation flow for Dataset " + DatasetToUse + " with recommendation method " + recommendationMethod + " ...");
         long startRecommendationFlowTime = System.nanoTime();
