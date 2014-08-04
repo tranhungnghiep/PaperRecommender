@@ -112,7 +112,7 @@ public class PRCentralController {
                     PRConstant.FOLDER_MAS_DATASET1 + "T0-T1\\TF-IDF\\Vector",
                     PRConstant.FOLDER_MAS_DATASET1 + "T0-T1\\MahoutCF",
                     // Result
-                    "EvaluationResult\\EvaluationResult_Maintain_NewCitation.xls",
+                    "EvaluationResult\\EvaluationResult_NewCitation.xls",
                     1);
         } catch (Exception e) {
             e.printStackTrace();
@@ -207,7 +207,7 @@ public class PRCentralController {
                 System.out.println("End reading paper list.");
                 // Step 3: 
                 // Compute TF-IDF for MAS papers.
-                //PaperFVComputation.computeTFIDFFromPaperAbstract(papers, dirPapers, dirPreProcessedPaper, sequenceDir, vectorDir);
+                CBFPaperFVComputation.computeTFIDFFromPaperAbstract(papers, dirPapers, dirPreProcessedPaper, sequenceDir, vectorDir);
                 CBFPaperFVComputation.readTFIDFFromMahoutFile(papers, vectorDir);
                 // Clear no longer in use objects.
                 // Always clear abstract.
