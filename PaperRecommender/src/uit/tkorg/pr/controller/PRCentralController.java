@@ -233,13 +233,19 @@ public class PRCentralController {
         // parameters for cf method: 1: KNN Pearson, 2: KNN Cosine, 3: SVD
         int cfMethod = 1;
         
-        // parameters for hybrid method: 1: combine linear, 2: combine based on confidence, 
+        // parameters for hybrid method
+        // combinationScheme: 1: combine linear, 2: combine based on confidence, 
         // 3: combine based on confidence and linear
         int combinationScheme;
+        // weighting when combine linear.
         float alpha;
         
         // parameters for trust based method
-        int howToTrust;
+        // howToTrustAuthor: 1: combine linear citation author and coauthor, 2: meta trust citation author of coauthor
+        // 3: meta trust citation author of citation author.
+        int howToTrustAuthor;
+        // howToTrustPaper: 1: average trust value of authors, 2: max trust value of authors.
+        int howToTrustPaper;
 
         // Recommendation.
         if (recommendationMethod == 1) {
@@ -286,22 +292,39 @@ public class PRCentralController {
             alpha = (float) 0.9;
             CBFCF.computeCBFCFCombinationAndPutIntoModelForAuthorList(authorTestSet, alpha, combinationScheme);
             CBFCF.cbfcfHybridRecommendToAuthorList(authorTestSet, topNRecommend);
-            algorithmName = "LINEAR COMBINATION, alpha = " + alpha + " combinationScheme = " + combinationScheme;
+            algorithmName = "CBF-CF LINEAR COMBINATION:"
+                    + " combinationScheme = " + combinationScheme
+                    + " alpha = " + alpha;
             //</editor-fold>
         } else if (recommendationMethod == 4) {
             //<editor-fold defaultstate="collapsed" desc="TRUST BASED">
             TrustDataModelPreparation.computeCoAuthorRSSHM(authorTestSet, fileNameAuthorship, fileNamePapers);
             HashMap<String, HashMap<String, Float>> referenceRSSNet = new HashMap<>();
             TrustDataModelPreparation.computeCitationAuthorRSSHM(authorTestSet, fileNameAuthorship, fileNamePaperCitePaper, referenceRSSNet);
+            
             combinationScheme = 1;
-            alpha = (float) 0.0;
-            howToTrust = 2;
-//            TrustHybrid.computeTrustedAuthorHMLinearCombinationAndPutIntoModelForAuthorList(authorTestSet, alpha, combinationScheme);
-            TrustHybrid.computeMetaTrustedAuthorHMAndPutIntoModelForAuthorList(authorTestSet, referenceRSSNet, alpha);
-            TrustHybrid.computeTrustedPaperHMAndPutIntoModelForAuthorList(authorTestSet, howToTrust);
+            alpha = 0f;
+            howToTrustAuthor = 1;
+            howToTrustPaper = 2;
+            
+            if (howToTrustAuthor == 1) {
+                TrustHybrid.computeTrustedAuthorHMLinearCombinationAndPutIntoModelForAuthorList(authorTestSet, alpha, combinationScheme);
+            } else if (howToTrustAuthor == 2) {
+                int metaTrustType = 1;
+                TrustHybrid.computeMetaTrustedAuthorHMAndPutIntoModelForAuthorList(authorTestSet, referenceRSSNet, metaTrustType, alpha);
+            } else if (howToTrustAuthor == 3) {
+                int metaTrustType = 2;
+                TrustHybrid.computeMetaTrustedAuthorHMAndPutIntoModelForAuthorList(authorTestSet, referenceRSSNet, metaTrustType, alpha);
+            }
+            
+            TrustHybrid.computeTrustedPaperHMAndPutIntoModelForAuthorList(authorTestSet, howToTrustPaper);
 
             TrustHybrid.trustRecommendToAuthorList(authorTestSet, topNRecommend);
-            algorithmName = "Trust Based Method alpha = " + alpha + " combinationScheme = " + combinationScheme + "howToTrust = " + howToTrust;
+            algorithmName = "Trust Based Method:"
+                    + " combinationScheme = " + combinationScheme 
+                    + " alpha = " + alpha 
+                    + " howToTrustAuthor = " + howToTrustAuthor 
+                    + " howToTrustPaper = " + howToTrustPaper;
             //</editor-fold>
         } else if (recommendationMethod == 5) {
             //<editor-fold defaultstate="collapsed" desc="TRUST BASED LINEAR COMBINATION">           
@@ -314,19 +337,34 @@ public class PRCentralController {
             TrustDataModelPreparation.computeCoAuthorRSSHM(authorTestSet, fileNameAuthorship, fileNamePapers);
             HashMap<String, HashMap<String, Float>> referenceRSSNet = new HashMap<>();
             TrustDataModelPreparation.computeCitationAuthorRSSHM(authorTestSet, fileNameAuthorship, fileNamePaperCitePaper, referenceRSSNet);
-            combinationScheme = 4;
-            alpha = (float) 0.0;
-            howToTrust = 2;
-//            TrustHybrid.computeTrustedAuthorHMLinearCombinationAndPutIntoModelForAuthorList(authorTestSet, alpha, combinationScheme);
-            TrustHybrid.computeMetaTrustedAuthorHMAndPutIntoModelForAuthorList(authorTestSet, referenceRSSNet, alpha);
-            TrustHybrid.computeTrustedPaperHMAndPutIntoModelForAuthorList(authorTestSet, howToTrust);
 
-            combinationScheme = 4;
+            combinationScheme = 1;
+            alpha = 0f;
+            howToTrustAuthor = 1;
+            howToTrustPaper = 2;
+            
+            if (howToTrustAuthor == 1) {
+                TrustHybrid.computeTrustedAuthorHMLinearCombinationAndPutIntoModelForAuthorList(authorTestSet, alpha, combinationScheme);
+            } else if (howToTrustAuthor == 2) {
+                int metaTrustType = 1;
+                TrustHybrid.computeMetaTrustedAuthorHMAndPutIntoModelForAuthorList(authorTestSet, referenceRSSNet, metaTrustType, alpha);
+            } else if (howToTrustAuthor == 3) {
+                int metaTrustType = 2;
+                TrustHybrid.computeMetaTrustedAuthorHMAndPutIntoModelForAuthorList(authorTestSet, referenceRSSNet, metaTrustType, alpha);
+            }
+            
+            TrustHybrid.computeTrustedPaperHMAndPutIntoModelForAuthorList(authorTestSet, howToTrustPaper);
+
+            combinationScheme = 1;
             alpha = (float) 0.3;
             TrustHybrid.computeCBFTrustLinearCombinationAndPutIntoModelForAuthorList(authorTestSet, alpha, combinationScheme);
 
             TrustHybrid.trustHybridRecommendToAuthorList(authorTestSet, topNRecommend);
-            algorithmName = "Trust Based combined with CBF, alpha = " + alpha + " combinationScheme = " + combinationScheme + "howToTrust = " + howToTrust;
+            algorithmName = "Trust Based combined with CBF:"
+                    + " howToTrustAuthor = " + howToTrustAuthor
+                    + " howToTrustPaper = " + howToTrustPaper
+                    + " combinationScheme = " + combinationScheme 
+                    + " alpha = " + alpha;
             //</editor-fold>
         }
 
@@ -389,6 +427,7 @@ public class PRCentralController {
             HashMap<String, Author> authorTestSet, String fileNameEvaluationResult) throws Exception {
 
         // Compute evaluation index.
+        double mp5 = Evaluator.computeMeanPrecisionTopN(authorTestSet, 5);
         double mp10 = Evaluator.computeMeanPrecisionTopN(authorTestSet, 10);
         double mp20 = Evaluator.computeMeanPrecisionTopN(authorTestSet, 20);
         double mp30 = Evaluator.computeMeanPrecisionTopN(authorTestSet, 30);
@@ -413,6 +452,7 @@ public class PRCentralController {
                 .append("Dataset").append("\t")
                 .append("Algorithm").append("\t")
                 .append("Running time in second").append("\t")
+                .append("MP@5").append("\t")
                 .append("MP@10").append("\t")
                 .append("MP@20").append("\t")
                 .append("MP@30").append("\t")
@@ -434,6 +474,7 @@ public class PRCentralController {
                 .append(datasetName).append("\t")
                 .append(algorithmName).append("\t")
                 .append(estimatedRecommendationFlowTime / 1000000000).append("\t")
+                .append(mp5).append("\t")
                 .append(mp10).append("\t")
                 .append(mp20).append("\t")
                 .append(mp30).append("\t")
