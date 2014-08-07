@@ -112,7 +112,7 @@ public class PRCentralController {
                     PRConstant.FOLDER_MAS_DATASET1 + "T0-T1\\TF-IDF\\Vector",
                     PRConstant.FOLDER_MAS_DATASET1 + "T0-T1\\MahoutCF",
                     // Result
-                    "EvaluationResult\\EvaluationResult_NewCitation.xls",
+                    "EvaluationResult\\EvaluationResult_NewCitation_070814.xls",
                     1);
         } catch (Exception e) {
             e.printStackTrace();
@@ -195,7 +195,7 @@ public class PRCentralController {
             System.out.println("Reading author test set elapsed time: " + estimatedTime / 1000000000 + " seconds");
             System.out.println("End reading author test set.");
             // When method is CF, do not read paper content.
-            if (recommendationMethod != 2) {
+            if (recommendationMethod != 2) { // recommendationMethod == 2 == CF
                 // Step 2:
                 // - Read content of papers from [Training] Paper_Before_2006.csv
                 // - Store metadata of all papers into HashMap<String, Paper> papers
@@ -207,7 +207,7 @@ public class PRCentralController {
                 System.out.println("End reading paper list.");
                 // Step 3: 
                 // Compute TF-IDF for MAS papers.
-                CBFPaperFVComputation.computeTFIDFFromPaperAbstract(papers, dirPapers, dirPreProcessedPaper, sequenceDir, vectorDir);
+                //CBFPaperFVComputation.computeTFIDFFromPaperAbstract(papers, dirPapers, dirPreProcessedPaper, sequenceDir, vectorDir);
                 CBFPaperFVComputation.readTFIDFFromMahoutFile(papers, vectorDir);
                 // Clear no longer in use objects.
                 // Always clear abstract.
@@ -221,11 +221,14 @@ public class PRCentralController {
         //</editor-fold>
 
         // parameters for CBF methods.
-        int combiningSchemePaperOfAuthor = 0;
+        // 0: itself content, 1: itself content + ref; 2: itself content + citations; 
+        // 3: itself content + content of references + content of citations.
+        int combiningSchemePaperOfAuthor = 1; 
+     
         int weightingSchemePaperOfAuthor = 0;
-        int timeAwareScheme = 1;
-        double gamma = 0.3;
-        int combiningSchemePaperTestSet = 0;
+        int timeAwareScheme = 0;
+        double gamma = 0.0;
+        int combiningSchemePaperTestSet = combiningSchemePaperOfAuthor;
         int weightingSchemePaperTestSet = 0;
         int similarityScheme = 0;
         double pruning = 0.0;
@@ -429,15 +432,24 @@ public class PRCentralController {
         // Compute evaluation index.
         double mp5 = Evaluator.computeMeanPrecisionTopN(authorTestSet, 5);
         double mp10 = Evaluator.computeMeanPrecisionTopN(authorTestSet, 10);
+        double mp15 = Evaluator.computeMeanPrecisionTopN(authorTestSet, 15);
         double mp20 = Evaluator.computeMeanPrecisionTopN(authorTestSet, 20);
+        double mp25 = Evaluator.computeMeanPrecisionTopN(authorTestSet, 25);
         double mp30 = Evaluator.computeMeanPrecisionTopN(authorTestSet, 30);
         double mp40 = Evaluator.computeMeanPrecisionTopN(authorTestSet, 40);
         double mp50 = Evaluator.computeMeanPrecisionTopN(authorTestSet, 50);
-        double mr50 = Evaluator.computeMeanRecallTopN(authorTestSet, 50);
+        double mr5 = Evaluator.computeMeanRecallTopN(authorTestSet, 5);
+        double mr10 = Evaluator.computeMeanRecallTopN(authorTestSet, 10);
+        double mr15 = Evaluator.computeMeanRecallTopN(authorTestSet, 15);
+        double mr20 = Evaluator.computeMeanRecallTopN(authorTestSet, 20);
+        double mr25 = Evaluator.computeMeanRecallTopN(authorTestSet, 25);
         double mr100 = Evaluator.computeMeanRecallTopN(authorTestSet, 100);
         double f1 = Evaluator.computeMeanFMeasure(authorTestSet, 1);
+        double map5 = Evaluator.computeMAP(authorTestSet, 5);
         double map10 = Evaluator.computeMAP(authorTestSet, 10);
+        double map15 = Evaluator.computeMAP(authorTestSet, 15);
         double map20 = Evaluator.computeMAP(authorTestSet, 20);
+        double map25 = Evaluator.computeMAP(authorTestSet, 25);
         double map30 = Evaluator.computeMAP(authorTestSet, 30);
         double map40 = Evaluator.computeMAP(authorTestSet, 40);
         double map50 = Evaluator.computeMAP(authorTestSet, 50);
@@ -454,15 +466,24 @@ public class PRCentralController {
                 .append("Running time in second").append("\t")
                 .append("MP@5").append("\t")
                 .append("MP@10").append("\t")
+                .append("MP@15").append("\t")
                 .append("MP@20").append("\t")
+                .append("MP@25").append("\t")
                 .append("MP@30").append("\t")
                 .append("MP@40").append("\t")
                 .append("MP@50").append("\t")
-                .append("MR@50").append("\t")
+                .append("MR@5").append("\t")
+                .append("MR@10").append("\t")
+                .append("MR@15").append("\t")
+                .append("MR@20").append("\t")
+                .append("MR@25").append("\t")
                 .append("MR@100").append("\t")
                 .append("F1").append("\t")
+                .append("MAP@5").append("\t")
                 .append("MAP@10").append("\t")
+                .append("MAP@15").append("\t")
                 .append("MAP@20").append("\t")
+                .append("MAP@25").append("\t")
                 .append("MAP@30").append("\t")
                 .append("MAP@40").append("\t")
                 .append("MAP@50").append("\t")
@@ -476,15 +497,24 @@ public class PRCentralController {
                 .append(estimatedRecommendationFlowTime / 1000000000).append("\t")
                 .append(mp5).append("\t")
                 .append(mp10).append("\t")
+                .append(mp15).append("\t")
                 .append(mp20).append("\t")
+                .append(mp25).append("\t")
                 .append(mp30).append("\t")
                 .append(mp40).append("\t")
                 .append(mp50).append("\t")
-                .append(mr50).append("\t")
+                .append(mr5).append("\t")
+                .append(mr10).append("\t")
+                .append(mr15).append("\t")
+                .append(mr20).append("\t")
+                .append(mr25).append("\t")
                 .append(mr100).append("\t")
                 .append(f1).append("\t")
+                .append(map5).append("\t")
                 .append(map10).append("\t")
+                .append(map15).append("\t")
                 .append(map20).append("\t")
+                .append(map25).append("\t")
                 .append(map30).append("\t")
                 .append(map40).append("\t")
                 .append(map50).append("\t")
