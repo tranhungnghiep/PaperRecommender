@@ -221,16 +221,20 @@ public class PRCentralController {
         //</editor-fold>
 
         // parameters for CBF methods.
-        // 0: itself content, 1: itself content + ref; 2: itself content + citations; 
-        // 3: itself content + content of references + content of citations.
-        int combiningSchemePaperOfAuthor = 1; 
-     
+        // combiningSchemePaperOfAuthor: 0: itself, 1: itself + ref; 2: itself + citations; 
+        // 3: itself + refs + citations.
+        int combiningSchemePaperOfAuthor = 1;
+        // weightingSchemePaperOfAuthor: 0: linear; 1: cosine; 2: rpy.
         int weightingSchemePaperOfAuthor = 0;
+        // timeAwareScheme: 0: unaware; 1: aware.
         int timeAwareScheme = 0;
+        // gamma: forgetting factor when aware of time.
         double gamma = 0.0;
         int combiningSchemePaperTestSet = combiningSchemePaperOfAuthor;
-        int weightingSchemePaperTestSet = 0;
+        int weightingSchemePaperTestSet = weightingSchemePaperOfAuthor;
+        // similarityScheme: 0: cosine
         int similarityScheme = 0;
+        // Threshold to prune citation and reference paper when combining.
         double pruning = 0.0;
 
         // parameters for cf method: 1: KNN Pearson, 2: KNN Cosine, 3: SVD
