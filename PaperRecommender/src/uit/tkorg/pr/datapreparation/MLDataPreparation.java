@@ -36,6 +36,7 @@ public class MLDataPreparation {
     public static void main(String[] args) {
         try {
             // Training Set
+            System.out.println("START EXPORTING THE TRAINING SET");
             runExportClassificationMatrix(
                     // For CBF
                     PRConstant.FOLDER_MAS_DATASET1 + "T0-T1\\[Training] Paper_Before_2006.csv",
@@ -59,7 +60,10 @@ public class MLDataPreparation {
                     // Filename for Testset with 10 Papers for each author
                     null,
                     1);
+            System.out.println("END EXPORTING THE TRAINING SET");
+            
             // Test Set
+            System.out.println("START EXPORTING THE TESTING SET");
             runExportClassificationMatrix(
                     // For CBF
                     PRConstant.FOLDER_MAS_DATASET1 + "T1-T2\\[Training] Paper_Before_2009.csv",
@@ -83,6 +87,8 @@ public class MLDataPreparation {
                     // Filename for Testset with 10 Papers for each author
                     null,
                     1);
+            System.out.println("END EXPORTING THE TESTING SET");
+            System.out.println("DONE");
         } catch (Exception e) {
             e.printStackTrace();
         }
