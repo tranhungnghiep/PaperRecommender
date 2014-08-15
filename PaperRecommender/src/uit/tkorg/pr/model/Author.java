@@ -487,8 +487,9 @@ public class Author implements Serializable {
     /**
      * @param coAuthorRSSHM the coAuthorRSSHM to set
      */
-    public void setCoAuthorRSSHM(HashMap<String, Float> coAuthorRSSHM) {
+    public void setCoAuthorRSSHM(HashMap<String, Float> coAuthorRSSHM) throws Exception {
         this.coAuthorRSSHM = coAuthorRSSHM;
+        HashMapUtility.minNormalizeHashMap(this.coAuthorRSSHM);
     }
 
     /**
@@ -501,8 +502,9 @@ public class Author implements Serializable {
     /**
      * @param citationAuthorRSSHM the citationAuthorRSSHM to set
      */
-    public void setCitationAuthorRSSHM(HashMap<String, Float> citationAuthorRSSHM) {
+    public void setCitationAuthorRSSHM(HashMap<String, Float> citationAuthorRSSHM) throws Exception {
         this.citationAuthorRSSHM = citationAuthorRSSHM;
+        HashMapUtility.minNormalizeHashMap(this.citationAuthorRSSHM);
     }
 
     /**

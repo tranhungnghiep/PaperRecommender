@@ -121,6 +121,7 @@ public class TrustHybrid {
                     try {
                         final HashMap<String, Float> metaTrustAuthorHM = new HashMap<>();
                         computeMetaTrustedAuthorsForOneAuthor(referenceRSSNet, authorObj, metaTrustAuthorHM, metaTrustType);
+                        HashMapUtility.minNormalizeHashMap(metaTrustAuthorHM);
                         HashMapUtility.combineLinearTwoHashMap(authorObj.getCitationAuthorRSSHM(), 
                                 metaTrustAuthorHM, alpha, authorObj.getTrustedAuthorHM());
                     } catch (Exception ex) {
