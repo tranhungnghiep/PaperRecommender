@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import uit.tkorg.utility.general.HashMapUtility;
 
 /**
  *
@@ -441,8 +442,9 @@ public class Author implements Serializable {
     /**
      * @param cbfSimHM the cbfSimHM to set
      */
-    public void setCbfSimHM(HashMap<String, Float> cbfSimHM) {
+    public void setCbfSimHM(HashMap<String, Float> cbfSimHM) throws Exception {
         this.cbfSimHM = cbfSimHM;
+        HashMapUtility.minNormalizeHashMap(this.cbfSimHM);
     }
 
     /**
@@ -455,8 +457,9 @@ public class Author implements Serializable {
     /**
      * @param cfRatingHM the cfRatingHM to set
      */
-    public void setCfRatingHM(HashMap<String, Float> cfRatingHM) {
+    public void setCfRatingHM(HashMap<String, Float> cfRatingHM) throws Exception {
         this.cfRatingHM = cfRatingHM;
+        HashMapUtility.minNormalizeHashMap(this.cfRatingHM);
     }
 
     /**
@@ -469,8 +472,9 @@ public class Author implements Serializable {
     /**
      * @param cbfCfHybridHM the cbfCfHybridHM to set
      */
-    public void setCbfCfHybridHM(HashMap<String, Float> cbfCfHybridHM) {
+    public void setCbfCfHybridHM(HashMap<String, Float> cbfCfHybridHM) throws Exception {
         this.cbfCfHybridHM = cbfCfHybridHM;
+        HashMapUtility.minNormalizeHashMap(this.cbfCfHybridHM);
     }
 
     /**
@@ -511,8 +515,9 @@ public class Author implements Serializable {
     /**
      * @param trustedAuthorHM the trustedAuthorHM to set
      */
-    public void setTrustedAuthorHM(HashMap<String, Float> trustedAuthorHM) {
+    public void setTrustedAuthorHM(HashMap<String, Float> trustedAuthorHM) throws Exception {
         this.trustedAuthorHM = trustedAuthorHM;
+        HashMapUtility.minNormalizeHashMap(this.trustedAuthorHM);
     }
 
     /**
@@ -525,8 +530,9 @@ public class Author implements Serializable {
     /**
      * @param trustedPaperHM the trustedPaperHM to set
      */
-    public void setTrustedPaperHM(HashMap<String, Float> trustedPaperHM) {
+    public void setTrustedPaperHM(HashMap<String, Float> trustedPaperHM) throws Exception {
         this.trustedPaperHM = trustedPaperHM;
+        HashMapUtility.minNormalizeHashMap(this.trustedPaperHM);
     }
 
     /**
@@ -539,8 +545,9 @@ public class Author implements Serializable {
     /**
      * @param finalRecommendingScoreHM the finalRecommendingScoreHM to set
      */
-    public void setFinalRecommendingScoreHM(HashMap<String, Float> finalRecommendingScoreHM) {
+    public void setFinalRecommendingScoreHM(HashMap<String, Float> finalRecommendingScoreHM) throws Exception {
         this.finalRecommendingScoreHM = finalRecommendingScoreHM;
+        HashMapUtility.minNormalizeHashMap(this.finalRecommendingScoreHM);
     }
 
     /**
@@ -553,7 +560,8 @@ public class Author implements Serializable {
     /**
      * @param cbfTrustHybridHM the cbfTrustHybridHM to set
      */
-    public void setCbfTrustHybridHM(HashMap<String, Float> cbfTrustHybridHM) {
+    public void setCbfTrustHybridHM(HashMap<String, Float> cbfTrustHybridHM) throws Exception {
         this.cbfTrustHybridHM = cbfTrustHybridHM;
+        HashMapUtility.minNormalizeHashMap(this.cbfTrustHybridHM);
     }
 }
