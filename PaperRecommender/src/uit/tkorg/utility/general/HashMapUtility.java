@@ -240,6 +240,10 @@ public class HashMapUtility {
     }
 
     public static void minNormalizeHashMap(HashMap<String, Float> hm) throws Exception {
+        if ((hm == null) || (hm.isEmpty())) {
+            return;
+        }
+        
         Float min = Collections.min(hm.values());
         Float max = Collections.max(hm.values());
         
