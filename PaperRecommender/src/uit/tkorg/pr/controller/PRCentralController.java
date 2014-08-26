@@ -28,6 +28,7 @@ import uit.tkorg.pr.method.hybrid.CBFCF;
 import uit.tkorg.pr.method.hybrid.TrustHybrid;
 import uit.tkorg.pr.model.Author;
 import uit.tkorg.pr.model.Paper;
+import uit.tkorg.pr.utility.PaperFilterUtility;
 import uit.tkorg.utility.general.BinaryFileUtility;
 import uit.tkorg.utility.textvectorization.TextPreprocessUtility;
 import uit.tkorg.utility.textvectorization.TextVectorizationByMahoutTerminalUtility;
@@ -266,6 +267,11 @@ public class PRCentralController {
                     timeAwareScheme, gamma,
                     combiningSchemePaperTestSet, weightingSchemePaperTestSet, similarityScheme,
                     pruning);
+            
+            // Filter old paper.
+            int cutYear = 2003;
+            PaperFilterUtility.filterOldPaper(authorTestSet, papers, cutYear);
+            
             FeatureVectorSimilarity.generateRecommendationForAuthorList(authorTestSet, topNRecommend);
 
             estimatedTime = System.nanoTime() - startTime;
