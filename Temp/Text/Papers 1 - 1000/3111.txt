@@ -1,0 +1,1 @@
+Abstract: this paperas &quot;the first clear demonstration of a probabilistic parser outperforming a trigram model&quot; (pg. 457), itdoes not discuss what features of the algorithm lead to its superior results

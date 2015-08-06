@@ -1,0 +1,1 @@
+We present a system, TimeMines, that automatically generatestimelines from date-tagged free text corpora. TimeMinesdetects, ranks, and groups semantic features based ontheir statistical properties. We use these features to discoversets of related stories that deal with a single topic
