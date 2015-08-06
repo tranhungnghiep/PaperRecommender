@@ -1,0 +1,4 @@
+Author: 4
+Number of paper: 113 bai( dc viet truoc nam 20006-nguon MAS)
+Groundtruth1 2006-2008: cac bai co the dc trich dan truoc do
+Groundtruth2 2006-2008: cac bai chua dc trich dan truoc do hoac moi dc trich dan sau nay
