@@ -35,60 +35,20 @@ public class MLDataPreparation {
 
     public static void main(String[] args) {
         try {
-            // Training Set
-            System.out.println("START EXPORTING THE TRAINING SET");
             runExportClassificationMatrix(
-                    // For CBF
-                    PRConstant.FOLDER_MAS_DATASET1 + "T0-T1\\[Training] Paper_Before_2006.csv",
-                    PRConstant.FOLDER_MAS_DATASET1 + "T0-T1\\[Training] Paper_Cite_Paper_Before_2006.csv",
-                    // Testing data
-                    PRConstant.FOLDER_MAS_DATASET1 + "T0-T1\\[Testing] 1000Authors.csv",
-                    //PRConstant.FOLDER_MAS_DATASET1 + "T0-T1\\[Testing] Ground_Truth_2006_2008.csv",
-                    PRConstant.FOLDER_MAS_DATASET1 + "T0-T1\\[Testing] Ground_Truth_2006_2008_New_Citation.csv",
-                    // Author Profile
-                    PRConstant.FOLDER_MAS_DATASET1 + "T0-T1\\[Training] Author_Paper_Before_2006.csv",
-                    // For CF
-                    PRConstant.FOLDER_MAS_DATASET1 + "T0-T1\\[Training] Author_Cite_Paper_Before_2006.csv", 
-                    // Mahout
-                    PRConstant.FOLDER_MAS_DATASET1 + "T0-T1\\TF-IDF\\Text",
-                    PRConstant.FOLDER_MAS_DATASET1 + "T0-T1\\TF-IDF\\PreProcessedPaper",
-                    PRConstant.FOLDER_MAS_DATASET1 + "T0-T1\\TF-IDF\\Sequence",
-                    PRConstant.FOLDER_MAS_DATASET1 + "T0-T1\\TF-IDF\\Vector",
-                    PRConstant.FOLDER_MAS_DATASET1 + "T0-T1\\MahoutCF",
-                    // Result
-                    PRConstant.FOLDER_MAS_DATASET1 + "ML\\MLMatrixTrainingSet.csv",
-                    // Filename for Testset with 10 Papers for each author
-                    null,
-                    1);
-            System.out.println("END EXPORTING THE TRAINING SET");
-            
-            // Test Set
-            System.out.println("START EXPORTING THE TESTING SET");
-            runExportClassificationMatrix(
-                    // For CBF
-                    PRConstant.FOLDER_MAS_DATASET1 + "T1-T2\\[Training] Paper_Before_2009.csv",
-                    PRConstant.FOLDER_MAS_DATASET1 + "T1-T2\\[Training] Paper_Cite_Paper_Before_2009.csv",
-                    // Testing data
-                    PRConstant.FOLDER_MAS_DATASET1 + "T1-T2\\[Testing] 1000Authors.csv",
-                    //PRConstant.FOLDER_MAS_DATASET1 + "T1-T2\\[Testing] Ground_Truth_2009_2010.csv",
-                    PRConstant.FOLDER_MAS_DATASET1 + "T1-T2\\[Testing] Ground_Truth_2009_2010_New_Citation.csv",
-                    // Author Profile
-                    PRConstant.FOLDER_MAS_DATASET1 + "T1-T2\\[Training] Author_Paper_Before_2009.csv",
-                    // For CF
-                    PRConstant.FOLDER_MAS_DATASET1 + "T1-T2\\[Training] Author_Cite_Paper_Before_2009.csv", 
-                    // Mahout
-                    PRConstant.FOLDER_MAS_DATASET1 + "T1-T2\\TF-IDF\\Text",
-                    PRConstant.FOLDER_MAS_DATASET1 + "T1-T2\\TF-IDF\\PreProcessedPaper",
-                    PRConstant.FOLDER_MAS_DATASET1 + "T1-T2\\TF-IDF\\Sequence",
-                    PRConstant.FOLDER_MAS_DATASET1 + "T1-T2\\TF-IDF\\Vector",
-                    PRConstant.FOLDER_MAS_DATASET1 + "T1-T2\\MahoutCF",
-                    // Result
-                    PRConstant.FOLDER_MAS_DATASET1 + "ML\\MLMatrixTestSet.csv",
-                    // Filename for Testset with 10 Papers for each author
-                    null,
-                    1);
-            System.out.println("END EXPORTING THE TESTING SET");
-            System.out.println("DONE");
+                    PRConstant.FOLDER_MAS_DATASET1 + "[Training] Paper_Before_2006.csv",
+                    PRConstant.FOLDER_MAS_DATASET1 + "[Training] Paper_Cite_Paper_Before_2006.csv",
+                    PRConstant.FOLDER_MAS_DATASET1 + "[Testing] 1000Authors.csv",
+                    //PRConstant.FOLDER_MAS_DATASET1 + "[Testing] Ground_Truth_2006_2008.csv",
+                    PRConstant.FOLDER_MAS_DATASET1 + "[Testing] Ground_Truth_2006_2008_New_Citation.csv",
+                    PRConstant.FOLDER_MAS_DATASET1 + "[Training] Author_Paper_Before_2006.csv",
+                    PRConstant.FOLDER_MAS_DATASET1 + "[Training] Author_Cite_Paper_Before_2006.csv",
+                    PRConstant.FOLDER_MAS_DATASET1 + "Text",
+                    PRConstant.FOLDER_MAS_DATASET1 + "PreProcessedPaper",
+                    PRConstant.FOLDER_MAS_DATASET1 + "Sequence",
+                    PRConstant.FOLDER_MAS_DATASET1 + "Vector",
+                    PRConstant.FOLDER_MAS_DATASET1 + "MahoutCF",
+                    PRConstant.FOLDER_MAS_DATASET1 + "ML\\MLMatrix.csv");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -99,8 +59,7 @@ public class MLDataPreparation {
             String fileNameGroundTruth, String fileNameAuthorship, String fileNameAuthorCitePaper,
             String dirPapers, String dirPreProcessedPaper, String sequenceDir, String vectorDir,
             String MahoutCFDir,
-            String fileNameTraingSetMLMatrix, String fileNameTestSetMLMatrix,
-            int testingData) throws Exception {
+            String fileNameMLMatrix) throws Exception {
 
         HashMap<String, Author> authorTestSet = new HashMap<>();
         HashMap<String, Paper> papers = new HashMap<>();
@@ -117,7 +76,7 @@ public class MLDataPreparation {
         papers = MASDataset1.readPaperList(fileNamePapers, fileNamePaperCitePaper);
         // Step 3: 
         // Compute TF-IDF for MAS papers.
-        CBFPaperFVComputation.computeTFIDFFromPaperAbstract(papers, dirPapers, dirPreProcessedPaper, sequenceDir, vectorDir);
+        //PaperFVComputation.computeTFIDFFromPaperAbstract(papers, dirPapers, dirPreProcessedPaper, sequenceDir, vectorDir);
         CBFPaperFVComputation.readTFIDFFromMahoutFile(papers, vectorDir);
         // Clear no longer in use objects.
         // Always clear abstract.
@@ -175,14 +134,10 @@ public class MLDataPreparation {
         // Compute paper quality.
         HashMap<String, Paper> paperTestSet = CBFPaperFVComputation.extractPapers(papers, paperIdsInTestSet);
         PaperQualityComputation.computeQualityValueForAllPapers(paperTestSet);
-        //</editor-fold>
 
         // Export Classification matrix.
-        if (testingData == 1) {
-            MLDataPreparation.exportClassificationMatrix(authorTestSet, paperTestSet, fileNameTraingSetMLMatrix);
-        } else if (testingData == 2) {
-            MLDataPreparation.exportClassificationMatrixSeparatedTestSet(authorTestSet, paperTestSet, fileNameTraingSetMLMatrix, fileNameTestSetMLMatrix, 10);
-        }
+        MLDataPreparation.exportClassificationMatrix(authorTestSet, paperTestSet, fileNameMLMatrix);
+        //</editor-fold>
     }
 
     public static void exportClassificationMatrix(HashMap<String, Author> authors,
@@ -236,74 +191,6 @@ public class MLDataPreparation {
                             .append(groundTruth)
                             .append("\r\n");
                     bw.write(content.toString());
-                }
-            }
-        }
-    }
-
-    public static void exportClassificationMatrixSeparatedTestSet(HashMap<String, Author> authors,
-            HashMap<String, Paper> papers,
-            String fileNameTrainingSetMLMatrix,
-            String fileNameTestSetMLMatrix,
-            int numberOfItemsInTestSet) throws Exception {
-        FileUtils.deleteQuietly(new File(fileNameTrainingSetMLMatrix));
-        FileUtils.write(new File(fileNameTrainingSetMLMatrix), "");
-        FileUtils.deleteQuietly(new File(fileNameTestSetMLMatrix));
-        FileUtils.write(new File(fileNameTestSetMLMatrix), "");
-
-        StringBuilder content = new StringBuilder();
-        content.append("AuthorId").append("\t")
-                .append("PaperId").append("\t")
-                .append("CBFSimValue").append("\t")
-                .append("CFRatingValue").append("\t")
-                .append("TrustPaperValue").append("\t")
-                .append("PaperQualityValue").append("\t")
-                .append("TemporalCitationTrendValue").append("\t")
-                .append("GroundTruth")
-                .append("\r\n");
-        try (BufferedWriter bwTrain = new BufferedWriter(new FileWriter(fileNameTrainingSetMLMatrix));
-                BufferedWriter bwTest = new BufferedWriter(new FileWriter(fileNameTestSetMLMatrix));) {
-            bwTrain.write(content.toString());
-            bwTest.write(content.toString());
-            for (String authorId : authors.keySet()) {
-                int countTestItem = 0;
-                for (String paperId : authors.get(authorId).getCbfSimHM().keySet()) {
-                    Float cbfSimValue = authors.get(authorId).getCbfSimHM().get(paperId);
-                    if (cbfSimValue == null) {
-                        cbfSimValue = 0f;
-                    }
-                    
-                    Float cfRatingValue = authors.get(authorId).getCfRatingHM().get(paperId);
-                    if (cfRatingValue == null) {
-                        cfRatingValue = 0f;
-                    }
-                    
-                    Float trustedPaperValue = authors.get(authorId).getTrustedPaperHM().get(paperId);
-                    if (trustedPaperValue == null) {
-                        trustedPaperValue = 0f;
-                    }
-                    
-                    int groundTruth = 0;
-                    if (authors.get(authorId).getGroundTruth().contains(paperId)) {
-                        groundTruth = 1;
-                    }
-                    
-                    content.setLength(0);
-                    content.append(authorId).append("\t")
-                            .append(paperId).append("\t")
-                            .append(String.format("%f", cbfSimValue)).append("\t")
-                            .append(String.format("%f", cfRatingValue)).append("\t")
-                            .append(String.format("%f", trustedPaperValue)).append("\t")
-                            .append(String.format("%f", papers.get(paperId).getQualityValue())).append("\t")
-                            .append(String.format("%f", papers.get(paperId).getTemporalCitationTrendValue())).append("\t")
-                            .append(groundTruth)
-                            .append("\r\n");
-                    if ((groundTruth == 1) && (countTestItem < numberOfItemsInTestSet)) {
-                        countTestItem++;
-                        bwTest.write(content.toString());
-                    } else {
-                        bwTrain.write(content.toString());
-                    }
                 }
             }
         }

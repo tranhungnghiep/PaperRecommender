@@ -104,7 +104,6 @@ public class TrustHybrid {
 
     public static void computeMetaTrustedAuthorHMAndPutIntoModelForAuthorList(HashMap<String, Author> authors, 
             final HashMap<String, HashMap<String, Float>> referenceRSSNet, 
-            final int metaTrustType,
             final float alpha) throws Exception {
         Runtime runtime = Runtime.getRuntime();
         int numOfProcessors = runtime.availableProcessors();
@@ -120,8 +119,7 @@ public class TrustHybrid {
                 public void run() {
                     try {
                         final HashMap<String, Float> metaTrustAuthorHM = new HashMap<>();
-                        computeMetaTrustedAuthorsForOneAuthor(referenceRSSNet, authorObj, metaTrustAuthorHM, metaTrustType);
-                        HashMapUtility.minNormalizeHashMap(metaTrustAuthorHM);
+                        computeMetaTrustedAuthorsForOneAuthor(referenceRSSNet, authorObj, metaTrustAuthorHM);
                         HashMapUtility.combineLinearTwoHashMap(authorObj.getCitationAuthorRSSHM(), 
                                 metaTrustAuthorHM, alpha, authorObj.getTrustedAuthorHM());
                     } catch (Exception ex) {
@@ -138,57 +136,31 @@ public class TrustHybrid {
 
     public static void computeMetaTrustedAuthorsForOneAuthor(HashMap<String, HashMap<String, Float>> referenceRSSNet, 
             Author ai, 
-            HashMap<String, Float> outputHM,
-            int metaTrustType) throws Exception {
+            HashMap<String, Float> outputHM) throws Exception {
 
-        // citation author of coauthor.
-        if (metaTrustType == 1) {
-            for (String au : ai.getCoAuthorRSSHM().keySet()) {
-                if (referenceRSSNet.containsKey(au)) {
-                    for (String aj : referenceRSSNet.get(au).keySet()) {
-                        Float combinedValue = ai.getCoAuthorRSSHM().get(au) * referenceRSSNet.get(au).get(aj);
-                        if (outputHM.containsKey(aj)) {
-                            outputHM.put(aj, outputHM.get(aj) + combinedValue);
-                        } else {
-                            outputHM.put(aj, combinedValue);
-                        }
+        for (String au : ai.getCoAuthorRSSHM().keySet()) {
+            if (referenceRSSNet.containsKey(au)) {
+                for (String aj : referenceRSSNet.get(au).keySet()) {
+                    Float combinedValue = ai.getCoAuthorRSSHM().get(au) * referenceRSSNet.get(au).get(aj);
+                    if (outputHM.containsKey(aj)) {
+                        outputHM.put(aj, outputHM.get(aj) + combinedValue);
+                    } else {
+                        outputHM.put(aj, combinedValue);
                     }
                 }
-            }
-
-            // scaling
-            for (String aj : outputHM.keySet()) {
-                outputHM.put(aj, outputHM.get(aj) / ai.getCoAuthorRSSHM().size());
-            }
-            
-        // citation author of citation author.
-        } else if (metaTrustType == 2) {
-            for (String au : ai.getCitationAuthorRSSHM().keySet()) {
-                if (referenceRSSNet.containsKey(au)) {
-                    for (String aj : referenceRSSNet.get(au).keySet()) {
-                        Float combinedValue = ai.getCitationAuthorRSSHM().get(au) * referenceRSSNet.get(au).get(aj);
-                        if (outputHM.containsKey(aj)) {
-                            outputHM.put(aj, outputHM.get(aj) + combinedValue);
-                        } else {
-                            outputHM.put(aj, combinedValue);
-                        }
-                    }
-                }
-            }
-
-            // scaling
-            for (String aj : outputHM.keySet()) {
-                outputHM.put(aj, outputHM.get(aj) / ai.getCitationAuthorRSSHM().size());
             }
         }
         
+        for (String aj : outputHM.keySet()) {
+            outputHM.put(aj, outputHM.get(aj) / ai.getCoAuthorRSSHM().size());
+        }
+
         synchronized (getCountThread()) {
             System.out.println("Thread No. " + countThread++ + " Done. " + (new Date(System.currentTimeMillis()).toString()));
         }
     }
 
-    public static void computeTrustedPaperHMAndPutIntoModelForAuthorList(final HashMap<String, Author> authors, 
-            final int howToTrustPaper) throws Exception {
+    public static void computeTrustedPaperHMAndPutIntoModelForAuthorList(final HashMap<String, Author> authors, final int howToTrust) throws Exception {
         Runtime runtime = Runtime.getRuntime();
         int numOfProcessors = runtime.availableProcessors();
         ExecutorService executor = Executors.newFixedThreadPool(numOfProcessors - 1);
@@ -201,7 +173,7 @@ public class TrustHybrid {
                 @Override
                 public void run() {
                     try {
-                        computeTrustedPaperHM(authors, authorObj, howToTrustPaper);
+                        computeTrustedPaperHM(authors, authorObj, howToTrust);
                     } catch (Exception ex) {
                         Logger.getLogger(FeatureVectorSimilarity.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -218,10 +190,10 @@ public class TrustHybrid {
      * 
      * @param authors
      * @param author
-     * @param howToTrustPaper 1: average trusted author, 2: max trusted author.
+     * @param howToTrust 1: average trusted author, 2: max trusted author.
      * @throws Exception 
      */
-    private static void computeTrustedPaperHM(HashMap<String, Author> authors, Author author, int howToTrustPaper) throws Exception {
+    private static void computeTrustedPaperHM(HashMap<String, Author> authors, Author author, int howToTrust) throws Exception {
 
         HashMap<String, Integer> paperTrustedAuthorCount = new HashMap<>();
         
@@ -229,12 +201,12 @@ public class TrustHybrid {
             if (authors.containsKey(authorId)) {
                 for (String paperId : (List<String>) authors.get(authorId).getPaperList()) {
                     if (author.getTrustedPaperHM().containsKey(paperId)) {
-                        if (howToTrustPaper == 1) {
+                        if (howToTrust == 1) {
                             author.getTrustedPaperHM().put(paperId, 
                                     author.getTrustedPaperHM().get(paperId) + author.getTrustedAuthorHM().get(authorId));
                             paperTrustedAuthorCount.put(paperId, 
                                     paperTrustedAuthorCount.get(paperId) + 1);
-                        } else if (howToTrustPaper == 2) {
+                        } else if (howToTrust == 2) {
                             if (author.getTrustedPaperHM().get(paperId) < author.getTrustedAuthorHM().get(authorId)) {
                                 author.getTrustedPaperHM().put(paperId, author.getTrustedAuthorHM().get(authorId));
                             }
@@ -247,7 +219,7 @@ public class TrustHybrid {
             }
         }
         
-        if (howToTrustPaper == 1) {
+        if (howToTrust == 1) {
             for (String paperId : author.getTrustedPaperHM().keySet()) {
                 author.getTrustedPaperHM().put(paperId, 
                         author.getTrustedPaperHM().get(paperId) / paperTrustedAuthorCount.get(paperId));

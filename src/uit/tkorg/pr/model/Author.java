@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
-import uit.tkorg.utility.general.HashMapUtility;
 
 /**
  *
@@ -442,9 +441,8 @@ public class Author implements Serializable {
     /**
      * @param cbfSimHM the cbfSimHM to set
      */
-    public void setCbfSimHM(HashMap<String, Float> cbfSimHM) throws Exception {
+    public void setCbfSimHM(HashMap<String, Float> cbfSimHM) {
         this.cbfSimHM = cbfSimHM;
-        HashMapUtility.minNormalizeHashMap(this.cbfSimHM);
     }
 
     /**
@@ -457,9 +455,8 @@ public class Author implements Serializable {
     /**
      * @param cfRatingHM the cfRatingHM to set
      */
-    public void setCfRatingHM(HashMap<String, Float> cfRatingHM) throws Exception {
+    public void setCfRatingHM(HashMap<String, Float> cfRatingHM) {
         this.cfRatingHM = cfRatingHM;
-        HashMapUtility.minNormalizeHashMap(this.cfRatingHM);
     }
 
     /**
@@ -472,9 +469,8 @@ public class Author implements Serializable {
     /**
      * @param cbfCfHybridHM the cbfCfHybridHM to set
      */
-    public void setCbfCfHybridHM(HashMap<String, Float> cbfCfHybridHM) throws Exception {
+    public void setCbfCfHybridHM(HashMap<String, Float> cbfCfHybridHM) {
         this.cbfCfHybridHM = cbfCfHybridHM;
-        HashMapUtility.minNormalizeHashMap(this.cbfCfHybridHM);
     }
 
     /**
@@ -487,9 +483,8 @@ public class Author implements Serializable {
     /**
      * @param coAuthorRSSHM the coAuthorRSSHM to set
      */
-    public void setCoAuthorRSSHM(HashMap<String, Float> coAuthorRSSHM) throws Exception {
+    public void setCoAuthorRSSHM(HashMap<String, Float> coAuthorRSSHM) {
         this.coAuthorRSSHM = coAuthorRSSHM;
-        HashMapUtility.minNormalizeHashMap(this.coAuthorRSSHM);
     }
 
     /**
@@ -502,9 +497,8 @@ public class Author implements Serializable {
     /**
      * @param citationAuthorRSSHM the citationAuthorRSSHM to set
      */
-    public void setCitationAuthorRSSHM(HashMap<String, Float> citationAuthorRSSHM) throws Exception {
+    public void setCitationAuthorRSSHM(HashMap<String, Float> citationAuthorRSSHM) {
         this.citationAuthorRSSHM = citationAuthorRSSHM;
-        HashMapUtility.minNormalizeHashMap(this.citationAuthorRSSHM);
     }
 
     /**
@@ -517,9 +511,8 @@ public class Author implements Serializable {
     /**
      * @param trustedAuthorHM the trustedAuthorHM to set
      */
-    public void setTrustedAuthorHM(HashMap<String, Float> trustedAuthorHM) throws Exception {
+    public void setTrustedAuthorHM(HashMap<String, Float> trustedAuthorHM) {
         this.trustedAuthorHM = trustedAuthorHM;
-        HashMapUtility.minNormalizeHashMap(this.trustedAuthorHM);
     }
 
     /**
@@ -532,9 +525,8 @@ public class Author implements Serializable {
     /**
      * @param trustedPaperHM the trustedPaperHM to set
      */
-    public void setTrustedPaperHM(HashMap<String, Float> trustedPaperHM) throws Exception {
+    public void setTrustedPaperHM(HashMap<String, Float> trustedPaperHM) {
         this.trustedPaperHM = trustedPaperHM;
-        HashMapUtility.minNormalizeHashMap(this.trustedPaperHM);
     }
 
     /**
@@ -547,9 +539,8 @@ public class Author implements Serializable {
     /**
      * @param finalRecommendingScoreHM the finalRecommendingScoreHM to set
      */
-    public void setFinalRecommendingScoreHM(HashMap<String, Float> finalRecommendingScoreHM) throws Exception {
+    public void setFinalRecommendingScoreHM(HashMap<String, Float> finalRecommendingScoreHM) {
         this.finalRecommendingScoreHM = finalRecommendingScoreHM;
-        HashMapUtility.minNormalizeHashMap(this.finalRecommendingScoreHM);
     }
 
     /**
@@ -562,8 +553,7 @@ public class Author implements Serializable {
     /**
      * @param cbfTrustHybridHM the cbfTrustHybridHM to set
      */
-    public void setCbfTrustHybridHM(HashMap<String, Float> cbfTrustHybridHM) throws Exception {
+    public void setCbfTrustHybridHM(HashMap<String, Float> cbfTrustHybridHM) {
         this.cbfTrustHybridHM = cbfTrustHybridHM;
-        HashMapUtility.minNormalizeHashMap(this.cbfTrustHybridHM);
     }
 }

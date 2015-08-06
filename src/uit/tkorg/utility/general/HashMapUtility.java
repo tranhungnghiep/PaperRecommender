@@ -238,21 +238,4 @@ public class HashMapUtility {
     public static void setCountThread(Integer aCountThread) {
         countThread = aCountThread;
     }
-
-    public static void minNormalizeHashMap(HashMap<String, Float> hm) throws Exception {
-        if ((hm == null) || (hm.isEmpty())) {
-            return;
-        }
-        
-        Float min = Collections.min(hm.values());
-        Float max = Collections.max(hm.values());
-        
-        for (String id : hm.keySet()) {
-            hm.put(id, (hm.get(id) - min) / (max - min));
-        }
-
-        synchronized (getCountThread()) {
-            System.out.println("Thread No. " + countThread++ + " Done. " + (new Date(System.currentTimeMillis()).toString()));
-        }
-    }
 }
