@@ -8,6 +8,6 @@ Together with this framework, we have built seveval datasets for experiments of 
 <br/>(4) Dataset 4: https://drive.google.com/file/d/0B8gXe63FdGk5Q0pfNE1oNUVJZVU
 
 If you find the source code or the datasets useful, please kindly cite the following paper:
-<br/>Hung Nghiep Tran, Tin Huynh, Kiem Hoang. A Potential Approach to Overcome Data Limitation in Scientific Publication Recommendation. KSE 2015.
+<br/>Hung Nghiep Tran, Tin Huynh, Kiem Hoang. <a href="https://scholar.google.com.vn/citations?view_op=view_citation&hl=en&citation_for_view=fYPeEWkAAAAJ:9ZlFYXVOiuMC" target="_blank">A Potential Approach to Overcome Data Limitation in Scientific Publication Recommendation</a>. KSE 2015.
 
 For more information, please visit the website: https://sites.google.com/site/tranhungnghiep
