@@ -14,6 +14,6 @@ Parallel_Topic_Modeling is a free software under the terms of <a href="https://o
 The dataset is provided under the <a href="http://opendatacommons.org/licenses/by/summary/">Open Data Commons Attribution License</a> 1.0. You can freely use, redistribute, and modify it as long as you acknowledge us.
 
 If you find the source code or the dataset useful, please acknowledge us by kindly citing the following paper: 
-<br/>Hung Nghiep Tran, Tin Huynh, Kiem Hoang. <a href="http://ieeexplore.ieee.org/document/7371802/" target="_blank">A Potential Approach to Overcome Data Limitation in Scientific Publication Recommendation</a>. KSE 2015.
+_<br/>Hung Nghiep Tran, Tin Huynh, Kiem Hoang. <a href="http://ieeexplore.ieee.org/document/7371802/" target="_blank">A Potential Approach to Overcome Data Limitation in Scientific Publication Recommendation</a>. KSE 2015._
 
 For more information, please visit the website: https://sites.google.com/site/tranhungnghiep
