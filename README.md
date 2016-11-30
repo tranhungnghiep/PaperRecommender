@@ -1,6 +1,6 @@
 # Scientific Paper Recommender Systems
 ### Introduction
-This is a general framework for relevant scientific paper recommendation. This framework was developed for experimental purpose in our research project.
+PaperRecommender is a general framework for relevant scientific paper recommendation. This framework was developed for experimental purpose in our research project.
 
 We also built seveval datasets for scientific paper recommendation experiments based on a novel <a href="https://arxiv.org/pdf/1510.04422.pdf">method to build ground truth data</a>. The dataset contains metadata of over 4,000,000 scientific papers in computer science, crawled from <a href="http://academic.research.microsoft.com">Microsoft Research</a>.
 <br/>(1) Dataset 1: https://drive.google.com/file/d/0B8gXe63FdGk5WTljdHdsSUw3UEk (.zip, 376 MB)
@@ -9,7 +9,7 @@ We also built seveval datasets for scientific paper recommendation experiments b
 <br/>(4) Dataset 4: https://drive.google.com/file/d/0B8gXe63FdGk5Q0pfNE1oNUVJZVU (.zip, 528 MB)
 
 ### License
-Parallel_Topic_Modeling is a free software under the terms of <a href="https://opensource.org/licenses/MIT">MIT License</a>. You can freely use, redistribute, and modify it as long as you acknowledge us.
+PaperRecommender is a free software under the terms of <a href="https://opensource.org/licenses/MIT">MIT License</a>. You can freely use, redistribute, and modify it as long as you acknowledge us.
 
 The dataset is provided under the <a href="http://opendatacommons.org/licenses/by/summary/">Open Data Commons Attribution License</a> 1.0. You can freely use, redistribute, and modify it as long as you acknowledge us.
 
