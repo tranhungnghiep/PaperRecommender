@@ -1,4 +1,4 @@
-# Paper Recommender
+# Scientific Paper Recommender Systems
 ### Introduction
 This is a general framework for relevant scientific paper recommendation. This framework was developed for experimental purpose in our research project.
 
