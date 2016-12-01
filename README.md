@@ -1,6 +1,6 @@
 # Scientific Paper Recommender Systems
 ### Introduction
-PaperRecommender is a general framework for relevant scientific paper recommendation, developed for experimental purpose in our research project. The source code was written in Java using NetBeans project format and can be opened in <a href="https://netbeans.org/features/index.html">NetBeans IDE</a>.
+PaperRecommender is a general framework for relevant scientific paper recommendation, developed for experimental purpose in our research project. The source code was written in Java using Ant-based NetBeans project format, which can be opened in <a href="https://netbeans.org/features/index.html">NetBeans IDE</a>.
 
 We also built seveval datasets for scientific paper recommendation experiments based on a novel <a href="https://arxiv.org/pdf/1510.04422.pdf">method to build ground truth data</a>. The dataset contains metadata of over 4,000,000 scientific papers in computer science, crawled from <a href="http://academic.research.microsoft.com">Microsoft Research</a>.
 <br/>Dataset 1: https://drive.google.com/file/d/0B8gXe63FdGk5WTljdHdsSUw3UEk (.zip, 376 MB)
