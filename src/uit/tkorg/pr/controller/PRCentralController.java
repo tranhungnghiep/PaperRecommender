@@ -175,6 +175,17 @@ public class PRCentralController {
                 // Always clear abstract.
                 CBFPaperFVComputation.clearPaperAbstract(papers);
             }
+            // Check the number of TF-IDF feature (size of TF-IDF vector).
+//            HashSet<String> x = new HashSet();
+//            for (Paper p : papers.values()) {
+//                for (String k : p.getTfidfVector().hashMap.keySet()) {
+//                    if (!x.contains(k)) {
+//                        x.add(k);
+//                    }
+//                }
+//            }
+//            long ans = x.size();
+            
             // Step 4:
             // Get list of papers to process.
             paperIdsOfAuthorTestSet = CBFAuthorFVComputation.getPaperIdsOfAuthors(authorTestSet);
