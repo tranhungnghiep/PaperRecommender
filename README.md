@@ -2,7 +2,7 @@
 ### Introduction
 PaperRecommender is a general framework for relevant scientific paper recommendation, developed for experimental purpose in our research project. The source code was written in Java using Ant-based NetBeans project format, which can be opened in <a href="https://netbeans.org/">NetBeans IDE</a>. For the latest source code, please see the <a href="https://github.com/tranhungnghiep/PaperRecommender/tree/PaperRecommender_TestSite_NghiepTH_20141226">Test Site</a> branch.
 
-We also built several datasets for scientific paper recommendation experiments based on a novel <a href="https://arxiv.org/pdf/1510.04422.pdf">method to build ground truth data</a>. The dataset contains metadata of over 4 million scientific papers in computer science, crawled from <a href="http://academic.research.microsoft.com">Microsoft Academic Research</a> (MAS), finished in November 2012.
+We also built several datasets for scientific paper recommendation experiments based on a novel <a href="https://arxiv.org/pdf/1510.04422.pdf">method to build ground truth data</a>. These datasets contain metadata of over 4 million scientific papers in computer science, crawled from <a href="http://academic.research.microsoft.com">Microsoft Academic Research</a> (MAS), finished in November 2012.
 <br/>Dataset 1: https://drive.google.com/file/d/0B8gXe63FdGk5WTljdHdsSUw3UEk (.zip, 376 MB)
 <br/>Dataset 2: https://drive.google.com/file/d/0B8gXe63FdGk5QlNsQmhVekx1SlU (.zip, 379 MB)
 <br/>Dataset 3: https://drive.google.com/file/d/0B8gXe63FdGk5ZjlTWS1hZ0w0Tnc (.zip, 376 MB)
