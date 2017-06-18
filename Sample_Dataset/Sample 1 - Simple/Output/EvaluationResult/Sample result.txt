@@ -1,0 +1,6 @@
+Content - based,Precision,100,0.05
+Content - based,Recall,100,1.0
+Content - based,F1,100,0.476
+Content - based,MAP,100,0.302
+Content - based,NDCG,100,0.076
+Content - based,MRR,100,0.265

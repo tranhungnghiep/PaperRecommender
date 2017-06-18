@@ -1,0 +1,3 @@
+Content - based,MAP,100,0.302
+Content - based,NDCG,100,0.076
+Content - based,MRR,100,0.265

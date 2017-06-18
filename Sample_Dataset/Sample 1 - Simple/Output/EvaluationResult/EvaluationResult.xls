@@ -1,0 +1,2 @@
+Time Stamp	Algorithm	Running time in second	P@10	P@20	P@30	P@40	P@50	R@50	R@100	F1	MAP@10	MAP@20	MAP@30	MAP@40	MAP@50	NDCG@5	NDCG@10	MRR
+Wed Jul 02 11:13:44 ICT 2014	MAS Dataset: CBF with FV_PaperOfAuthor(31), FV_Authors(10.2), FV_PaperTestSet(31)	14	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0

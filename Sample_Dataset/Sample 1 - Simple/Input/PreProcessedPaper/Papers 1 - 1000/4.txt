@@ -1,0 +1,1 @@
+concept optim nonlin funct particl swarm methodolog introduc evolut paradigm outlin implem paradigm disc benchmark test paradigm appl inclus nonlin funct optim neur network train prop relationship particl swarm optim artif lif genet algorithm 
