@@ -10,12 +10,12 @@ We also built several datasets for scientific paper recommendation experiments b
 <br/>Dataset 4: https://drive.google.com/file/d/0B8gXe63FdGk5Q0pfNE1oNUVJZVU (.zip, 528 MB)
 
 ### License
-PaperRecommender is a free software under <a href="https://opensource.org/licenses/MIT">MIT License</a> (you are free to use, redistribute, and modify as long as you acknowledge us).
+PaperRecommender is a free software under <a href="https://opensource.org/licenses/MIT">MIT License</a>.
 
-The dataset is provided under <a href="http://opendatacommons.org/licenses/by/summary/">ODC-BY License</a> 1.0 (you are free to use, redistribute, and modify as long as you acknowledge us).
+The dataset is provided under open <a href="http://opendatacommons.org/licenses/by/summary/">ODC-BY License</a> 1.0.
 
----
 **Corresponding paper:**  
+If you find the codes or data useful, please cite the following paper.  
 *Hung Nghiep Tran, Tin Huynh, Kiem Hoang. <a href="http://ieeexplore.ieee.org/document/7371802/" target="_blank">A Potential Approach to Overcome Data Limitation in Scientific Publication Recommendation</a>. KSE 2015.*
 
 For more information, please visit the website: https://sites.google.com/site/tranhungnghiep
